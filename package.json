@@ -12,6 +12,10 @@
     "start": "next start"
   },
   "dependencies": {
+    "@mantine/core": "^7.7.0",
+    "@mantine/form": "^7.7.0",
+    "@mantine/hooks": "^7.7.0",
+    "@mantine/modals": "^7.7.0",
     "@prisma/client": "^5.1.1",
     "@t3-oss/env-nextjs": "^0.7.0",
     "@tanstack/react-query": "^4.32.6",
