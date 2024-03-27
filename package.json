@@ -12,6 +12,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@clerk/nextjs": "^4.29.9",
     "@mantine/core": "^7.7.0",
     "@mantine/form": "^7.7.0",
     "@mantine/hooks": "^7.7.0",
