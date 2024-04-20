@@ -1,4 +1,5 @@
 import { type AppType } from "next/app";
+import AppLayout from "~/containers/AppLayout";
 import ClerkAuthProvider from "~/providers/ClerkAuthProvider";
 import MantineStyleProvider from "~/providers/MantineStyleProvider";
 
@@ -8,7 +9,9 @@ const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     <ClerkAuthProvider {...pageProps}>
       <MantineStyleProvider>
-        <Component {...pageProps} />
+        <AppLayout>
+          <Component {...pageProps} />
+        </AppLayout>
       </MantineStyleProvider>
     </ClerkAuthProvider>
   );

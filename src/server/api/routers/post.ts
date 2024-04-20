@@ -1,3 +1,4 @@
+import { clerkClient } from "@clerk/nextjs";
 import { z } from "zod";
 
 import {
@@ -9,9 +10,10 @@ import {
 export const postRouter = createTRPCRouter({
   hello: protectedProcedure
     .input(z.object({ text: z.string().optional() }))
-    .query(({ input, ctx }) => {
+    .query(async ({ input, ctx }) => {
+      const users = await clerkClient.users.getUserList();
       return {
-        greeting: ctx.auth,
+        greeting: users,
       };
     }),
 
