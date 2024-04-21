@@ -7,6 +7,8 @@ import {
   Group,
 } from "@mantine/core";
 import NativeImage from "~/components/NativeImage";
+import ToggleTheme from "~/components/ToggleTheme";
+import { CiDark, CiLight } from "react-icons/ci";
 
 function AppHeader() {
   return (
@@ -22,14 +24,17 @@ function AppHeader() {
               Apply as Tutor!
             </Anchor>
           </Group>
-          <SignedOut>
-            <SignInButton>
-              <Button>Sign In</Button>
-            </SignInButton>
-          </SignedOut>
-          <SignedIn>
-            <UserButton />
-          </SignedIn>
+          <Group>
+            <SignedOut>
+              <SignInButton>
+                <Button>Sign In</Button>
+              </SignInButton>
+            </SignedOut>
+            <SignedIn>
+              <UserButton afterSignOutUrl="/" />
+            </SignedIn>
+            <ToggleTheme DarkIcon={CiDark} LightIcon={CiLight} />
+          </Group>
         </Group>
       </Container>
     </AppShellHeader>
