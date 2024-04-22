@@ -40,7 +40,7 @@ export default function Home() {
 
   return (
     <Container size="lg">
-      <Stack pt="xl" gap="xl">
+      <Stack my="xl" gap="xl">
         <Title py="xl" ta="center">
           Interactive IQRA
         </Title>

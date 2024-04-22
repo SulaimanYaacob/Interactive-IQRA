@@ -5,22 +5,38 @@ import {
   Button,
   Container,
   Group,
+  UnstyledButton,
 } from "@mantine/core";
 import NativeImage from "~/components/NativeImage";
 import ToggleTheme from "~/components/ToggleTheme";
 import { CiDark, CiLight } from "react-icons/ci";
+import Link from "next/link";
 
 function AppHeader() {
   return (
     <AppShellHeader py="lg">
       <Container size="lg">
         <Group pos="relative" justify="space-between">
-          <NativeImage src="/images/logo.png" alt="logo" width={150} />
-          <Group pos="absolute" gap="xl" left="0%" right="0" justify="center">
-            <Anchor variant="gradient" td="none">
+          <UnstyledButton display="contents" component={Link} href="/">
+            <NativeImage src="/images/logo.png" alt="logo" width={150} />
+          </UnstyledButton>
+          <Group
+            pos="absolute"
+            gap="xl"
+            left="30%"
+            right="30%"
+            justify="center"
+          >
+            <Anchor
+              variant="gradient"
+              td="none"
+              fw={500}
+              component={Link}
+              href="/tutors"
+            >
               View List of Tutors
             </Anchor>
-            <Anchor variant="gradient" td="none">
+            <Anchor variant="gradient" td="none" fw={500}>
               Apply as Tutor!
             </Anchor>
           </Group>
