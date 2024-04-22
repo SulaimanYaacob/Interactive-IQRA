@@ -13,18 +13,19 @@ export default function ToggleTheme({ DarkIcon, LightIcon }: Props) {
   return (
     <>
       <ActionIcon
+        color="yellow"
         onClick={() => toggleColorScheme()}
         lightHidden
         variant="transparent"
       >
-        <DarkIcon size="24" />
+        <LightIcon size="32" />
       </ActionIcon>
       <ActionIcon
         onClick={() => toggleColorScheme()}
         darkHidden
         variant="transparent"
       >
-        <LightIcon size="24" />
+        <DarkIcon size="32" />
       </ActionIcon>
     </>
   );

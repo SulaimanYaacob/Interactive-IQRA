@@ -23,7 +23,6 @@ const MyApp: AppType = ({ Component, pageProps }) => {
         <meta name="author" content="Sulaiman Yaacob" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
-      <p>This is my page content.</p>
       <ClerkAuthProvider {...pageProps}>
         <MantineStyleProvider>
           <AppLayout>
