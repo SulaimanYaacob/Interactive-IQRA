@@ -13,7 +13,7 @@ export const postRouter = createTRPCRouter({
     .query(async ({ input, ctx }) => {
       const users = await clerkClient.users.getUserList();
       return {
-        greeting: users,
+        greeting: ctx.auth,
       };
     }),
 

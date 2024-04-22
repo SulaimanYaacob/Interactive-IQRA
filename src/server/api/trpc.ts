@@ -60,6 +60,7 @@ export const createTRPCContext = (opts: CreateNextContextOptions) => {
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { db } from "../db";
+import { clerkClient } from "@clerk/nextjs";
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,
@@ -69,14 +70,16 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
 });
 
 // check if the user is signed in, otherwise through a UNAUTHORIZED CODE
-const isAuthed = t.middleware(({ next, ctx }) => {
+const isAuthed = t.middleware(async ({ next, ctx }) => {
   if (!ctx.auth.userId) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
 
+  const user = await clerkClient.users.getUser(ctx.auth.userId);
+
   return next({
     ctx: {
-      auth: ctx.auth,
+      auth: user,
     },
   });
 });
