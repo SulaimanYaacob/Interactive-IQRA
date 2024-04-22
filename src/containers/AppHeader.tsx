@@ -2,6 +2,7 @@ import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import {
   Anchor,
   AppShellHeader,
+  Burger,
   Button,
   Container,
   Group,
@@ -17,10 +18,17 @@ function AppHeader() {
     <AppShellHeader py="lg">
       <Container size="lg">
         <Group pos="relative" justify="space-between">
-          <UnstyledButton display="contents" component={Link} href="/">
+          <Burger hiddenFrom="sm" />
+          <UnstyledButton
+            visibleFrom="sm"
+            display="contents"
+            component={Link}
+            href="/"
+          >
             <NativeImage src="/images/logo.png" alt="logo" width={150} />
           </UnstyledButton>
           <Group
+            visibleFrom="sm"
             pos="absolute"
             gap="xl"
             left="30%"

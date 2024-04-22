@@ -13,6 +13,9 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^4.29.9",
+    "@liveblocks/client": "^1.11.2",
+    "@liveblocks/node": "^1.11.2",
+    "@liveblocks/react": "^1.11.2",
     "@mantine/core": "^7.7.0",
     "@mantine/form": "^7.7.0",
     "@mantine/hooks": "^7.7.0",

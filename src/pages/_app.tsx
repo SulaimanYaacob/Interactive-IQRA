@@ -2,6 +2,7 @@ import { type AppType } from "next/app";
 import Head from "next/head";
 import AppLayout from "~/containers/AppLayout";
 import ClerkAuthProvider from "~/providers/ClerkAuthProvider";
+import LiveblocksProvider from "~/providers/LiveblocksProvider";
 import MantineStyleProvider from "~/providers/MantineStyleProvider";
 
 import { api } from "~/utils/api";
@@ -25,9 +26,11 @@ const MyApp: AppType = ({ Component, pageProps }) => {
       </Head>
       <ClerkAuthProvider {...pageProps}>
         <MantineStyleProvider>
-          <AppLayout>
-            <Component {...pageProps} />
-          </AppLayout>
+          <LiveblocksProvider>
+            <AppLayout>
+              <Component {...pageProps} />
+            </AppLayout>
+          </LiveblocksProvider>
         </MantineStyleProvider>
       </ClerkAuthProvider>
     </>
