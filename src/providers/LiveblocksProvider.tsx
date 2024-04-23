@@ -3,9 +3,13 @@ import { Center, Loader } from "@mantine/core";
 import { RoomProvider } from "liveblocks.config";
 import { type ReactNode } from "react";
 
+//TODO Create a current/selected room (selected room will replace once user create another room / join a room)
 function LiveblocksProvider({ children }: { children: ReactNode }) {
+  // const { data } = api.post.hello.useQuery({ text: "22" });
+  // console.log({ data });
+
   return (
-    <RoomProvider id="my-room" initialPresence={{}}>
+    <RoomProvider id="123" initialPresence={{}}>
       <ClientSideSuspense
         fallback={
           <Center mih="50vh">

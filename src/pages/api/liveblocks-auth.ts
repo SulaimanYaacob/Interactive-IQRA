@@ -13,16 +13,12 @@ export default async function handler(
   const { userId } = getAuth(request);
   const user = userId ? await clerkClient.users.getUser(userId) : null;
 
-  if (userId && !user) return response.status(401).send("Unauthorized");
+  if (!user) return response.status(401).send("Unauthorized");
 
   const { status, body } = await liveblocks.identifyUser(
-    {
-      userId: userId!,
-      groupIds: [],
-    },
-    { userInfo: { name: user!.firstName!, avatar: user?.imageUrl } }
+    { userId: user.id, groupIds: [] },
+    { userInfo: { name: user.firstName!, avatar: user?.imageUrl } }
   );
 
-  // Authorize the user and return the result
   response.status(status).send(body);
 }
