@@ -12,7 +12,7 @@ export default function Cursor({ color, x, y }: Props) {
         left: 0,
         top: 0,
         transform: `translateX(${x}px) translateY(${y}px)`,
-        transition: "transform 120ms linear",
+        transition: "transform 0.5s cubic-bezier(.17,.93,.38,1)",
       }}
       width="24"
       height="36"
