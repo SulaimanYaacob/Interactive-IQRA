@@ -7,8 +7,8 @@ function Dummy() {
 
   console.log({ data });
   return (
-    <Container my="xl">
-      <Center>
+    <Container>
+      <Center my="xl">
         <Stack>
           <Title>{data?.greeting.firstName}</Title>
           <Button onClick={() => mutate()}>Create Room</Button>

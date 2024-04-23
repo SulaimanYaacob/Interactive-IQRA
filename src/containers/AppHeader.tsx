@@ -16,7 +16,7 @@ import Link from "next/link";
 function AppHeader() {
   return (
     <AppShellHeader py="lg">
-      <Container size="lg">
+      <Container>
         <Group pos="relative" justify="space-between">
           <Burger hiddenFrom="sm" />
           <UnstyledButton
