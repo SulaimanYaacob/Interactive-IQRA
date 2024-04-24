@@ -1,7 +1,12 @@
 import { Center, Container, Stack, Text, Title } from "@mantine/core";
 import { useViewportSize } from "@mantine/hooks";
 import { useMyPresence, useOthers } from "liveblocks.config";
+import dynamic from "next/dynamic";
 import Cursor from "~/components/Cursor";
+const LiveblocksProvider = dynamic(
+  () => import("~/providers/LiveblocksProvider"),
+  { ssr: false }
+);
 
 const COLORS = [
   "#E57373",
@@ -14,7 +19,15 @@ const COLORS = [
   "#7986CB",
 ];
 
-function Rooms() {
+export default function Rooms() {
+  return (
+    <LiveblocksProvider>
+      <InteractiveIqra />
+    </LiveblocksProvider>
+  );
+}
+
+function InteractiveIqra() {
   const others = useOthers();
   const userCount = others.length;
   const [{ cursor }, updateMyPresence] = useMyPresence();
@@ -60,5 +73,3 @@ function Rooms() {
     </Container>
   );
 }
-
-export default Rooms;
