@@ -3,7 +3,6 @@ import Head from "next/head";
 import AppLayout from "~/containers/AppLayout";
 import ClerkAuthProvider from "~/providers/ClerkAuthProvider";
 import MantineStyleProvider from "~/providers/MantineStyleProvider";
-
 import { api } from "~/utils/api";
 
 const MyApp: AppType = ({ Component, pageProps }) => {

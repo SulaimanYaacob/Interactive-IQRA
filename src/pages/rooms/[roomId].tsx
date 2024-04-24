@@ -36,7 +36,7 @@ function InteractiveIqra() {
   return (
     <Container
       fluid
-      h={height - 80}
+      h={height - 76}
       w={width}
       onPointerMove={(e) => {
         updateMyPresence({

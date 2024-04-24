@@ -17,6 +17,8 @@ function LiveblocksProvider({ children, header }: Props) {
   const { query } = useRouter();
   const { roomId } = query;
 
+  console.log({ roomId });
+
   return (
     <RoomProvider id={String(roomId)} initialPresence={{ cursor: null }}>
       <ClientSideSuspense

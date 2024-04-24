@@ -1,4 +1,5 @@
 import { Liveblocks } from "@liveblocks/node";
+import { TRPCError } from "@trpc/server";
 import { string, z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
@@ -21,15 +22,22 @@ export const liveblocksRouter = createTRPCRouter({
   checkRoomIsJoined: protectedProcedure
     .input(z.object({ roomId: string() }))
     .query(async ({ ctx, input }) => {
-      const { roomId } = input;
+      try {
+        const { roomId } = input;
 
-      const prismaUserJoinedRoom = await ctx.db.room.findUnique({
-        where: { id: ctx.auth.id, roomId },
-      });
+        const prismaUserJoinedRoom = await ctx.db.room.findUnique({
+          where: { id: ctx.auth.id, roomId },
+        });
 
-      if (prismaUserJoinedRoom) return true;
+        if (prismaUserJoinedRoom) return true;
 
-      return false;
+        return false;
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Something went wrong",
+        });
+      }
     }),
 
   createRoom: protectedProcedure
