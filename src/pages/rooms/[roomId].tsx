@@ -3,6 +3,7 @@ import { useViewportSize } from "@mantine/hooks";
 import { useMyPresence, useOthers } from "liveblocks.config";
 import dynamic from "next/dynamic";
 import Cursor from "~/components/Cursor";
+import useWindowLiveCursors from "~/hooks/useWindowLiveCursors";
 const LiveblocksProvider = dynamic(
   () => import("~/providers/LiveblocksProvider"),
   { ssr: false }
@@ -19,6 +20,7 @@ const COLORS = [
   "#7986CB",
 ];
 
+//! Currently not finished! The cursor is applied to the entire screen
 export default function Rooms() {
   return (
     <LiveblocksProvider>
@@ -30,42 +32,38 @@ export default function Rooms() {
 function InteractiveIqra() {
   const others = useOthers();
   const userCount = others.length;
-  const [{ cursor }, updateMyPresence] = useMyPresence();
+  const [{ cursor }] = useMyPresence();
   const { height, width } = useViewportSize();
+  const cursors = useWindowLiveCursors();
 
   return (
     <Container
       fluid
-      h={height - 76}
-      w={width}
-      onPointerMove={(e) => {
-        updateMyPresence({
-          cursor: {
-            x: Math.round(e.clientX),
-            y: Math.round(e.clientY),
-          },
-        });
-      }}
-      onPointerLeave={() => updateMyPresence({ cursor: null })}
+      // h={height - 76}
+      // w={width}
+      p="xl"
+      // onPointerMove={(e) => {
+      //   updateMyPresence({
+      //     cursor: {
+      //       x: Math.round(e.clientX),
+      //       y: Math.round(e.clientY),
+      //     },
+      //   });
+      // }}
+      // onPointerLeave={() => updateMyPresence({ cursor: null })}
     >
       <Stack py="xl">
         <Title ta="center">There are {userCount + 1} users in the room</Title>
-        <Text ta="center">
-          {cursor &&
-            `${(cursor.x / width) * 100} x ${(cursor.y / height) * 100}`}
-        </Text>
+        <Text ta="center">{cursor && `${cursor.x} x ${cursor.y}`}</Text>
       </Stack>
-
       <Center>
-        {others.map(({ connectionId, presence }) => {
-          if (!presence.cursor) return null;
-
+        {cursors.map(({ connectionId, x, y }) => {
           return (
             <Cursor
               key={connectionId}
               color={COLORS[connectionId % COLORS.length]!}
-              x={presence.cursor.x}
-              y={presence.cursor.y}
+              x={x}
+              y={y}
             />
           );
         })}
