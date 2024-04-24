@@ -1,4 +1,4 @@
-import { postRouter } from "~/server/api/routers/post";
+import { roomRouter } from "~/server/api/routers/room";
 import { createTRPCRouter } from "~/server/api/trpc";
 import { liveblocksRouter } from "./routers/liveblocks";
 
@@ -8,7 +8,7 @@ import { liveblocksRouter } from "./routers/liveblocks";
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
-  post: postRouter,
+  room: roomRouter,
   liveblocks: liveblocksRouter,
 });
 

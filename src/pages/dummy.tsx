@@ -1,17 +1,16 @@
-import { Button, Center, Container, Stack, Title } from "@mantine/core";
+import { Center, Container, Stack } from "@mantine/core";
 import { api } from "~/utils/api";
 
 function Dummy() {
   const { mutate } = api.liveblocks.createRoom.useMutation();
-  const { data } = api.post.hello.useQuery({ text: "nothinng" });
+  const { data } = api.liveblocks.checkRoomIsJoined.useQuery({ roomId: "123" });
 
-  console.log({ data });
   return (
     <Container>
       <Center my="xl">
         <Stack>
-          <Title>{data?.greeting.firstName}</Title>
-          <Button onClick={() => mutate()}>Create Room</Button>
+          {/* <Title>{data?.greeting.firstName}</Title> */}
+          {/* <Button onClick={() => mutate()}>Create Room</Button> */}
         </Stack>
       </Center>
     </Container>
