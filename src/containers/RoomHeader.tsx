@@ -7,8 +7,20 @@ import {
   Group,
 } from "@mantine/core";
 import { useOthers, useSelf } from "liveblocks.config";
+import dynamic from "next/dynamic";
+const LiveblocksProvider = dynamic(
+  () => import("~/providers/LiveblocksProvider"),
+  { ssr: false }
+);
+export default function RoomHeader() {
+  return (
+    <LiveblocksProvider header>
+      <LiveblocksHeader />
+    </LiveblocksProvider>
+  );
+}
 
-function RoomHeader() {
+function LiveblocksHeader() {
   const users = useOthers();
   const currentUser = useSelf();
   const hasMoreUsers = users.length > 3;
@@ -42,5 +54,3 @@ function RoomHeader() {
     </AppShellHeader>
   );
 }
-
-export default RoomHeader;

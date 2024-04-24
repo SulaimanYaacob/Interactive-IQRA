@@ -5,7 +5,12 @@ import { useRouter } from "next/router";
 import { type ReactNode } from "react";
 
 //TODO Create a current/selected room (selected room will replace once user create another room / join a room)
-function LiveblocksProvider({ children }: { children: ReactNode }) {
+type Props = {
+  children: ReactNode;
+  header?: boolean;
+};
+
+function LiveblocksProvider({ children, header }: Props) {
   // const { data } = api.post.hello.useQuery({ text: "22" });
   // console.log({ data });
 
@@ -16,9 +21,11 @@ function LiveblocksProvider({ children }: { children: ReactNode }) {
     <RoomProvider id={String(roomId)} initialPresence={{ cursor: null }}>
       <ClientSideSuspense
         fallback={
-          <Center mih="50vh">
-            <Loader size="xl" />
-          </Center>
+          header ?? (
+            <Center mih="50vh">
+              <Loader size="xl" />
+            </Center>
+          )
         }
       >
         {() => children}
