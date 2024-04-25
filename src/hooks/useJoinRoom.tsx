@@ -14,7 +14,7 @@ const useJoinRoom = () => {
       roomId: "",
     },
     validate: {
-      roomId: hasLength({ min: 3, max: 6 }, "Invalid Room PIN"),
+      roomId: hasLength({ min: 1, max: 6 }, "Invalid Room PIN"),
     },
   });
 

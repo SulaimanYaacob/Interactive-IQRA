@@ -1,6 +1,6 @@
 import { roomRouter } from "~/server/api/routers/room";
 import { createTRPCRouter } from "~/server/api/trpc";
-import { liveblocksRouter } from "./routers/liveblocks";
+import { liveblocksRouter } from "./routers/liveblocksRouter";
 
 /**
  * This is the primary router for your server.

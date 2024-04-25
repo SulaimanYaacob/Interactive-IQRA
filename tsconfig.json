@@ -29,7 +29,8 @@
     "**/*.tsx",
     "**/*.cjs",
     "**/*.mjs",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "src/server/api/routers/liveblocksRouter.ts"
   ],
   "exclude": ["node_modules"]
 }

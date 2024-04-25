@@ -17,7 +17,13 @@ export default async function handler(
 
   const { status, body } = await liveblocks.identifyUser(
     { userId: user.id, groupIds: [] },
-    { userInfo: { name: user.firstName!, avatar: user?.imageUrl } }
+    {
+      userInfo: {
+        name: user.firstName!,
+        avatar: user?.imageUrl,
+        email: user.emailAddresses[0]?.emailAddress,
+      },
+    }
   );
 
   response.status(status).send(body);
