@@ -1,4 +1,4 @@
-import { Button, FocusTrap, PinInput, Stack, Text } from "@mantine/core";
+import { Button, PinInput, Stack, Text } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { hasLength, useForm } from "@mantine/form";
 import { api } from "~/utils/api";
@@ -64,8 +64,8 @@ const useJoinRoom = () => {
   const openJoinRoomModal = () => {
     modals.open({
       withCloseButton: false,
-      onClose: reset,
       centered: true,
+      trapFocus: true,
       size: "sm",
       children: (
         <form
@@ -75,9 +75,7 @@ const useJoinRoom = () => {
         >
           <Stack my="md" align="center">
             <Text fw={500}>{`Enter the room's PIN`}</Text>
-            <FocusTrap>
-              <PinInput fw={500} length={6} {...getInputProps("roomId")} />
-            </FocusTrap>
+            <PinInput fw={500} length={6} {...getInputProps("roomId")} />
             <Button type="submit">Enter Room</Button>
           </Stack>
         </form>

@@ -8,13 +8,19 @@ import {
 } from "@mantine/core";
 import { useOthers, useSelf } from "liveblocks.config";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
 const LiveblocksProvider = dynamic(
   () => import("~/providers/LiveblocksProvider"),
   { ssr: false }
 );
 export default function RoomHeader() {
+  const { query } = useRouter();
+  const { roomId } = query as { roomId: string };
+
+  if (!roomId) return null;
+
   return (
-    <LiveblocksProvider header>
+    <LiveblocksProvider roomId={roomId} header>
       <LiveblocksHeader />
     </LiveblocksProvider>
   );
@@ -23,7 +29,6 @@ export default function RoomHeader() {
 function LiveblocksHeader() {
   const users = useOthers();
   const currentUser = useSelf();
-  const hasMoreUsers = users.length > 3;
 
   return (
     <AppShellHeader py="lg">

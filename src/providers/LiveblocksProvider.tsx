@@ -1,7 +1,6 @@
 import { ClientSideSuspense } from "@liveblocks/react";
 import { Button, Center, Loader, Paper, Stack, Title } from "@mantine/core";
 import { RoomProvider } from "liveblocks.config";
-import { useRouter } from "next/router";
 import { type ReactNode } from "react";
 import { api } from "~/utils/api";
 
@@ -9,11 +8,10 @@ import { api } from "~/utils/api";
 type Props = {
   children: ReactNode;
   header?: boolean;
+  roomId: string;
 };
 
-function LiveblocksProvider({ children, header }: Props) {
-  const { query } = useRouter();
-  const { roomId } = query as { roomId: string };
+function LiveblocksProvider({ children, header, roomId }: Props) {
   const { data, isLoading } = api.liveblocks.getCurrentUserRoomAccess.useQuery({
     roomId,
   });

@@ -13,6 +13,7 @@ import useJoinRoom from "~/hooks/useJoinRoom";
 
 export default function Home() {
   const { openJoinRoomModal, isLoading: SearchingRoom } = useJoinRoom();
+
   const menuOptions = [
     {
       icons: "/images/logo.png",

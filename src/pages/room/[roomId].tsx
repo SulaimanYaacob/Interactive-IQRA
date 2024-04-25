@@ -9,6 +9,7 @@ import {
 import { useViewportSize } from "@mantine/hooks";
 import { useMyPresence, useOthers } from "liveblocks.config";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
 import { useRef } from "react";
 import Cursor from "~/components/Cursor";
 import { useElementLiveCursors } from "~/hooks/useElementLiveCursors";
@@ -29,8 +30,13 @@ const COLORS = [
 ];
 
 export default function Room() {
+  const { query } = useRouter();
+  const { roomId } = query as { roomId: string };
+
+  if (!roomId) return null;
+
   return (
-    <LiveblocksProvider>
+    <LiveblocksProvider roomId={roomId}>
       <InteractiveRoom id="room" />
     </LiveblocksProvider>
   );
