@@ -20,11 +20,14 @@ function LiveblocksProvider({ children, header }: Props) {
   console.log({ roomId });
 
   return (
-    <RoomProvider id={String(roomId)} initialPresence={{ cursor: null }}>
+    <RoomProvider
+      id={String(roomId)}
+      initialPresence={{ cursor: null, elementId: null }}
+    >
       <ClientSideSuspense
         fallback={
           header ?? (
-            <Center mih="50vh">
+            <Center mih="80vh">
               <Loader size="xl" />
             </Center>
           )

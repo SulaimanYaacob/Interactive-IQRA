@@ -1,0 +1,81 @@
+import { useOthers, useUpdateMyPresence } from "liveblocks.config";
+import { type RefObject, useEffect, useState } from "react";
+
+export function useElementLiveCursors(id: string, ref: RefObject<HTMLElement>) {
+  const updateMyPresence = useUpdateMyPresence();
+  const others = useOthers();
+  const [boundingRect, setBoundingRect] = useState<DOMRect>();
+
+  useEffect(() => {
+    if (ref.current) setBoundingRect(ref.current.getBoundingClientRect());
+  }, [ref]);
+
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+
+    function getCursorPositionFromBoundingRect(
+      e: MouseEvent,
+      boundingRect: DOMRect
+    ) {
+      return {
+        x: (e.clientX - boundingRect.left) / boundingRect.width,
+        y: (e.clientY - boundingRect.top) / boundingRect.height,
+      };
+    }
+
+    function onMouseMove(e: MouseEvent) {
+      if (!boundingRect) return;
+
+      const cursor = getCursorPositionFromBoundingRect(e, boundingRect);
+      updateMyPresence({
+        cursor,
+      });
+    }
+
+    function onMouseEnter() {
+      updateMyPresence({
+        elementId: id,
+      });
+      setBoundingRect(element!.getBoundingClientRect());
+    }
+
+    function onMouseLeave() {
+      updateMyPresence({
+        elementId: null,
+        cursor: null,
+      });
+    }
+
+    element.addEventListener("mousemove", onMouseMove);
+    element.addEventListener("mouseenter", onMouseEnter);
+    element.addEventListener("mouseleave", onMouseLeave);
+
+    return () => {
+      element.removeEventListener("mousemove", onMouseMove);
+      element.removeEventListener("mouseenter", onMouseEnter);
+      element.removeEventListener("mouseleave", onMouseLeave);
+    };
+  }, [id, ref, updateMyPresence, boundingRect]);
+
+  return others
+    .filter(
+      (user) =>
+        user.presence?.cursor != null &&
+        user.presence?.elementId != null &&
+        user.presence?.elementId === id
+    )
+    .map(({ connectionId, presence, id, info }) => {
+      if (!boundingRect) return null;
+      if (presence.cursor == null) return null;
+
+      return {
+        id,
+        info,
+        presence,
+        connectionId,
+        x: presence.cursor.x * boundingRect.width,
+        y: presence.cursor.y * boundingRect.height,
+      };
+    });
+}
