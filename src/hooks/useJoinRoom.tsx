@@ -75,7 +75,12 @@ const useJoinRoom = () => {
         >
           <Stack my="md" align="center">
             <Text fw={500}>{`Enter the room's PIN`}</Text>
-            <PinInput fw={500} length={6} {...getInputProps("roomId")} />
+            <PinInput
+              value=""
+              fw={500}
+              length={6}
+              {...getInputProps("roomId")}
+            />
             <Button type="submit">Enter Room</Button>
           </Stack>
         </form>
