@@ -1,7 +1,9 @@
 import { Button, Container, MantineProvider, createTheme } from "@mantine/core";
-import type { ReactNode } from "react";
-import "@mantine/core/styles.css";
+import { Notifications } from "@mantine/notifications";
 import { ModalsProvider } from "@mantine/modals";
+import type { ReactNode } from "react";
+import "@mantine/notifications/styles.css";
+import "@mantine/core/styles.css";
 
 const theme = createTheme({
   components: {
@@ -21,6 +23,7 @@ const theme = createTheme({
 function MantineStyleProvider({ children }: { children: ReactNode }) {
   return (
     <MantineProvider theme={theme}>
+      <Notifications position="top-center" autoClose={3000} limit={3} />
       <ModalsProvider>{children}</ModalsProvider>
     </MantineProvider>
   );

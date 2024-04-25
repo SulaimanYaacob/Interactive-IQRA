@@ -20,7 +20,26 @@ function generateUniqueID(): string {
 }
 
 export const liveblocksRouter = createTRPCRouter({
-  //* Get User's Rooms
+  getUserRoomAccess: protectedProcedure
+    .input(z.object({ roomId: string() }))
+    .query(async ({ ctx, input }) => {
+      try {
+        const { roomId } = input;
+        const room = await liveblocks.getRoom(roomId);
+
+        if (!room) return;
+
+        const userAccess =
+          room.usersAccesses[ctx.auth.emailAddresses[0]?.emailAddress ?? ""];
+
+        return userAccess;
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: (error as Error).message,
+        });
+      }
+    }),
   searchingRoom: protectedProcedure
     .input(z.object({ roomId: string() }))
     .mutation(async ({ input }) => {
@@ -38,7 +57,6 @@ export const liveblocksRouter = createTRPCRouter({
         });
       }
     }),
-
   createRoom: protectedProcedure
     .input(z.object({ maxUsers: z.number().default(10) }))
     .mutation(async ({ ctx, input }) => {

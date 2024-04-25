@@ -1,9 +1,8 @@
 import { Center, Container, Stack } from "@mantine/core";
-import { api } from "~/utils/api";
 
 function Dummy() {
   // const { mutate } = api.liveblocks.createRoom.useMutation();
-  const { data } = api.liveblocks.searchingRoom.useMutation();
+
   return (
     <Container>
       <Center my="xl">

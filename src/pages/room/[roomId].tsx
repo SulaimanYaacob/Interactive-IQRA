@@ -28,7 +28,7 @@ const COLORS = [
   "#7986CB",
 ];
 
-export default function Rooms() {
+export default function Room() {
   return (
     <LiveblocksProvider>
       <InteractiveRoom id="room" />
@@ -37,6 +37,10 @@ export default function Rooms() {
 }
 
 function InteractiveRoom({ id }: { id: string }) {
+  // const { query } = useRouter();
+  // const { roomId } = query as { roomId: string };
+  // const { data } = api.liveblocks.getUserRoomAccess.useQuery({ roomId });
+
   const others = useOthers();
   const userCount = others.length;
   const [{ cursor }] = useMyPresence();

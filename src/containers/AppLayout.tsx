@@ -7,7 +7,7 @@ import RoomHeader from "./RoomHeader";
 function AppLayout({ children }: { children: React.ReactNode }) {
   const DynamicHeader = () => {
     const { pathname } = useRouter();
-    if (pathname === "/rooms/[roomId]") return <RoomHeader />;
+    if (pathname === "/room/[roomId]") return <RoomHeader />;
     return <AppHeader />;
   };
 
