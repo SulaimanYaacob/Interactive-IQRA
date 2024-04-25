@@ -47,6 +47,42 @@ function InteractiveRoom({ id }: { id: string }) {
 
   return (
     <>
+      <Container ref={containerRef} fluid w={width - 64} h={height - 108}>
+        <Stack py="xl">
+          <Title ta="center">There are {userCount + 1} users in the room</Title>
+          <Text ta="center">
+            {cursor ? `${cursor.x} x ${cursor.y}` : "Move your cursor"}
+          </Text>
+        </Stack>
+        <Container>
+          <SimpleGrid cols={1} my="xl">
+            <Paper p="xs" withBorder>
+              <Text>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi
+                dolorum qui accusantium non a quod vel facilis maiores voluptas
+                vero aliquam libero id, eius quos excepturi commodi eveniet
+                animi repellat?
+              </Text>
+            </Paper>
+            <Paper p="xs" withBorder>
+              <Text>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi
+                dolorum qui accusantium non a quod vel facilis maiores voluptas
+                vero aliquam libero id, eius quos excepturi commodi eveniet
+                animi repellat?
+              </Text>
+            </Paper>
+            <Paper p="xs" withBorder>
+              <Text>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi
+                dolorum qui accusantium non a quod vel facilis maiores voluptas
+                vero aliquam libero id, eius quos excepturi commodi eveniet
+                animi repellat?
+              </Text>
+            </Paper>
+          </SimpleGrid>
+        </Container>
+      </Container>
       {cursors.map((cursor) => {
         if (!cursor?.connectionId) return null;
         const { connectionId, x, y } = cursor;
@@ -60,40 +96,6 @@ function InteractiveRoom({ id }: { id: string }) {
           />
         );
       })}
-      <Container ref={containerRef} fluid w={width - 64} h={height - 108}>
-        <Stack py="xl">
-          <Title ta="center">There are {userCount + 1} users in the room</Title>
-          <Text ta="center">
-            {cursor ? `${cursor.x} x ${cursor.y}` : "Move your cursor"}
-          </Text>
-        </Stack>
-        <SimpleGrid cols={1} my="xl">
-          <Paper p="xs" withBorder>
-            <Text>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi
-              dolorum qui accusantium non a quod vel facilis maiores voluptas
-              vero aliquam libero id, eius quos excepturi commodi eveniet animi
-              repellat?
-            </Text>
-          </Paper>
-          <Paper p="xs" withBorder>
-            <Text>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi
-              dolorum qui accusantium non a quod vel facilis maiores voluptas
-              vero aliquam libero id, eius quos excepturi commodi eveniet animi
-              repellat?
-            </Text>
-          </Paper>
-          <Paper p="xs" withBorder>
-            <Text>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi
-              dolorum qui accusantium non a quod vel facilis maiores voluptas
-              vero aliquam libero id, eius quos excepturi commodi eveniet animi
-              repellat?
-            </Text>
-          </Paper>
-        </SimpleGrid>
-      </Container>
     </>
   );
 }

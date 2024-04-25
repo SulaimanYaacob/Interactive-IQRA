@@ -3,7 +3,9 @@ import { TRPCError } from "@trpc/server";
 import { string, z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
-const liveblocks = new Liveblocks({ secret: process.env.LIVEBLOCKS_API_KEY! });
+const liveblocks = new Liveblocks({
+  secret: String(process.env.LIVEBLOCKS_API_KEY),
+});
 
 function generateUniqueID(): string {
   const characters =
@@ -19,23 +21,20 @@ function generateUniqueID(): string {
 
 export const liveblocksRouter = createTRPCRouter({
   //* Get User's Rooms
-  checkRoomIsJoined: protectedProcedure
+  searchingRoom: protectedProcedure
     .input(z.object({ roomId: string() }))
-    .query(async ({ ctx, input }) => {
+    .mutation(async ({ input }) => {
       try {
         const { roomId } = input;
+        const room = await liveblocks.getRoom(roomId);
 
-        const prismaUserJoinedRoom = await ctx.db.room.findUnique({
-          where: { id: ctx.auth.id, roomId },
-        });
+        if (!room) return;
 
-        if (prismaUserJoinedRoom) return true;
-
-        return false;
+        return room;
       } catch (error) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: "Something went wrong",
+          message: (error as Error).message,
         });
       }
     }),
@@ -43,10 +42,10 @@ export const liveblocksRouter = createTRPCRouter({
   createRoom: protectedProcedure
     .input(z.object({ maxUsers: z.number().default(10) }))
     .mutation(async ({ ctx, input }) => {
-      const { maxUsers } = input;
-      const roomId = generateUniqueID();
-
       try {
+        const { maxUsers } = input;
+        const roomId = generateUniqueID();
+
         const liveblocksRoom = await liveblocks.createRoom(roomId, {
           defaultAccesses: ["room:read", "room:presence:write"],
           usersAccesses: {

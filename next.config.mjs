@@ -19,10 +19,10 @@ const config = {
   },
   experimental: {
     optimizePackageImports: [
-      "@mantine/core",
-      "@mantine/hooks",
-      "@mantine/form",
-      "@mantine/modals",
+      // "@mantine/core",
+      // "@mantine/hooks",
+      // "@mantine/form",
+      // "@mantine/modals",
     ],
   },
 };
