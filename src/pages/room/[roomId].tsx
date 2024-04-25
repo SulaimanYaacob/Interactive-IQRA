@@ -9,11 +9,9 @@ import {
 import { useViewportSize } from "@mantine/hooks";
 import { useMyPresence, useOthers } from "liveblocks.config";
 import dynamic from "next/dynamic";
-import { useRouter } from "next/router";
 import { useRef } from "react";
 import Cursor from "~/components/Cursor";
 import { useElementLiveCursors } from "~/hooks/useElementLiveCursors";
-import { api } from "~/utils/api";
 const LiveblocksProvider = dynamic(
   () => import("~/providers/LiveblocksProvider"),
   { ssr: false }
@@ -39,10 +37,6 @@ export default function Room() {
 }
 
 function InteractiveRoom({ id }: { id: string }) {
-  const { query } = useRouter();
-  const { roomId } = query as { roomId: string };
-  const { data } = api.liveblocks.getCurrentUserRoomAccess.useQuery({ roomId });
-
   const others = useOthers();
   const userCount = others.length;
   const [{ cursor }] = useMyPresence();
@@ -50,13 +44,6 @@ function InteractiveRoom({ id }: { id: string }) {
   const { width, height } = useViewportSize();
   const containerRef = useRef<HTMLDivElement>(null);
   const cursors = useElementLiveCursors(id, containerRef);
-
-  if (!data)
-    return (
-      <Title my="xl" ta="center">
-        {`You Don't Have Access To This Room`}
-      </Title>
-    );
 
   return (
     <>
