@@ -5,6 +5,7 @@ import { api } from "~/utils/api";
 import { useRouter } from "next/router";
 import { notifications } from "@mantine/notifications";
 import { useEffect } from "react";
+import { FaCheck, FaExclamation } from "react-icons/fa6";
 
 const useJoinRoom = () => {
   const { push } = useRouter();
@@ -18,6 +19,7 @@ const useJoinRoom = () => {
     },
   });
 
+  //TODO Make notification reusable for other hooks
   const { mutate, isLoading } = api.liveblocks.searchingRoom.useMutation({
     onSuccess: async (room) => {
       notifications.update({
@@ -25,17 +27,23 @@ const useJoinRoom = () => {
         title: "Room Found",
         message: "Redirecting you to the room",
         autoClose: 3000,
-        color: "cyan",
+        color: "teal",
+        loading: false,
+        icon: <FaCheck />,
+        withCloseButton: false,
       });
       await push(`/room/${room?.id}`);
     },
     onError: (error) => {
       notifications.update({
         id: "searching-room",
+        icon: <FaExclamation />,
         title: "Room Not Available",
         message: error.message,
         autoClose: 3000,
+        loading: false,
         color: "red",
+        withCloseButton: false,
       });
     },
     onMutate: () => {
@@ -44,7 +52,8 @@ const useJoinRoom = () => {
         title: "Searching for Room",
         message: "Please wait while we search for the room",
         autoClose: false,
-        color: "cyan",
+        loading: true,
+        withCloseButton: false,
       });
     },
   });
