@@ -1,12 +1,4 @@
-import {
-  Container,
-  Paper,
-  SimpleGrid,
-  Stack,
-  Text,
-  Title,
-} from "@mantine/core";
-import { useViewportSize } from "@mantine/hooks";
+import { Container, Paper, SimpleGrid, Text, Title } from "@mantine/core";
 import { useMyPresence, useOthers } from "liveblocks.config";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
@@ -47,20 +39,26 @@ function InteractiveRoom({ id }: { id: string }) {
   const userCount = others.length;
   const [{ cursor }] = useMyPresence();
 
-  const { width, height } = useViewportSize();
   const containerRef = useRef<HTMLDivElement>(null);
   const cursors = useElementLiveCursors(id, containerRef);
 
+  //? Use window's viewport instead of mantine's useViewPort (It takes time to render and cause the UI to render container's viewport)
+  const { innerHeight, innerWidth } = window;
+
+  //! Using Margin Will Affect Cursor Position. Use Padding for now.
   return (
     <>
-      <Container ref={containerRef} fluid w={width - 64} h={height - 108}>
-        <Stack py="xl">
+      <Container
+        fluid
+        ref={containerRef}
+        w={innerWidth - 64}
+        h={innerHeight - 108}
+      >
+        <Container py="xl">
           <Title ta="center">There are {userCount + 1} users in the room</Title>
           <Text ta="center">
             {cursor ? `${cursor.x} x ${cursor.y}` : "Move your cursor"}
           </Text>
-        </Stack>
-        <Container>
           <SimpleGrid cols={1} my="xl">
             <Paper p="xs" withBorder>
               <Text>
