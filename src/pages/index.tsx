@@ -10,9 +10,11 @@ import {
 } from "@mantine/core";
 import NativeImage from "~/components/NativeImage";
 import useJoinRoom from "~/hooks/useJoinRoom";
+import useSelfTaughtOptions from "~/hooks/useSelfTaughtOptions";
 
 export default function Home() {
   const { openJoinRoomModal, isLoading: SearchingRoom } = useJoinRoom();
+  const { openSelfTaughtModal } = useSelfTaughtOptions();
 
   const menuOptions = [
     {
@@ -35,6 +37,7 @@ export default function Home() {
         "Without any interruptions and at your own pace, independently explore and study.",
       title: "Self-Taught",
       link: "st/learn-iqra/1",
+      modal: openSelfTaughtModal,
     },
   ];
 

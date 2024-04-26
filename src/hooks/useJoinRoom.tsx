@@ -1,4 +1,4 @@
-import { Button, PinInput, Stack, Text } from "@mantine/core";
+import { Button, PinInput, Stack, Title } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { hasLength, useForm } from "@mantine/form";
 import { api } from "~/utils/api";
@@ -82,8 +82,8 @@ const useJoinRoom = () => {
             mutate({ roomId }), modals.closeAll(), reset();
           })}
         >
-          <Stack my="md" align="center">
-            <Text fw={500}>{`Enter the room's PIN`}</Text>
+          <Stack ta="center" align="center">
+            <Title order={2}>{`Room PIN`}</Title>
             <PinInput
               value=""
               fw={500}
