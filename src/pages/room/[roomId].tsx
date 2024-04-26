@@ -42,9 +42,6 @@ function InteractiveRoom({ id }: { id: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const cursors = useElementLiveCursors(id, containerRef);
 
-  //? Use window's viewport instead of mantine's useViewPort (It takes time to render and cause the UI to render container's viewport)
-  const { innerHeight, innerWidth } = window;
-
   //! Using Margin Will Affect Cursor Position. Use Padding for now.
   return (
     <>

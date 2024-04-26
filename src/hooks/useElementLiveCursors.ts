@@ -2,9 +2,11 @@ import { useOthers, useUpdateMyPresence } from "liveblocks.config";
 import { type RefObject, useEffect, useState } from "react";
 
 export function useElementLiveCursors(id: string, ref: RefObject<HTMLElement>) {
+  //? Use window's viewport instead of mantine's useViewPort (It takes time to render and cause the UI to render container's viewport)
+
+  const [boundingRect, setBoundingRect] = useState<DOMRect>();
   const updateMyPresence = useUpdateMyPresence();
   const others = useOthers();
-  const [boundingRect, setBoundingRect] = useState<DOMRect>();
 
   useEffect(() => {
     if (ref.current) setBoundingRect(ref.current.getBoundingClientRect());
@@ -47,14 +49,20 @@ export function useElementLiveCursors(id: string, ref: RefObject<HTMLElement>) {
       });
     }
 
+    function handleResize() {
+      setBoundingRect(ref.current?.getBoundingClientRect());
+    }
+
     element.addEventListener("mousemove", onMouseMove);
     element.addEventListener("mouseenter", onMouseEnter);
     element.addEventListener("mouseleave", onMouseLeave);
+    window.addEventListener("resize", handleResize);
 
     return () => {
       element.removeEventListener("mousemove", onMouseMove);
       element.removeEventListener("mouseenter", onMouseEnter);
       element.removeEventListener("mouseleave", onMouseLeave);
+      window.removeEventListener("resize", handleResize);
     };
   }, [id, ref, updateMyPresence, boundingRect]);
 
