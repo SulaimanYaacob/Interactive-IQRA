@@ -29,8 +29,12 @@ export const liveblocksRouter = createTRPCRouter({
 
         if (!room) return;
 
-        const userAccess =
-          room.usersAccesses[String(ctx.auth.emailAddresses[0]?.emailAddress)];
+        //*If user have multiple email connected
+        const emailAddresses = ctx.auth.emailAddresses.map(
+          ({ emailAddress }) => emailAddress
+        );
+
+        const userAccess = room.usersAccesses[String(...emailAddresses)];
 
         return userAccess;
       } catch (error) {
@@ -50,6 +54,7 @@ export const liveblocksRouter = createTRPCRouter({
         if (!room) return;
 
         //* Check if user already joined the room or not. If not, update the user access
+        //* Only primary email is being stored in the database
         if (
           !room.usersAccesses[String(ctx.auth.emailAddresses[0]?.emailAddress)]
         ) {

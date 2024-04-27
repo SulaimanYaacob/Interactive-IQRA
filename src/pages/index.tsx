@@ -1,3 +1,4 @@
+import { ClerkLoading, SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
 import {
   Button,
   Center,
@@ -22,6 +23,7 @@ export default function Home() {
       description:
         "Create your own virtual rooms to get started, then invite your friends!",
       title: "Create Room",
+      authAccess: true,
     },
     {
       icons: "/images/logo.png",
@@ -30,6 +32,7 @@ export default function Home() {
       title: "Join Room",
       modal: openJoinRoomModal,
       loading: SearchingRoom,
+      authAccess: true,
     },
     {
       icons: "/images/logo.png",
@@ -38,10 +41,9 @@ export default function Home() {
       title: "Self-Taught",
       link: "st/learn-iqra/1",
       modal: openSelfTaughtModal,
+      authAccess: false,
     },
   ];
-
-  //! Currently Button is used as link component. This should be changed to popup a modal.
 
   return (
     <Container>
@@ -51,7 +53,10 @@ export default function Home() {
         </Title>
         <SimpleGrid spacing="xl" cols={{ base: 1, sm: 3 }}>
           {menuOptions.map(
-            ({ icons, description, title, modal, loading }, idx) => (
+            (
+              { icons, description, title, modal, loading, authAccess },
+              idx
+            ) => (
               <Paper withBorder p="xs" key={idx}>
                 <Stack
                   h={{ base: 350, sm: 500 }}
@@ -66,9 +71,23 @@ export default function Home() {
                     <NativeImage src={icons} alt={title} width={100} />
                   </Center>
                   <Text>{description}</Text>
-                  <Button onClick={modal} loading={loading}>
-                    {title}
-                  </Button>
+                  <ClerkLoading>
+                    <Button loading>{title}</Button>
+                  </ClerkLoading>
+                  <SignedIn>
+                    <Button onClick={modal} loading={loading}>
+                      {title}
+                    </Button>
+                  </SignedIn>
+                  <SignedOut>
+                    {authAccess ? (
+                      <SignInButton mode="modal">
+                        <Button>{title}</Button>
+                      </SignInButton>
+                    ) : (
+                      <Button onClick={modal}>{title}</Button>
+                    )}
+                  </SignedOut>
                 </Stack>
               </Paper>
             )

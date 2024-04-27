@@ -1,7 +1,7 @@
-import { Button, Center, SimpleGrid, Stack, Text, Title } from "@mantine/core";
+import { Button, SimpleGrid, Stack, Text, Title } from "@mantine/core";
+import { FaBookQuran, FaGears, FaArrowPointer } from "react-icons/fa6";
 import { modals } from "@mantine/modals";
 import { useRouter } from "next/router";
-import { FaBookQuran, FaGears, FaArrowPointer } from "react-icons/fa6";
 
 const selfTaughtOptions = [
   {
@@ -68,11 +68,9 @@ const SelfTaughtModalContent = () => {
             p={{ base: "md", xs: "lg" }}
             disabled={disabled}
           >
-            <Stack>
-              <Center>
-                <Icon className="mantine-visible-from-xs" size={64} />
-                <Icon className="mantine-hidden-from-xs" size={48} />
-              </Center>
+            <Stack align="center" justify="center">
+              <Icon className="mantine-visible-from-xs" size={64} />
+              <Icon className="mantine-hidden-from-xs" size={48} />
               <Text
                 fz={{ base: "sm", xs: "md" }}
                 mt={{ base: "sm", xs: "md" }}

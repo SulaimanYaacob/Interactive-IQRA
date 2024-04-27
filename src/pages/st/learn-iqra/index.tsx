@@ -6,6 +6,7 @@ import {
   Image,
   SimpleGrid,
 } from "@mantine/core";
+import Link from "next/link";
 
 function LearnIQRA() {
   return (
@@ -19,7 +20,9 @@ function LearnIQRA() {
               alt="Norway"
             />
           </CardSection>
-          <Button mt="md">IQRA 1</Button>
+          <Button mt="md" component={Link} href="/st/learn-iqra/1">
+            IQRA 1
+          </Button>
         </Card>
       </SimpleGrid>
     </Container>
