@@ -64,7 +64,6 @@ const SelfTaughtModalContent = () => {
             }}
             h="auto"
             key={idx}
-            variant="gradient"
             p={{ base: "md", xs: "lg" }}
             disabled={disabled}
           >
