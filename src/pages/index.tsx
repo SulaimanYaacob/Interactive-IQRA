@@ -1,4 +1,10 @@
-import { ClerkLoading, SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
+import {
+  ClerkLoaded,
+  ClerkLoading,
+  SignInButton,
+  SignedIn,
+  SignedOut,
+} from "@clerk/nextjs";
 import {
   Button,
   Center,
@@ -48,7 +54,7 @@ export default function Home() {
   return (
     <Container>
       <Stack my="xl" gap="xl">
-        <Title my="xl" ta="center">
+        <Title mt="xl" ta="center">
           Interactive IQRA
         </Title>
         <SimpleGrid spacing="xl" cols={{ base: 1, sm: 3 }}>
@@ -61,6 +67,7 @@ export default function Home() {
                 <Stack
                   h={{ base: 350, sm: 500 }}
                   justify="space-between"
+                  // h="auto"
                   align="center"
                   ta="center"
                   gap="xl"
@@ -71,23 +78,25 @@ export default function Home() {
                     <NativeImage src={icons} alt={title} width={100} />
                   </Center>
                   <Text>{description}</Text>
+                  <ClerkLoaded>
+                    <SignedIn>
+                      <Button onClick={modal} loading={loading}>
+                        {title}
+                      </Button>
+                    </SignedIn>
+                    <SignedOut>
+                      {authAccess ? (
+                        <SignInButton mode="modal">
+                          <Button>{title}</Button>
+                        </SignInButton>
+                      ) : (
+                        <Button onClick={modal}>{title}</Button>
+                      )}
+                    </SignedOut>
+                  </ClerkLoaded>
                   <ClerkLoading>
                     <Button loading>{title}</Button>
                   </ClerkLoading>
-                  <SignedIn>
-                    <Button onClick={modal} loading={loading}>
-                      {title}
-                    </Button>
-                  </SignedIn>
-                  <SignedOut>
-                    {authAccess ? (
-                      <SignInButton mode="modal">
-                        <Button>{title}</Button>
-                      </SignInButton>
-                    ) : (
-                      <Button onClick={modal}>{title}</Button>
-                    )}
-                  </SignedOut>
                 </Stack>
               </Paper>
             )

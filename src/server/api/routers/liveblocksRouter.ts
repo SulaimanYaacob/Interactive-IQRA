@@ -29,7 +29,7 @@ export const liveblocksRouter = createTRPCRouter({
 
         if (!room) return;
 
-        //*If user have multiple email connected
+        //*If user have multiple emails
         const emailAddresses = ctx.auth.emailAddresses.map(
           ({ emailAddress }) => emailAddress
         );

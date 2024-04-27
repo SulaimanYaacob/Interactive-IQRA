@@ -55,7 +55,11 @@ function AppHeader() {
               </SignInButton>
             </SignedOut>
             <SignedIn>
-              <UserButton afterSignOutUrl="/" />
+              <UserButton
+                userProfileMode="navigation"
+                userProfileUrl="/profile"
+                afterSignOutUrl="/"
+              />
             </SignedIn>
             <ToggleTheme DarkIcon={CiDark} LightIcon={CiLight} />
           </Group>

@@ -12,18 +12,17 @@ type Props = {
 };
 
 function LiveblocksProvider({ children, header, roomId }: Props) {
-  const { data, isLoading } = api.liveblocks.getCurrentUserRoomAccess.useQuery({
-    roomId,
-  });
+  const { data, failureCount } =
+    api.liveblocks.getCurrentUserRoomAccess.useQuery({ roomId });
 
   if (!data && header) return;
 
-  if (!data && !header && !isLoading)
+  if (!data && !header && failureCount > 0)
     return (
       <Center mih="70vh">
         <Paper p="xl" withBorder m="xl">
           <Stack gap="xl">
-            <Title ta="center">{`You do not have access to this room`}</Title>
+            <Title ta="center">You do not have access to this room</Title>
             <Center>
               <Button color="red" component="a" href="/">
                 Exit Page
