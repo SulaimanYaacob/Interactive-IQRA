@@ -18,6 +18,7 @@ import {
 import NativeImage from "~/components/NativeImage";
 import useJoinRoom from "~/hooks/useJoinRoom";
 import useSelfTaughtOptions from "~/hooks/useSelfTaughtOptions";
+import { logoFont } from "~/utils/nextFont";
 
 export default function Home() {
   const { openJoinRoomModal, isLoading: SearchingRoom } = useJoinRoom();
@@ -54,7 +55,7 @@ export default function Home() {
   return (
     <Container>
       <Stack my="xl" gap="xl">
-        <Title mt="xl" ta="center">
+        <Title className={logoFont.className} mt="xl" ta="center">
           Interactive IQRA
         </Title>
         <SimpleGrid spacing="xl" cols={{ base: 1, sm: 3 }}>

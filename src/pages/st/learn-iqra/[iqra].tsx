@@ -1,7 +1,8 @@
-import { Container, Paper, Stack, Title } from "@mantine/core";
+import { Alert, Container, Paper, Stack, Title } from "@mantine/core";
 import { useRouter } from "next/router";
 import iqraOne from "public/iqra/iqra-1.json";
 import { useEffect, useState } from "react";
+import { quranFont } from "~/utils/nextFont";
 
 //* This should be a component instead to reuse it in rooms page
 function Iqra() {
@@ -13,6 +14,8 @@ function Iqra() {
   useEffect(() => {
     if (iqra === "1") setSelectedIqra(iqraOne);
   }, [iqra]);
+
+  if (!iqra) return null;
 
   if (iqra !== "1")
     return (
@@ -27,11 +30,23 @@ function Iqra() {
       <Stack ta="center">
         <Title ta="center">Current Iqra: {iqra}</Title>
         <Paper p="xs" withBorder>
-          {selectedIqra.map(({ lines, page }) => {
-            return lines.map((line, idx) => {
-              return <Title key={idx}>{line}</Title>;
-            });
-          })}
+          {selectedIqra.map(
+            ({ lines, page, instruction }) =>
+              page === "page1" && (
+                <>
+                  <Alert>{instruction}</Alert>
+                  {lines.map((line, idx) => {
+                    return (
+                      <>
+                        <Title className={quranFont.className} key={idx}>
+                          {line}
+                        </Title>
+                      </>
+                    );
+                  })}
+                </>
+              )
+          )}
         </Paper>
       </Stack>
     </Container>
