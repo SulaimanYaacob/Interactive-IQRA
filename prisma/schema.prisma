@@ -11,15 +11,15 @@ datasource db {
 }
 
 model Room {
-    id         String @unique //* Clerk's Id (Use this to retrieve user's room)
-    roomId     String @unique //* Max 6 characters
-    maxUsers   Int
-    identifier String @id @default(uuid()) //* Backup Id generated from prisma (In case clerk is no longer used)
+    createdByClerkId    String @unique //* Clerk's Id (Use this to retrieve user's room)
+    roomId              String @unique //* Max 6 characters
+    maxUsers            Int
+    createdByIdentifier String @id @default(uuid()) //* Backup Id generated from prisma (In case clerk is no longer used)
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    @@index([id])
+    @@index([createdByClerkId])
 }
 
 enum Role {
