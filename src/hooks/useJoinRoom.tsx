@@ -9,15 +9,6 @@ import { FaCheck, FaExclamation } from "react-icons/fa6";
 
 const useJoinRoom = () => {
   const { push } = useRouter();
-  const { getInputProps, onSubmit, errors, reset } = useForm({
-    mode: "uncontrolled",
-    initialValues: {
-      roomId: "",
-    },
-    validate: {
-      roomId: hasLength({ min: 1, max: 6 }, "Invalid Room PIN"),
-    },
-  });
 
   //TODO Make notification reusable for other hooks
   const { mutate, isLoading } = api.liveblocks.searchingRoom.useMutation({
@@ -58,46 +49,53 @@ const useJoinRoom = () => {
     },
   });
 
-  useEffect(() => {
-    if (errors.roomId) {
-      notifications.show({
-        title: "Invalid Room PIN",
-        message: "Please enter a valid Room PIN",
-        color: "red",
-      });
-
-      reset();
-    }
-  }, [errors.roomId, reset]);
-
   const openJoinRoomModal = () => {
     modals.open({
       withCloseButton: false,
       centered: true,
       trapFocus: true,
       size: "sm",
-      children: (
-        <form
-          onSubmit={onSubmit(({ roomId }) => {
-            mutate({ roomId }), modals.closeAll(), reset();
-          })}
-        >
-          <Stack ta="center" align="center">
-            <Title order={2}>{`Room PIN`}</Title>
-            <PinInput
-              value=""
-              fw={500}
-              length={6}
-              {...getInputProps("roomId")}
-            />
-            <Button type="submit">Enter Room</Button>
-          </Stack>
-        </form>
-      ),
+      children: <RoomModalForm mutate={mutate} />,
     });
   };
 
-  return { openJoinRoomModal, isLoading, errors };
+  return { openJoinRoomModal, isLoading };
+};
+
+//* Currently This is the Best Way
+const RoomModalForm = ({
+  mutate,
+}: {
+  mutate: ({ roomId }: { roomId: string }) => void;
+}) => {
+  const { getInputProps, onSubmit, errors } = useForm({
+    mode: "uncontrolled",
+    initialValues: { roomId: "" },
+    validate: { roomId: hasLength({ min: 1, max: 6 }, "Invalid Room PIN") },
+  });
+
+  useEffect(() => {
+    if (errors.roomId)
+      notifications.show({
+        title: "Invalid Room PIN",
+        message: "Please enter a valid Room PIN",
+        color: "red",
+      });
+  }, [errors.roomId]);
+
+  return (
+    <form
+      onSubmit={onSubmit(({ roomId }) => {
+        mutate({ roomId }), modals.closeAll();
+      })}
+    >
+      <Stack ta="center" align="center">
+        <Title order={2}>{`Room PIN`}</Title>
+        <PinInput value="" fw={500} length={6} {...getInputProps("roomId")} />
+        <Button type="submit">Enter Room</Button>
+      </Stack>
+    </form>
+  );
 };
 
 export default useJoinRoom;
