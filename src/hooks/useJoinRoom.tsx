@@ -1,4 +1,4 @@
-import { Button, PinInput, Stack, Title } from "@mantine/core";
+import { Button, Divider, PinInput, Stack, Text } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { hasLength, useForm } from "@mantine/form";
 import { api } from "~/utils/api";
@@ -89,9 +89,32 @@ const RoomModalForm = ({
         mutate({ roomId }), modals.closeAll();
       })}
     >
-      <Stack ta="center" align="center">
-        <Title order={2}>{`Room PIN`}</Title>
-        <PinInput value="" fw={500} length={6} {...getInputProps("roomId")} />
+      <Stack>
+        <Divider
+          label={
+            <Text c="gray" fw={500}>
+              Enter Valid Room PIN
+            </Text>
+          }
+        />
+        <Stack ta="center" align="center">
+          <PinInput
+            visibleFrom="sm"
+            value=""
+            fw={500}
+            length={6}
+            {...getInputProps("roomId")}
+          />
+          <PinInput
+            hiddenFrom="sm"
+            size="xs"
+            value=""
+            fw={500}
+            length={6}
+            {...getInputProps("roomId")}
+          />
+        </Stack>
+        <Divider />
         <Button type="submit">Enter Room</Button>
       </Stack>
     </form>

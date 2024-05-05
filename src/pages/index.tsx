@@ -17,6 +17,7 @@ import {
 } from "@mantine/core";
 import { useRouter } from "next/router";
 import NativeImage from "~/components/NativeImage";
+import useCreateRoom from "~/hooks/useCreateRoom";
 import useJoinRoom from "~/hooks/useJoinRoom";
 import { logoFont } from "~/utils/nextFont";
 
@@ -24,6 +25,7 @@ export default function Home() {
   const { push } = useRouter();
   const { openJoinRoomModal, isLoading: SearchingRoom } = useJoinRoom();
   // const { openSelfTaughtModal } = useSelfTaughtOptions(); //? Not used due to unproposed features.
+  const { openSelfTaughtModal } = useCreateRoom();
 
   const menuOptions = [
     {
@@ -32,7 +34,7 @@ export default function Home() {
         "Create your own virtual rooms to get started, then invite your friends!",
       title: "Create Room",
       authAccess: true,
-      modal: openJoinRoomModal,
+      modal: openSelfTaughtModal,
     },
     {
       icons: "/images/logo.png",
