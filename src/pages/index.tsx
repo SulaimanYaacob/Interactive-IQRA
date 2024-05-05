@@ -15,14 +15,15 @@ import {
   Text,
   Title,
 } from "@mantine/core";
+import { useRouter } from "next/router";
 import NativeImage from "~/components/NativeImage";
 import useJoinRoom from "~/hooks/useJoinRoom";
-import useSelfTaughtOptions from "~/hooks/useSelfTaughtOptions";
 import { logoFont } from "~/utils/nextFont";
 
 export default function Home() {
+  const { push } = useRouter();
   const { openJoinRoomModal, isLoading: SearchingRoom } = useJoinRoom();
-  const { openSelfTaughtModal } = useSelfTaughtOptions();
+  // const { openSelfTaughtModal } = useSelfTaughtOptions(); //? Not used due to unproposed features.
 
   const menuOptions = [
     {
@@ -31,6 +32,7 @@ export default function Home() {
         "Create your own virtual rooms to get started, then invite your friends!",
       title: "Create Room",
       authAccess: true,
+      modal: openJoinRoomModal,
     },
     {
       icons: "/images/logo.png",
@@ -46,8 +48,8 @@ export default function Home() {
       description:
         "Without any interruptions and at your own pace, independently explore and study.",
       title: "Self-Taught",
-      link: "st/learn-iqra/1",
-      modal: openSelfTaughtModal,
+      link: "/st/iqra-1/1",
+      modal: () => push("/st/iqra-1/1"),
       authAccess: false,
     },
   ];
@@ -61,7 +63,7 @@ export default function Home() {
         <SimpleGrid spacing="xl" cols={{ base: 1, sm: 3 }}>
           {menuOptions.map(
             (
-              { icons, description, title, modal, loading, authAccess },
+              { icons, description, title, modal, loading, authAccess, link },
               idx
             ) => (
               <Paper withBorder p="xs" key={idx}>
@@ -81,7 +83,7 @@ export default function Home() {
                   <Text>{description}</Text>
                   <ClerkLoaded>
                     <SignedIn>
-                      <Button onClick={modal} loading={loading}>
+                      <Button onClick={() => modal()} loading={loading}>
                         {title}
                       </Button>
                     </SignedIn>
@@ -91,7 +93,7 @@ export default function Home() {
                           <Button>{title}</Button>
                         </SignInButton>
                       ) : (
-                        <Button onClick={modal}>{title}</Button>
+                        <Button onClick={() => modal()}>{title}</Button>
                       )}
                     </SignedOut>
                   </ClerkLoaded>
