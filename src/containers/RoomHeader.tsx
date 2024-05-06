@@ -3,12 +3,17 @@ import {
   Avatar,
   AvatarGroup,
   Button,
+  Center,
   Container,
+  CopyButton,
   Group,
+  Text,
+  Tooltip,
 } from "@mantine/core";
 import { useOthers, useSelf } from "liveblocks.config";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
+import { FaCheck, FaRegCopy } from "react-icons/fa6";
 import { api } from "~/utils/api";
 const LiveblocksProvider = dynamic(
   () => import("~/providers/LiveblocksProvider"),
@@ -39,10 +44,27 @@ function LiveblocksHeader({ roomPIN }: { roomPIN: string }) {
   return (
     <AppShellHeader py="lg">
       <Container>
-        <Group justify="space-between">
+        <Group pos="relative" justify="space-between">
           <Button component="a" href="/" color="red">
             Exit Room
           </Button>
+          <Center visibleFrom="xs" pos="absolute" left="30%" right="30%">
+            <CopyButton value={roomPIN} timeout={2000}>
+              {({ copied, copy }) => (
+                <Tooltip label={copied ? "Copied" : "Copy"}>
+                  <Button
+                    leftSection={copied ? <FaCheck /> : <FaRegCopy />}
+                    color={copied ? "teal" : "gray"}
+                    onClick={copy}
+                  >
+                    <Text lts="3px" fw="500">
+                      {roomPIN}
+                    </Text>
+                  </Button>
+                </Tooltip>
+              )}
+            </CopyButton>
+          </Center>
           <Group>
             <AvatarGroup>
               <Avatar
