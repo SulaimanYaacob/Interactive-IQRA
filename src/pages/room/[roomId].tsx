@@ -29,7 +29,7 @@ export default function Room() {
 
   return (
     <LiveblocksProvider roomId={roomId}>
-      <InteractiveRoom id="room" />
+      <InteractiveRoom id={roomId} />
     </LiveblocksProvider>
   );
 }

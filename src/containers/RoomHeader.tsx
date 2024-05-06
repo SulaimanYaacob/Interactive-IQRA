@@ -9,24 +9,30 @@ import {
 import { useOthers, useSelf } from "liveblocks.config";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
+import { api } from "~/utils/api";
 const LiveblocksProvider = dynamic(
   () => import("~/providers/LiveblocksProvider"),
   { ssr: false }
 );
 export default function RoomHeader() {
   const { query } = useRouter();
-  const { roomId } = query as { roomId: string };
 
+  const { roomId } = query as { roomId: string };
   if (!roomId) return null;
+
+  const { data } = api.liveblocks.getCurrentRoomDetails.useQuery({ roomId });
+  if (!data) return null;
+
+  const { roomPIN } = data;
 
   return (
     <LiveblocksProvider roomId={roomId} header>
-      <LiveblocksHeader />
+      <LiveblocksHeader roomPIN={String(roomPIN)} />
     </LiveblocksProvider>
   );
 }
 
-function LiveblocksHeader() {
+function LiveblocksHeader({ roomPIN }: { roomPIN: string }) {
   const users = useOthers();
   const currentUser = useSelf();
 

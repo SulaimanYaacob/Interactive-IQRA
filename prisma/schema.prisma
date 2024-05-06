@@ -11,10 +11,11 @@ datasource db {
 }
 
 model Room {
+    roomId              String @unique @default(uuid())
+    roomPIN             String @unique //* Max 6 characters
     createdByClerkId    String @unique //* Clerk's Id (Use this to retrieve user's room)
     createdByIdentifier String @id @default(uuid()) //* Backup Id generated from prisma (In case clerk is no longer used)
-    roomId              String @unique //* Max 6 characters
-    iqraBook            Int
+    iqraBook            String
     maxUsers            Int
 
     createdAt DateTime @default(now())

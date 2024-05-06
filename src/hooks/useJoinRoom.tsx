@@ -1,4 +1,11 @@
-import { Button, Divider, PinInput, Stack, Text } from "@mantine/core";
+import {
+  Button,
+  Divider,
+  FocusTrap,
+  PinInput,
+  Stack,
+  Text,
+} from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { hasLength, useForm } from "@mantine/form";
 import { api } from "~/utils/api";
@@ -66,27 +73,27 @@ const useJoinRoom = () => {
 const RoomModalForm = ({
   mutate,
 }: {
-  mutate: ({ roomId }: { roomId: string }) => void;
+  mutate: ({ roomPIN }: { roomPIN: string }) => void;
 }) => {
   const { getInputProps, onSubmit, errors } = useForm({
     mode: "uncontrolled",
-    initialValues: { roomId: "" },
-    validate: { roomId: hasLength({ min: 1, max: 6 }, "Invalid Room PIN") },
+    initialValues: { roomPIN: "" },
+    validate: { roomPIN: hasLength({ min: 1, max: 6 }, "Invalid Room PIN") },
   });
 
   useEffect(() => {
-    if (errors.roomId)
+    if (errors.roomPIN)
       notifications.show({
         title: "Invalid Room PIN",
         message: "Please enter a valid Room PIN",
         color: "red",
       });
-  }, [errors.roomId]);
+  }, [errors.roomPIN]);
 
   return (
     <form
-      onSubmit={onSubmit(({ roomId }) => {
-        mutate({ roomId }), modals.closeAll();
+      onSubmit={onSubmit((val) => {
+        mutate(val), modals.closeAll();
       })}
     >
       <Stack>
@@ -98,21 +105,25 @@ const RoomModalForm = ({
           }
         />
         <Stack ta="center" align="center">
-          <PinInput
-            visibleFrom="sm"
-            value=""
-            fw={500}
-            length={6}
-            {...getInputProps("roomId")}
-          />
-          <PinInput
-            hiddenFrom="sm"
-            size="xs"
-            value=""
-            fw={500}
-            length={6}
-            {...getInputProps("roomId")}
-          />
+          <FocusTrap>
+            <PinInput
+              visibleFrom="sm"
+              value=""
+              fw={500}
+              length={6}
+              {...getInputProps("roomPIN")}
+            />
+          </FocusTrap>
+          <FocusTrap>
+            <PinInput
+              hiddenFrom="sm"
+              size="xs"
+              value=""
+              fw={500}
+              length={6}
+              {...getInputProps("roomPIN")}
+            />
+          </FocusTrap>
         </Stack>
         <Divider />
         <Button type="submit">Enter Room</Button>

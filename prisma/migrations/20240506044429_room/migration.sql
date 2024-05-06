@@ -6,10 +6,12 @@ CREATE TYPE "Status" AS ENUM ('PENDING', 'ACCEPTED', 'REJECTED', 'CANCELLED');
 
 -- CreateTable
 CREATE TABLE "Room" (
-    "createdByClerkId" TEXT NOT NULL,
     "roomId" TEXT NOT NULL,
-    "maxUsers" INTEGER NOT NULL,
+    "roomPIN" TEXT NOT NULL,
+    "createdByClerkId" TEXT NOT NULL,
     "createdByIdentifier" TEXT NOT NULL,
+    "iqraBook" TEXT NOT NULL,
+    "maxUsers" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -17,10 +19,13 @@ CREATE TABLE "Room" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Room_createdByClerkId_key" ON "Room"("createdByClerkId");
+CREATE UNIQUE INDEX "Room_roomId_key" ON "Room"("roomId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Room_roomId_key" ON "Room"("roomId");
+CREATE UNIQUE INDEX "Room_roomPIN_key" ON "Room"("roomPIN");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Room_createdByClerkId_key" ON "Room"("createdByClerkId");
 
 -- CreateIndex
 CREATE INDEX "Room_createdByClerkId_idx" ON "Room"("createdByClerkId");
