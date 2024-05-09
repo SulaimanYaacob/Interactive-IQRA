@@ -7,7 +7,6 @@ import {
 } from "@clerk/nextjs";
 import {
   Button,
-  Center,
   Container,
   Paper,
   SimpleGrid,
@@ -15,8 +14,8 @@ import {
   Text,
   Title,
 } from "@mantine/core";
+import Image from "next/image";
 import { useRouter } from "next/router";
-import NativeImage from "~/components/NativeImage";
 import useCreateRoom from "~/hooks/useCreateRoom";
 import useJoinRoom from "~/hooks/useJoinRoom";
 import { logoFont } from "~/utils/nextFont";
@@ -29,15 +28,15 @@ export default function Home() {
 
   const menuOptions = [
     {
-      icons: "/images/logo.png",
+      icons: "/images/create-room.png",
       description:
-        "Create your own virtual rooms to get started, then invite your friends!",
+        "Create your own virtual rooms to get started, then invite anyone!",
       title: "Create Room",
       authAccess: true,
       modal: openSelfTaughtModal,
     },
     {
-      icons: "/images/logo.png",
+      icons: "/images/join-room.png",
       description:
         "Engage in an interactive learning with friends, family or tutors!",
       title: "Join Room",
@@ -46,43 +45,42 @@ export default function Home() {
       authAccess: true,
     },
     {
-      icons: "/images/logo.png",
+      icons: "/images/self-taught.png",
       description:
-        "Without any interruptions and at your own pace, independently explore and study.",
+        "Independently explore and study at your own pace, uninterrupted.",
       title: "Self-Taught",
-      link: "/st/iqra-1/1",
-      modal: () => push("/st/iqra-1/1"),
+      modal: () => push("/st/learn-iqra"),
       authAccess: false,
     },
   ];
 
   return (
     <Container>
-      <Stack my="xl" gap="xl">
+      <Stack gap="xl" mih="75vh" justify="center">
         <Title className={logoFont.className} mt="xl" ta="center">
           Interactive IQRA
         </Title>
         <SimpleGrid spacing="xl" cols={{ base: 1, sm: 3 }}>
           {menuOptions.map(
             (
-              { icons, description, title, modal, loading, authAccess, link },
+              { icons, description, title, modal, loading, authAccess },
               idx
             ) => (
-              <Paper withBorder p="xs" key={idx}>
+              <Paper withBorder p="xs" key={idx} style={{ borderWidth: "2px" }}>
                 <Stack
-                  h={{ base: 350, sm: 500 }}
+                  h={{ base: 375, sm: 450 }}
                   justify="space-between"
                   // h="auto"
                   align="center"
                   ta="center"
                   gap="xl"
                   px="xs"
-                  py="md"
+                  py="xl"
                 >
-                  <Center py="xl">
-                    <NativeImage src={icons} alt={title} width={100} />
-                  </Center>
-                  <Text>{description}</Text>
+                  <Image src={icons} alt={title} width={125} height={125} />
+                  <Text h="auto" fw="500">
+                    {description}
+                  </Text>
                   <ClerkLoaded>
                     <SignedIn>
                       <Button onClick={() => modal()} loading={loading}>

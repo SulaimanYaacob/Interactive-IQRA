@@ -20,7 +20,7 @@ function LearnIQRA() {
               alt="Norway"
             />
           </CardSection>
-          <Button mt="md" component={Link} href="/st/learn-iqra/1">
+          <Button mt="md" component={Link} href="/st/iqra-1/1">
             IQRA 1
           </Button>
         </Card>

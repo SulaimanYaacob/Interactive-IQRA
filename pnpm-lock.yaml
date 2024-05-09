@@ -36,25 +36,25 @@ importers:
         specifier: ^7.8.1
         version: 7.8.1(@mantine/core@7.8.1(@mantine/hooks@7.8.1(react@18.2.0))(@types/react@18.2.34)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@mantine/hooks@7.8.1(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@t3-oss/env-nextjs':
-        specifier: ^0.7.0
+        specifier: ^0.7.1
         version: 0.7.1(typescript@5.2.2)(zod@3.22.4)
       '@tanstack/react-query':
-        specifier: ^4.32.6
+        specifier: ^4.36.1
         version: 4.36.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/client':
-        specifier: ^10.37.1
+        specifier: ^10.43.1
         version: 10.43.1(@trpc/server@10.43.1)
       '@trpc/next':
-        specifier: ^10.37.1
+        specifier: ^10.43.1
         version: 10.43.1(@tanstack/react-query@4.36.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.36.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.0.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/react-query':
-        specifier: ^10.37.1
+        specifier: ^10.43.1
         version: 10.43.1(@tanstack/react-query@4.36.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/server':
-        specifier: ^10.37.1
+        specifier: ^10.43.1
         version: 10.43.1
       next:
-        specifier: ^14.0.0
+        specifier: ^14.0.1
         version: 14.0.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react:
         specifier: 18.2.0
@@ -66,7 +66,7 @@ importers:
         specifier: ^5.1.0
         version: 5.1.0(react@18.2.0)
       superjson:
-        specifier: ^1.13.1
+        specifier: ^1.13.3
         version: 1.13.3
       zod:
         specifier: ^3.22.4
@@ -76,34 +76,34 @@ importers:
         specifier: ^5.13.0
         version: 5.13.0(prisma@5.13.0)
       '@types/eslint':
-        specifier: ^8.44.2
+        specifier: ^8.44.6
         version: 8.44.6
       '@types/node':
-        specifier: ^18.16.0
+        specifier: ^18.18.8
         version: 18.18.8
       '@types/react':
-        specifier: ^18.2.33
+        specifier: ^18.2.34
         version: 18.2.34
       '@types/react-dom':
         specifier: ^18.2.14
         version: 18.2.14
       '@typescript-eslint/eslint-plugin':
-        specifier: ^6.3.0
+        specifier: ^6.9.1
         version: 6.9.1(@typescript-eslint/parser@6.9.1(eslint@8.53.0)(typescript@5.2.2))(eslint@8.53.0)(typescript@5.2.2)
       '@typescript-eslint/parser':
-        specifier: ^6.3.0
+        specifier: ^6.9.1
         version: 6.9.1(eslint@8.53.0)(typescript@5.2.2)
       eslint:
-        specifier: ^8.47.0
+        specifier: ^8.53.0
         version: 8.53.0
       eslint-config-next:
-        specifier: ^14.0.0
+        specifier: ^14.0.1
         version: 14.0.1(eslint@8.53.0)(typescript@5.2.2)
       prisma:
         specifier: ^5.13.0
         version: 5.13.0
       typescript:
-        specifier: ^5.1.6
+        specifier: ^5.2.2
         version: 5.2.2
 
 packages:
@@ -676,8 +676,8 @@ packages:
     resolution: {integrity: sha512-L28STB170nwWS63UjtlEOE3dldQApaJXZkOI1uMFfzf3rRuPegHaHesyee+YxQ+W6SvRDQV6UrdOdRiR153wJg==}
     engines: {node: '>=6'}
 
-  caniuse-lite@1.0.30001561:
-    resolution: {integrity: sha512-NTt0DNoKe958Q0BE0j0c1V9jbUzhBxHIEJy7asmGrpE0yG63KTV7PLHPnK2E1O9RsQrQ081I3NLuXGS6zht3cw==}
+  caniuse-lite@1.0.30001617:
+    resolution: {integrity: sha512-mLyjzNI9I+Pix8zwcrpxEbGlfqOkF9kM3ptzmKNw5tizSyYwMe+nGLTqMK9cO+0E+Bh6TsBxNAaHWEM8xwSsmA==}
 
   chalk@4.1.2:
     resolution: {integrity: sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA==}
@@ -2481,7 +2481,7 @@ snapshots:
 
   camelcase@5.3.1: {}
 
-  caniuse-lite@1.0.30001561: {}
+  caniuse-lite@1.0.30001617: {}
 
   chalk@4.1.2:
     dependencies:
@@ -3229,7 +3229,7 @@ snapshots:
       '@next/env': 14.0.1
       '@swc/helpers': 0.5.2
       busboy: 1.6.0
-      caniuse-lite: 1.0.30001561
+      caniuse-lite: 1.0.30001617
       postcss: 8.4.31
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
