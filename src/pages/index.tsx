@@ -57,7 +57,13 @@ export default function Home() {
   return (
     <Container>
       <Stack gap="xl" mih="75vh" justify="center">
-        <Title className={logoFont.className} mt="xl" ta="center">
+        <Title
+          fz={{ base: "40px", sm: "60px" }}
+          className={logoFont.className}
+          ta="center"
+          lts="1.5px"
+          mt="xl"
+        >
           Interactive IQRA
         </Title>
         <SimpleGrid spacing="xl" cols={{ base: 1, sm: 3 }}>

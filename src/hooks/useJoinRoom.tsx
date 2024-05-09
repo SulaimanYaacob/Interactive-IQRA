@@ -52,11 +52,11 @@ const useJoinRoom = () => {
 
   const openJoinRoomModal = () => {
     modals.open({
-      withCloseButton: false,
-      centered: true,
-      trapFocus: true,
-      size: "sm",
       children: <RoomModalForm mutate={mutate} />,
+      withCloseButton: false,
+      trapFocus: true,
+      centered: true,
+      size: "sm",
     });
   };
 
