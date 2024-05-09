@@ -12,46 +12,40 @@ import { api } from "~/utils/api";
 import { useRouter } from "next/router";
 import { notifications } from "@mantine/notifications";
 import { useEffect } from "react";
-import { FaCheck, FaExclamation } from "react-icons/fa6";
+import {
+  errorProps,
+  successProps,
+  mutateProps,
+} from "~/utils/notificationProps";
 
 const useJoinRoom = () => {
   const { push } = useRouter();
 
   //TODO Make notification reusable for other hooks
   const { mutate, isLoading } = api.liveblocks.searchingRoom.useMutation({
+    onMutate: () => {
+      notifications.show({
+        id: "searching-room",
+        title: "Searching for Room",
+        message: "Please wait while we search for the room",
+        ...mutateProps,
+      });
+    },
     onSuccess: async (room) => {
       notifications.update({
         id: "searching-room",
         title: "Room Found",
         message: "Redirecting you to the room",
-        autoClose: 3000,
-        color: "teal",
-        loading: false,
-        icon: <FaCheck />,
-        withCloseButton: false,
+        ...successProps,
       });
       await push(`/room/${room?.id}`);
     },
     onError: (error) => {
       notifications.update({
         id: "searching-room",
-        icon: <FaExclamation />,
-        title: "Room Not Available",
+        title: "Unable to join room",
         message: error.message,
-        autoClose: 3000,
-        loading: false,
-        color: "red",
-        withCloseButton: false,
-      });
-    },
-    onMutate: () => {
-      notifications.show({
-        id: "searching-room",
-        title: "Searching for Room",
-        message: "Please wait while we search for the room",
-        autoClose: false,
-        loading: true,
-        withCloseButton: false,
+        ...errorProps,
       });
     },
   });
@@ -78,7 +72,7 @@ const RoomModalForm = ({
   const { getInputProps, onSubmit, errors } = useForm({
     mode: "uncontrolled",
     initialValues: { roomPIN: "" },
-    validate: { roomPIN: hasLength({ min: 1, max: 6 }, "Invalid Room PIN") },
+    validate: { roomPIN: hasLength({ min: 6, max: 6 }, "Invalid Room PIN") },
   });
 
   useEffect(() => {

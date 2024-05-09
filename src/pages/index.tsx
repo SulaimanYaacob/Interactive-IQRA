@@ -66,11 +66,16 @@ export default function Home() {
               { icons, description, title, modal, loading, authAccess },
               idx
             ) => (
-              <Paper withBorder p="xs" key={idx} style={{ borderWidth: "2px" }}>
+              <Paper
+                p="xs"
+                w="100%"
+                key={idx}
+                withBorder
+                style={{ borderWidth: "2px" }}
+              >
                 <Stack
-                  h={{ base: 375, sm: 450 }}
+                  h={{ base: 350, sm: 425 }}
                   justify="space-between"
-                  // h="auto"
                   align="center"
                   ta="center"
                   gap="xl"
@@ -78,9 +83,7 @@ export default function Home() {
                   py="xl"
                 >
                   <Image src={icons} alt={title} width={125} height={125} />
-                  <Text h="auto" fw="500">
-                    {description}
-                  </Text>
+                  <Text fw="500">{description}</Text>
                   <ClerkLoaded>
                     <SignedIn>
                       <Button onClick={() => modal()} loading={loading}>
