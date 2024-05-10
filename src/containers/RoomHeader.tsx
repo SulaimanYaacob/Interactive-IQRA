@@ -26,6 +26,7 @@ export default function RoomHeader() {
   if (!roomId) return null;
 
   const { data } = api.liveblocks.getCurrentRoomDetails.useQuery({ roomId });
+
   if (!data) return null;
 
   const { roomPIN } = data;
@@ -56,6 +57,7 @@ function LiveblocksHeader({ roomPIN }: { roomPIN: string }) {
                     leftSection={copied ? <FaCheck /> : <FaRegCopy />}
                     color={copied ? "teal" : "gray"}
                     onClick={copy}
+                    variant="subtle"
                   >
                     <Text lts="3px" fw="500">
                       {roomPIN}

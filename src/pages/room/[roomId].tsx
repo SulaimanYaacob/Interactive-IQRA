@@ -1,8 +1,13 @@
-import { Container, Paper, SimpleGrid, Text, Title } from "@mantine/core";
-import { useMyPresence, useOthers } from "liveblocks.config";
+import { Button, Container, SimpleGrid, Text, Title } from "@mantine/core";
+import {
+  useMyPresence,
+  useOthers,
+  useBroadcastEvent,
+  useEventListener,
+} from "liveblocks.config";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import Cursor from "~/components/Cursor";
 import { useElementLiveCursors } from "~/hooks/useElementLiveCursors";
 const LiveblocksProvider = dynamic(
@@ -35,6 +40,8 @@ export default function Room() {
 }
 
 function InteractiveRoom({ id }: { id: string }) {
+  const [count, setCount] = useState(0);
+  const broadcast = useBroadcastEvent();
   const others = useOthers();
   const userCount = others.length;
   const [{ cursor }] = useMyPresence();
@@ -42,7 +49,18 @@ function InteractiveRoom({ id }: { id: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const cursors = useElementLiveCursors(id, containerRef);
 
-  //! Using Margin Will Affect Cursor Position. Use Padding for now.
+  useEventListener(({ event }) => {
+    switch (event.type) {
+      case "increase":
+        setCount((count) => count + 1);
+        break;
+      case "decrease":
+        setCount((count) => count - 1);
+        break;
+    }
+  });
+
+  //* Using Margin Will Affect Cursor Position. Use Padding Instead.
   return (
     <>
       <Container
@@ -57,30 +75,27 @@ function InteractiveRoom({ id }: { id: string }) {
             {cursor ? `${cursor.x} x ${cursor.y}` : "Move your cursor"}
           </Text>
           <SimpleGrid cols={1} my="xl">
-            <Paper p="xs" withBorder>
-              <Text>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi
-                dolorum qui accusantium non a quod vel facilis maiores voluptas
-                vero aliquam libero id, eius quos excepturi commodi eveniet
-                animi repellat?
-              </Text>
-            </Paper>
-            <Paper p="xs" withBorder>
-              <Text>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi
-                dolorum qui accusantium non a quod vel facilis maiores voluptas
-                vero aliquam libero id, eius quos excepturi commodi eveniet
-                animi repellat?
-              </Text>
-            </Paper>
-            <Paper p="xs" withBorder>
-              <Text>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi
-                dolorum qui accusantium non a quod vel facilis maiores voluptas
-                vero aliquam libero id, eius quos excepturi commodi eveniet
-                animi repellat?
-              </Text>
-            </Paper>
+            <Title key={count} ta="center">
+              {count}
+            </Title>
+            <Button
+              onClick={() => {
+                broadcast({ type: "increase" });
+                setCount((count) => count + 1);
+              }}
+              variant="outline"
+            >
+              +
+            </Button>
+            <Button
+              onClick={() => {
+                broadcast({ type: "decrease" });
+                setCount((count) => count - 1);
+              }}
+              variant="outline"
+            >
+              -
+            </Button>
           </SimpleGrid>
         </Container>
       </Container>
