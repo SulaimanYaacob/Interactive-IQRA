@@ -12,11 +12,12 @@ type Props = {
 };
 
 function LiveblocksProvider({ children, header, roomId }: Props) {
-  const { data } = api.liveblocks.getCurrentUserRoomAccess.useQuery({ roomId });
+  const { data, failureCount } =
+    api.liveblocks.getCurrentUserRoomAccess.useQuery({ roomId });
 
   if (!data && header) return;
 
-  if (!data && !header)
+  if (!data && !header && failureCount > 0)
     return (
       <Center mih="70vh">
         <Paper p="xl" withBorder m="xl">
