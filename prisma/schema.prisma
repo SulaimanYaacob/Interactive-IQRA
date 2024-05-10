@@ -11,17 +11,15 @@ datasource db {
 }
 
 model Room {
-    roomId              String @unique @default(uuid())
+    roomId              String @id @unique @default(uuid())
     roomPIN             String @unique //* Max 6 characters
-    createdByClerkId    String @unique //* Clerk's Id (Use this to retrieve user's room)
-    createdByIdentifier String @id @default(uuid()) //* Backup Id generated from prisma (In case clerk is no longer used)
+    createdByClerkId    String //* Clerk's Id (Use this to retrieve user's room)
+    createdByIdentifier String @default(uuid()) //* Backup Id generated from prisma (In case clerk is no longer used)
     iqraBook            String
     maxUsers            Int
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-
-    @@index([createdByClerkId])
 }
 
 enum Role {

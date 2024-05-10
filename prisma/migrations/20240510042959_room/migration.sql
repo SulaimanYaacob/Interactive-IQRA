@@ -15,7 +15,7 @@ CREATE TABLE "Room" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Room_pkey" PRIMARY KEY ("createdByIdentifier")
+    CONSTRAINT "Room_pkey" PRIMARY KEY ("roomId")
 );
 
 -- CreateIndex
@@ -23,9 +23,3 @@ CREATE UNIQUE INDEX "Room_roomId_key" ON "Room"("roomId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Room_roomPIN_key" ON "Room"("roomPIN");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Room_createdByClerkId_key" ON "Room"("createdByClerkId");
-
--- CreateIndex
-CREATE INDEX "Room_createdByClerkId_idx" ON "Room"("createdByClerkId");

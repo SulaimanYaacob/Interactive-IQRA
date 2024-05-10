@@ -21,11 +21,10 @@ import {
 const useJoinRoom = () => {
   const { push } = useRouter();
 
-  //TODO Make notification reusable for other hooks
   const { mutate, isLoading } = api.liveblocks.searchingRoom.useMutation({
     onMutate: () => {
       notifications.show({
-        id: "searching-room",
+        id: "search-room",
         title: "Searching for Room",
         message: "Please wait while we search for the room",
         ...mutateProps,
@@ -33,7 +32,7 @@ const useJoinRoom = () => {
     },
     onSuccess: async (room) => {
       notifications.update({
-        id: "searching-room",
+        id: "search-room",
         title: "Room Found",
         message: "Redirecting you to the room",
         ...successProps,
@@ -42,7 +41,7 @@ const useJoinRoom = () => {
     },
     onError: (error) => {
       notifications.update({
-        id: "searching-room",
+        id: "search-room",
         title: "Unable to join room",
         message: error.message,
         ...errorProps,

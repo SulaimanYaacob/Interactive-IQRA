@@ -8,14 +8,49 @@ import {
   Stack,
   Text,
 } from "@mantine/core";
+import {
+  errorProps,
+  mutateProps,
+  successProps,
+} from "~/utils/notificationProps";
+import { api } from "~/utils/api";
+import { useRouter } from "next/router";
 import { useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
 import { FaCircleInfo } from "react-icons/fa6";
+import { notifications } from "@mantine/notifications";
 import type { CreateRoomInput } from "~/server/api/routers/liveblocksRouter";
-import { api } from "~/utils/api";
 
 const useCreateRoom = () => {
-  const { mutate } = api.liveblocks.createRoom.useMutation({});
+  const { push } = useRouter();
+
+  const { mutate } = api.liveblocks.createRoom.useMutation({
+    onMutate: () => {
+      notifications.show({
+        id: "create-room",
+        title: "Creating for Room",
+        message: "Please wait while we create the room",
+        ...mutateProps,
+      });
+    },
+    onSuccess: async (room) => {
+      notifications.update({
+        id: "create-room",
+        title: "Room Successfully Created!",
+        message: "Redirecting you to the room",
+        ...successProps,
+      });
+      await push(`/room/${room?.liveblocksRoom.id}`);
+    },
+    onError: (error) => {
+      notifications.update({
+        id: "create-room",
+        title: "Unable to create room",
+        message: error.message,
+        ...errorProps,
+      });
+    },
+  });
   const openSelfTaughtModal = () => {
     modals.open({
       size: "md",
@@ -41,7 +76,11 @@ const CreateRoomModalContent = ({
   });
 
   return (
-    <form onSubmit={onSubmit((val) => mutate(val))}>
+    <form
+      onSubmit={onSubmit((val) => {
+        mutate(val), modals.closeAll();
+      })}
+    >
       <Stack ta="center">
         <Alert
           icon={<FaCircleInfo />}
