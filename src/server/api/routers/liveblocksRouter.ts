@@ -33,6 +33,8 @@ export const liveblocksRouter = createTRPCRouter({
           where: { roomId },
         });
 
+        if (!currentRoom) throw new TRPCError({ code: "NOT_FOUND" });
+
         return currentRoom;
       } catch (error) {
         throw new TRPCError({
@@ -48,7 +50,8 @@ export const liveblocksRouter = createTRPCRouter({
         const { roomId } = input;
         const room = await liveblocks.getRoom(roomId);
 
-        if (!room) return;
+        if (!room)
+          throw new TRPCError({ code: "NOT_FOUND", message: "Room not found" });
 
         //*If user have multiple emails
         const emailAddresses = ctx.auth.emailAddresses.map(
@@ -56,6 +59,12 @@ export const liveblocksRouter = createTRPCRouter({
         );
 
         const userAccess = room.usersAccesses[String(...emailAddresses)];
+
+        if (!userAccess)
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "User does not have access to this room",
+          });
 
         return userAccess;
       } catch (error) {
