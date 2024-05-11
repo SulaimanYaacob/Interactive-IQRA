@@ -13,10 +13,6 @@ export default function Cursor({ color, x, y, info }: Props) {
   const [opacity, setOpacity] = useState(1);
   return (
     <Stack
-      align="center"
-      justify="center"
-      w="50px"
-      h="50px"
       gap={0}
       pos="absolute"
       opacity={opacity}
@@ -54,7 +50,7 @@ export default function Cursor({ color, x, y, info }: Props) {
           fill={color}
         />
       </svg>
-      <Text c={color} inline pos="absolute" left={45} top={15} fz="xs">
+      <Text c={color} inline pos="absolute" left={25} fz="xs">
         {info.name}
       </Text>
     </Stack>
