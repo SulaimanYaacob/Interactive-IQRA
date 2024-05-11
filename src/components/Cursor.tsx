@@ -1,5 +1,6 @@
 import { Stack, Text } from "@mantine/core";
 import type { UserMeta } from "liveblocks.config";
+import { useState } from "react";
 
 type Props = {
   info: UserMeta["info"];
@@ -9,14 +10,28 @@ type Props = {
 };
 
 export default function Cursor({ color, x, y, info }: Props) {
+  const [opacity, setOpacity] = useState(1);
   return (
     <Stack
+      align="center"
+      justify="center"
+      w="50px"
+      h="50px"
+      gap={0}
       pos="absolute"
+      opacity={opacity}
       style={{
+        borderRadius: "100%",
         left: 0,
         top: 0,
         transform: `translateX(${x}px) translateY(${y}px)`,
         transition: "transform 0.5s cubic-bezier(.17,.93,.38,1)",
+      }}
+      onMouseEnter={() => {
+        setOpacity(0.2);
+      }}
+      onMouseLeave={() => {
+        setOpacity(1);
       }}
     >
       <svg
@@ -28,6 +43,7 @@ export default function Cursor({ color, x, y, info }: Props) {
         viewBox="0 0 38 46"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
+        //TODO onMouseEnter make the opacity of the cursor reduced
       >
         {/* <path
         d="M5.65376 12.3673H5.46026L5.31717 12.4976L0.500002 16.8829L0.500002 1.19841L11.7841 12.3673H5.65376Z"
@@ -38,7 +54,9 @@ export default function Cursor({ color, x, y, info }: Props) {
           fill={color}
         />
       </svg>
-      <Text>{info.name}</Text>
+      <Text c={color} inline pos="absolute" left={45} top={15} fz="xs">
+        {info.name}
+      </Text>
     </Stack>
   );
 }
