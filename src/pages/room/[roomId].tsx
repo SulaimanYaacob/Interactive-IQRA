@@ -7,7 +7,7 @@ import {
 } from "liveblocks.config";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Cursor from "~/components/Cursor";
 import { useElementLiveCursors } from "~/hooks/useElementLiveCursors";
 const LiveblocksProvider = dynamic(
@@ -49,6 +49,10 @@ function InteractiveRoom({ id }: { id: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const cursors = useElementLiveCursors(id, containerRef);
 
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+  }, []);
+
   useEventListener(({ event }) => {
     switch (event.type) {
       case "increase":
@@ -62,56 +66,59 @@ function InteractiveRoom({ id }: { id: string }) {
 
   //* Using Margin Will Affect Cursor Position. Use Padding Instead.
   return (
-    <>
+    <Container
+      fluid
+      ref={containerRef}
+      h={innerHeight - 76}
+      //? Only when padding is necessary (Balance need to be added into the cursor position)
+      // w={innerWidth - 64}
+      // h={innerHeight - 108}
+    >
       <Container
-        fluid
-        ref={containerRef}
-        w={innerWidth - 64}
-        h={innerHeight - 108}
+      // py="xl"
       >
-        <Container py="xl">
-          <Title ta="center">There are {userCount + 1} users in the room</Title>
-          <Text ta="center">
-            {cursor ? `${cursor.x} x ${cursor.y}` : "Move your cursor"}
-          </Text>
-          <SimpleGrid cols={1} my="xl">
-            <Title key={count} ta="center">
-              {count}
-            </Title>
-            <Button
-              onClick={() => {
-                broadcast({ type: "increase" });
-                setCount((count) => count + 1);
-              }}
-              variant="outline"
-            >
-              +
-            </Button>
-            <Button
-              onClick={() => {
-                broadcast({ type: "decrease" });
-                setCount((count) => count - 1);
-              }}
-              variant="outline"
-            >
-              -
-            </Button>
-          </SimpleGrid>
-        </Container>
+        <Title ta="center">There are {userCount + 1} users in the room</Title>
+        <Text ta="center">
+          {cursor ? `${cursor.x} x ${cursor.y}` : "Move your cursor"}
+        </Text>
+        <SimpleGrid cols={1} my="xl">
+          <Title key={count} ta="center">
+            {count}
+          </Title>
+          <Button
+            onClick={() => {
+              broadcast({ type: "increase" });
+              setCount((count) => count + 1);
+            }}
+            variant="outline"
+          >
+            +
+          </Button>
+          <Button
+            onClick={() => {
+              broadcast({ type: "decrease" });
+              setCount((count) => count - 1);
+            }}
+            variant="outline"
+          >
+            -
+          </Button>
+        </SimpleGrid>
       </Container>
       {cursors.map((cursor) => {
         if (!cursor?.connectionId) return null;
-        const { connectionId, x, y } = cursor;
-
+        const { connectionId, x, y, info } = cursor;
         return (
           <Cursor
             key={connectionId}
+            info={info}
             color={String(COLORS[connectionId % COLORS.length])}
-            x={x + 32}
+            // x={x + 32}
+            x={x}
             y={y + 76}
           />
         );
       })}
-    </>
+    </Container>
   );
 }
