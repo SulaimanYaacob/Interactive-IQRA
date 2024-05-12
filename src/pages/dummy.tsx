@@ -26,10 +26,20 @@
 
 // export default Dummy;
 
-import { Center, Container, Stack } from "@mantine/core";
+import { useSession } from "@clerk/nextjs";
+import {
+  Badge,
+  Button,
+  Center,
+  Container,
+  Grid,
+  Stack,
+  TextInput,
+} from "@mantine/core";
 import { useState } from "react";
+import { api } from "~/utils/api";
 
-const MicRecorder = () => {
+const DummyPage = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder>();
   const [audioURL, setAudioURL] = useState("");
@@ -66,18 +76,43 @@ const MicRecorder = () => {
     }
   };
 
+  //! Don't use this cause U can't validate afterwards.
+  const { session } = useSession();
+  const { mutate } = api.profile.updateProfile.useMutation();
+  const [newName, setNewName] = useState<string>("Undefined");
+
   return (
     <Container>
-      <Center>
+      <Center mih="75vh">
         <Stack>
-          <button onClick={toggleRecording}>
-            {isRecording ? "Stop Recording" : "Start Recording"}
-          </button>
-          {audioURL && <audio controls src={audioURL} />}
+          <Center>
+            <Badge size="lg" variant="dot">
+              {session?.user.fullName}
+            </Badge>
+          </Center>
+          <Grid>
+            <Grid.Col span="content">
+              <TextInput
+                onChange={(e) => setNewName(e.target.value)}
+                placeholder="Your weird name"
+              />
+            </Grid.Col>
+            <Grid.Col span="content">
+              <Button onClick={() => mutate({ name: newName })} color="green">
+                Update Name
+              </Button>
+            </Grid.Col>
+          </Grid>
+          <Stack>
+            <Button fullWidth onClick={toggleRecording}>
+              {isRecording ? "Stop Recording" : "Start Recording"}
+            </Button>
+            {audioURL && <audio controls src={audioURL} />}
+          </Stack>
         </Stack>
       </Center>
     </Container>
   );
 };
 
-export default MicRecorder;
+export default DummyPage;
