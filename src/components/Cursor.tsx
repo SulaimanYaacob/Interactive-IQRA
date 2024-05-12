@@ -1,33 +1,27 @@
 import { Stack, Text } from "@mantine/core";
 import type { UserMeta } from "liveblocks.config";
-import { useState } from "react";
 
 type Props = {
   info: UserMeta["info"];
   color: string;
+  opacity: number;
   x: number;
   y: number;
 };
 
-export default function Cursor({ color, x, y, info }: Props) {
-  const [opacity, setOpacity] = useState(1);
+export default function Cursor({ color, x, y, info, opacity }: Props) {
   return (
     <Stack
       gap={0}
       pos="absolute"
       opacity={opacity}
       style={{
-        borderRadius: "100%",
-        left: 0,
+        zIndex: -1,
         top: 0,
+        left: 0,
+        borderRadius: "100%",
         transform: `translateX(${x}px) translateY(${y}px)`,
-        transition: "transform 0.5s cubic-bezier(.17,.93,.38,1)",
-      }}
-      onMouseEnter={() => {
-        setOpacity(0.2);
-      }}
-      onMouseLeave={() => {
-        setOpacity(1);
+        transition: "transform 0.5s cubic-bezier(.17,.93,.38,1), opacity 0.5s",
       }}
     >
       <svg
@@ -50,8 +44,8 @@ export default function Cursor({ color, x, y, info }: Props) {
           fill={color}
         />
       </svg>
-      <Text c={color} inline pos="absolute" left={25} fz="xs">
-        {info.name}
+      <Text fw={500} c={color} inline pos="absolute" left={25} fz="xs">
+        {x + "," + y}
       </Text>
     </Stack>
   );

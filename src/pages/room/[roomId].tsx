@@ -1,4 +1,4 @@
-import { Button, Container, SimpleGrid, Text, Title } from "@mantine/core";
+import { Button, Container, Group, Text, Title } from "@mantine/core";
 import {
   useMyPresence,
   useOthers,
@@ -48,6 +48,7 @@ function InteractiveRoom({ id }: { id: string }) {
 
   const containerRef = useRef<HTMLDivElement>(null);
   const cursors = useElementLiveCursors(id, containerRef);
+  const [opacity, setOpacity] = useState(1);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -74,17 +75,12 @@ function InteractiveRoom({ id }: { id: string }) {
       // w={innerWidth - 64}
       // h={innerHeight - 108}
     >
-      <Container
-      // py="xl"
-      >
-        <Title ta="center">There are {userCount + 1} users in the room</Title>
+      <Container py="xl">
+        <Title ta="center">{userCount + 1} Users are in the room</Title>
         <Text ta="center">
           {cursor ? `${cursor.x} x ${cursor.y}` : "Move your cursor"}
         </Text>
-        <SimpleGrid cols={1} my="xl">
-          <Title key={count} ta="center">
-            {count}
-          </Title>
+        <Group justify="center" my="xl">
           <Button
             onClick={() => {
               broadcast({ type: "increase" });
@@ -94,6 +90,9 @@ function InteractiveRoom({ id }: { id: string }) {
           >
             +
           </Button>
+          <Title key={count} ta="center">
+            {count}
+          </Title>
           <Button
             onClick={() => {
               broadcast({ type: "decrease" });
@@ -103,13 +102,16 @@ function InteractiveRoom({ id }: { id: string }) {
           >
             -
           </Button>
-        </SimpleGrid>
+          <Button onClick={() => setOpacity(0.1)}>Read Mode</Button>
+        </Group>
       </Container>
+
       {cursors.map((cursor) => {
         if (!cursor?.connectionId) return null;
         const { connectionId, x, y, info } = cursor;
         return (
           <Cursor
+            opacity={opacity}
             key={connectionId}
             info={info}
             color={String(COLORS[connectionId % COLORS.length])}
