@@ -103,6 +103,7 @@ function InteractiveRoom({ id }: { id: string }) {
             -
           </Button>
           <Button onClick={() => setOpacity(0.1)}>Read Mode</Button>
+          <Button onClick={() => setOpacity(1)}>Reset</Button>
         </Group>
       </Container>
 

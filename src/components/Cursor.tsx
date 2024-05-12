@@ -45,7 +45,7 @@ export default function Cursor({ color, x, y, info, opacity }: Props) {
         />
       </svg>
       <Text fw={500} c={color} inline pos="absolute" left={25} fz="xs">
-        {x + "," + y}
+        {info.name}
       </Text>
     </Stack>
   );
