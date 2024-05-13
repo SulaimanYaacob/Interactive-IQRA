@@ -4,84 +4,18 @@ import {
   Center,
   Container,
   Group,
+  Loader,
   Pagination,
   Paper,
   SimpleGrid,
   Stack,
   Text,
   TextInput,
-  useMantineColorScheme,
 } from "@mantine/core";
-import { useState } from "react";
+import { useRouter } from "next/router";
+import { type ReactNode, useState, useEffect } from "react";
 import { FaMagnifyingGlass } from "react-icons/fa6";
-
-const listOfTutors = [
-  {
-    name: "John Doe",
-    country: "USA",
-    state: "California",
-    image:
-      "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1280&q=80",
-  },
-  {
-    name: "John Doe",
-    country: "USA",
-    state: "California",
-    image:
-      "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1280&q=80",
-  },
-  {
-    name: "John Doe",
-    country: "USA",
-    state: "California",
-    image:
-      "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1280&q=80",
-  },
-  {
-    name: "John Doe",
-    country: "USA",
-    state: "California",
-    image:
-      "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1280&q=80",
-  },
-  {
-    name: "John Doe",
-    country: "USA",
-    state: "California",
-    image:
-      "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1280&q=80",
-  },
-  {
-    name: "Alissa",
-    country: "USA",
-    state: "Indianapolis",
-    image: "https://randomuser.me/api/portraits/women/24.jpg",
-  },
-  {
-    name: "Alissa",
-    country: "USA",
-    state: "Indianapolis",
-    image: "https://randomuser.me/api/portraits/women/24.jpg",
-  },
-  {
-    name: "Alissa",
-    country: "USA",
-    state: "Indianapolis",
-    image: "https://randomuser.me/api/portraits/women/24.jpg",
-  },
-  {
-    name: "Alissa",
-    country: "USA",
-    state: "Indianapolis",
-    image: "https://randomuser.me/api/portraits/women/24.jpg",
-  },
-  {
-    name: "Alissa",
-    country: "USA",
-    state: "Indianapolis",
-    image: "https://randomuser.me/api/portraits/women/24.jpg",
-  },
-];
+import { api } from "~/utils/api";
 
 function chunk<T>(array: T[], size: number): T[][] {
   if (!array.length) {
@@ -92,11 +26,58 @@ function chunk<T>(array: T[], size: number): T[][] {
   return [head, ...chunk(tail, size)];
 }
 
-const chunkedListOfTutors = chunk(listOfTutors, 6);
+//* Desperate Measures
+const DynamicGroup = ({
+  children,
+  bottomBorder,
+}: {
+  children: ReactNode;
+  bottomBorder: string;
+}) => {
+  return (
+    <>
+      <Group
+        justify="space-between"
+        style={(theme) => ({
+          borderBottom: `1px ${bottomBorder} ${theme.colors.gray[3]}`,
+        })}
+        darkHidden
+      >
+        {children}
+      </Group>
+      <Group
+        justify="space-between"
+        style={(theme) => ({
+          borderBottom: `1px ${bottomBorder} ${theme.colors.gray[7]}`,
+        })}
+        lightHidden
+      >
+        {children}
+      </Group>
+    </>
+  );
+};
 
 function Tutors() {
-  const { colorScheme } = useMantineColorScheme();
-  const [activePage, setPage] = useState(1);
+  const { query, push } = useRouter();
+  const { page } = query;
+
+  const [activePage, setPage] = useState(Number(page));
+  const { data: tutors } = api.tutor.getTutors.useQuery();
+
+  useEffect(() => {
+    setPage(Number(page));
+  }, [page]);
+
+  if (!tutors)
+    return (
+      <Center mih="80vh">
+        <Loader />
+      </Center>
+    );
+
+  //* Define number of tutors to display per page
+  const chunkedListOfTutors = chunk(tutors, 5);
 
   return (
     <Container size="sm" my="xl">
@@ -110,30 +91,25 @@ function Tutors() {
         <Group></Group>
         <Stack gap="0">
           {chunkedListOfTutors[activePage - 1]?.map(
-            ({ country, image, name, state }, idx) => {
+            ({ firstName, lastName, imageUrl }, idx) => {
+              const bottomBorder =
+                (chunkedListOfTutors[activePage - 1] ?? []).length - 1 === idx
+                  ? "none"
+                  : "solid";
+
               return (
-                <Group
-                  style={(theme) => ({
-                    borderBottom: `1px ${
-                      listOfTutors.length - 1 === idx ? "none" : "solid"
-                    } ${theme.colors.gray[colorScheme === "dark" ? 7 : 3]}`,
-                  })}
-                  justify="space-between"
-                  key={idx}
-                >
+                <DynamicGroup key={idx} bottomBorder={bottomBorder}>
                   <Group my="xs" ml="md">
-                    <Avatar src={image} color="blue" radius="xl" />
+                    <Avatar src={imageUrl} color="blue" radius="xl" />
                     <Stack gap="0">
-                      <Text fw="500">{name}</Text>
-                      <Text c="dimmed">
-                        {state}, {country}
-                      </Text>
+                      <Text fw="500">{`${firstName} + ${lastName}`}</Text>
+                      <Text c="dimmed"></Text>
                     </Stack>
                   </Group>
-                  <Anchor td="none" mr="md">
-                    View Profile
+                  <Anchor fw="500" td="none" mr="md">
+                    View
                   </Anchor>
-                </Group>
+                </DynamicGroup>
               );
             }
           )}
@@ -143,7 +119,10 @@ function Tutors() {
         <Pagination
           total={chunkedListOfTutors.length}
           value={activePage}
-          onChange={setPage}
+          onChange={async (e) => {
+            setPage(e);
+            await push(`/tutors?page=${e}`);
+          }}
         />
       </Center>
     </Container>

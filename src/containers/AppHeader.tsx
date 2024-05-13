@@ -40,7 +40,7 @@ function AppHeader() {
               td="none"
               fw={500}
               component={Link}
-              href="/tutors"
+              href="/tutors?page=1"
             >
               View List of Tutors
             </Anchor>
