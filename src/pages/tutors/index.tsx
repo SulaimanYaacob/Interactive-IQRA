@@ -80,6 +80,7 @@ function Tutors() {
     <Container size="sm" my="xl">
       <SimpleGrid my="xs" cols={{ base: 1, xs: 3 }}>
         <TextInput
+          defaultValue={search}
           leftSection={<FaMagnifyingGlass />}
           placeholder="Search Tutors"
           onKeyDown={async (e) => {
@@ -140,17 +141,19 @@ function Tutors() {
       )}
       {/*//******************************** Error Handling  *********************************/}
       {isLoading && (
-        <Center mih="60vh">
+        <Stack mih="60vh" align="center" justify="center">
           <Loader />
-        </Center>
+        </Stack>
       )}
+
       {!listOfTutors && !isLoading && (
+        //TODO Probably just find the name in database instead of using query from clerk
         <Center mih="60vh">
-          {search && search.length < 3 ? (
+          {/* {search && search.length < 3 ? (
             <Title fw="500">Please enter at least 3 characters</Title>
-          ) : (
-            <Title fw="500">{error?.message ?? "No tutors found"}</Title>
-          )}
+          ) : ( */}
+          <Title>{error?.message ?? "No tutors found"}</Title>
+          {/* )} */}
         </Center>
       )}
     </Container>

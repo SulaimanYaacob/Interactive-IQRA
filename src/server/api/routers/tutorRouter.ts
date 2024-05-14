@@ -15,12 +15,9 @@ export const tutorRouter = createTRPCRouter({
     .query(async ({ input }) => {
       try {
         const { query, size } = input;
-        if (query && query?.length > 0 && query.length < 3) return null;
 
         //! Can't use the offset and limit here due not having the metadata properties
-        const users = await clerkClient.users.getUserList({
-          query: query ?? "",
-        });
+        const users = await clerkClient.users.getUserList();
 
         if (!users)
           throw new TRPCError({
@@ -28,7 +25,24 @@ export const tutorRouter = createTRPCRouter({
             message: "Users not found",
           });
 
-        // Get the user who has role of a tutor in publicmetadata
+        //* If query exists filter the users
+        if (query) {
+          const filteredUsers = users.filter((user) => {
+            const name = (user.firstName ?? "") + user?.lastName;
+            return name.toLowerCase().includes(query.toLowerCase());
+          });
+
+          const tutors = filteredUsers.filter((user) => {
+            return user.publicMetadata.role === "TUTOR";
+          });
+
+          if (tutors.length === 0) return null;
+
+          const listOfTutors = chunk(tutors, size);
+          return listOfTutors;
+        }
+
+        //* Get the user who has role of a tutor in publicmetadata
         const tutors = users.filter((user) => {
           return user.publicMetadata.role === "TUTOR";
         });
