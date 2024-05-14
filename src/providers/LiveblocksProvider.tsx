@@ -13,7 +13,10 @@ type Props = {
 
 function LiveblocksProvider({ children, header, roomId }: Props) {
   const { data, failureCount } =
-    api.liveblocks.getCurrentUserRoomAccess.useQuery({ roomId });
+    api.liveblocks.getCurrentUserRoomAccess.useQuery(
+      { roomId },
+      { refetchOnWindowFocus: false, refetchOnMount: false }
+    );
 
   if (!data && header) return;
 

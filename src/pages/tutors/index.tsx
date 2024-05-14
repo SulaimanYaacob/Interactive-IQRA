@@ -11,22 +11,19 @@ import {
   Stack,
   Text,
   TextInput,
+  Title,
 } from "@mantine/core";
+import type { NextApiRequest, NextApiResponse } from "next";
 import { useRouter } from "next/router";
 import { type ReactNode, useState, useEffect } from "react";
 import { FaMagnifyingGlass } from "react-icons/fa6";
+import { appRouter } from "~/server/api/root";
 import { api } from "~/utils/api";
+import { createServerSideHelpers } from "@trpc/react-query/server";
+import superjson from "superjson";
+import { createTRPCContext } from "~/server/api/trpc";
 
-function chunk<T>(array: T[], size: number): T[][] {
-  if (!array.length) {
-    return [];
-  }
-  const head = array.slice(0, size);
-  const tail = array.slice(size);
-  return [head, ...chunk(tail, size)];
-}
-
-//* Desperate Measures
+//* Style each group with a border except the last group (Because it alr contain container border)
 const DynamicGroup = ({
   children,
   bottomBorder,
@@ -59,74 +56,122 @@ const DynamicGroup = ({
 };
 
 function Tutors() {
+  //TODO Fix Abort Fetching Component Error
   const { query, push } = useRouter();
-  const { page } = query;
+  const { page, search } = query;
 
   const [activePage, setPage] = useState(Number(page));
-  const { data: tutors } = api.tutor.getTutors.useQuery();
+  const {
+    data: listOfTutors,
+    isLoading,
+    error,
+  } = api.tutor.getTutors.useQuery(
+    { query: (search as string) ?? "", size: 3 },
+    {
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+    }
+  );
 
-  useEffect(() => {
-    setPage(Number(page));
-  }, [page]);
-
-  if (!tutors)
-    return (
-      <Center mih="80vh">
-        <Loader />
-      </Center>
-    );
+  useEffect(() => setPage(Number(page)), [page]);
 
   //* Define number of tutors to display per page
-  const chunkedListOfTutors = chunk(tutors, 5);
-
   return (
     <Container size="sm" my="xl">
       <SimpleGrid my="xs" cols={{ base: 1, xs: 3 }}>
         <TextInput
           leftSection={<FaMagnifyingGlass />}
           placeholder="Search Tutors"
-        />
-      </SimpleGrid>
-      <Paper withBorder>
-        <Group></Group>
-        <Stack gap="0">
-          {chunkedListOfTutors[activePage - 1]?.map(
-            ({ firstName, lastName, imageUrl }, idx) => {
-              const bottomBorder =
-                (chunkedListOfTutors[activePage - 1] ?? []).length - 1 === idx
-                  ? "none"
-                  : "solid";
-
-              return (
-                <DynamicGroup key={idx} bottomBorder={bottomBorder}>
-                  <Group my="xs" ml="md">
-                    <Avatar src={imageUrl} color="blue" radius="xl" />
-                    <Stack gap="0">
-                      <Text fw="500">{`${firstName} + ${lastName}`}</Text>
-                      <Text c="dimmed"></Text>
-                    </Stack>
-                  </Group>
-                  <Anchor fw="500" td="none" mr="md">
-                    View
-                  </Anchor>
-                </DynamicGroup>
+          onKeyDown={async (e) => {
+            if (e.key === "Enter")
+              await push(
+                `/tutors?page=1${
+                  e.currentTarget.value && `&search=${e.currentTarget.value}`
+                }`
               );
-            }
-          )}
-        </Stack>
-      </Paper>
-      <Center my="xl">
-        <Pagination
-          total={chunkedListOfTutors.length}
-          value={activePage}
-          onChange={async (e) => {
-            setPage(e);
-            await push(`/tutors?page=${e}`);
           }}
         />
-      </Center>
+      </SimpleGrid>
+      {listOfTutors && (
+        <>
+          <Paper withBorder>
+            <Stack gap="0">
+              {listOfTutors[activePage - 1]?.map(
+                ({ firstName, lastName, imageUrl }, idx) => {
+                  const bottomBorder =
+                    (listOfTutors[activePage - 1] ?? []).length - 1 === idx
+                      ? "none"
+                      : "solid";
+
+                  return (
+                    <DynamicGroup key={idx} bottomBorder={bottomBorder}>
+                      <Group my="xs" ml="md">
+                        <Avatar src={imageUrl} color="blue" radius="xl" />
+                        <Stack gap="0">
+                          <Text fw="500">{`${firstName} ${lastName}`}</Text>
+                          <Text c="dimmed"></Text>
+                        </Stack>
+                      </Group>
+                      <Anchor fw="500" td="none" mr="md">
+                        View
+                      </Anchor>
+                    </DynamicGroup>
+                  );
+                }
+              )}
+            </Stack>
+          </Paper>
+          <Center my="xl">
+            <Pagination
+              total={listOfTutors.length}
+              value={activePage}
+              disabled={isLoading}
+              onChange={async (e) => {
+                setPage(e);
+                await push(
+                  `/tutors?page=${e}${
+                    search ? `&search=${String(search)}` : ""
+                  }`
+                );
+              }}
+            />
+          </Center>
+        </>
+      )}
+      {/*//******************************** Error Handling  *********************************/}
+      {isLoading && (
+        <Center mih="60vh">
+          <Loader />
+        </Center>
+      )}
+      {!listOfTutors && !isLoading && (
+        <Center mih="60vh">
+          <Title fw="500">{error?.message ?? "No tutors found"}</Title>
+        </Center>
+      )}
     </Container>
   );
 }
 
 export default Tutors;
+
+export async function getServerSideProps({
+  req,
+  res,
+}: {
+  req: NextApiRequest;
+  res: NextApiResponse;
+}) {
+  const ssh = createServerSideHelpers({
+    router: appRouter,
+    ctx: createTRPCContext({ req, res }),
+    transformer: superjson,
+  });
+
+  await ssh.tutor.getTutors.prefetch({});
+  return {
+    props: {
+      trpcState: JSON.stringify(ssh.dehydrate()),
+    },
+  };
+}
