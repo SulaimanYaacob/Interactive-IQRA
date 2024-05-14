@@ -14,9 +14,10 @@ export const tutorRouter = createTRPCRouter({
     )
     .query(async ({ input }) => {
       try {
-        //! Can't use the offset and limit here due not having the metadata properties
         const { query, size } = input;
+        if (query && query?.length > 0 && query.length < 3) return null;
 
+        //! Can't use the offset and limit here due not having the metadata properties
         const users = await clerkClient.users.getUserList({
           query: query ?? "",
         });

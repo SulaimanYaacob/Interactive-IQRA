@@ -146,7 +146,11 @@ function Tutors() {
       )}
       {!listOfTutors && !isLoading && (
         <Center mih="60vh">
-          <Title fw="500">{error?.message ?? "No tutors found"}</Title>
+          {search && search.length < 3 ? (
+            <Title fw="500">Please enter at least 3 characters</Title>
+          ) : (
+            <Title fw="500">{error?.message ?? "No tutors found"}</Title>
+          )}
         </Center>
       )}
     </Container>
