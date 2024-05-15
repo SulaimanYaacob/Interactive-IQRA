@@ -22,6 +22,17 @@ model Room {
     updatedAt DateTime @updatedAt
 }
 
+model TutorApplication {
+    applicationId       String @id @unique @default(uuid())
+    createdByIdentifier String @default(uuid())
+    createdByClerkId    String
+    resume              String
+    status              Status
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
 enum Role {
     STUDENT
     TUTOR

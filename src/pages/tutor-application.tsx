@@ -1,7 +1,11 @@
-import { Container } from "@mantine/core";
+import { Container, Title } from "@mantine/core";
 
 function TutorApplication() {
-  return <Container>TutorApplication</Container>;
+  return (
+    <Container my="xl">
+      <Title ta="center">Upload your resume here</Title>
+    </Container>
+  );
 }
 
 export default TutorApplication;
