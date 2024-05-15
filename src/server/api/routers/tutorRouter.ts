@@ -8,13 +8,13 @@ export const tutorRouter = createTRPCRouter({
   getTutors: protectedProcedure
     .input(
       z.object({
-        query: z.string().optional(),
+        search: z.string().optional(),
         size: z.number().optional().default(3),
       })
     )
     .query(async ({ input }) => {
       try {
-        const { query, size } = input;
+        const { search, size } = input;
 
         //! Can't use the offset and limit here due not having the metadata properties
         const users = await clerkClient.users.getUserList();
@@ -26,10 +26,10 @@ export const tutorRouter = createTRPCRouter({
           });
 
         //* If query exists filter the users
-        if (query) {
+        if (search) {
           const filteredUsers = users.filter((user) => {
             const name = (user.firstName ?? "") + (user?.lastName ?? "");
-            return name.toLowerCase().includes(query.toLowerCase());
+            return name.toLowerCase().includes(search.toLowerCase());
           });
 
           const tutors = filteredUsers.filter((user) => {

@@ -40,11 +40,17 @@ function AppHeader() {
               td="none"
               fw={500}
               component={Link}
-              href="/tutors?page=1"
+              href="/tutors/1"
             >
               View List of Tutors
             </Anchor>
-            <Anchor variant="gradient" td="none" fw={500}>
+            <Anchor
+              component={Link}
+              href="/tutor-application"
+              variant="gradient"
+              td="none"
+              fw={500}
+            >
               Apply as Tutor!
             </Anchor>
           </Group>
