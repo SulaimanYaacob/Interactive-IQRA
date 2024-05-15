@@ -22,7 +22,7 @@ function LiveblocksProvider({ children, header, roomId }: Props) {
 
   if (!data && !header && failureCount > 0)
     return (
-      <Center mih="80vh">
+      <Center mih="75vh">
         <Paper p="xl" withBorder m="xl">
           <Stack gap="xl">
             <Title ta="center">You do not have access to this room</Title>
@@ -44,7 +44,7 @@ function LiveblocksProvider({ children, header, roomId }: Props) {
       <ClientSideSuspense
         fallback={
           header ?? (
-            <Center mih="80vh">
+            <Center mih="75vh">
               <Loader />
             </Center>
           )

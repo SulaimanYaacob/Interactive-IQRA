@@ -16,7 +16,7 @@ export default function Cursor({ color, x, y, info, opacity }: Props) {
       pos="absolute"
       opacity={opacity}
       style={{
-        zIndex: -1,
+        zIndex: 1,
         top: 0,
         left: 0,
         borderRadius: "100%",

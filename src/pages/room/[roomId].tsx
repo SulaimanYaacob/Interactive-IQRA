@@ -1,4 +1,4 @@
-import { Button, Container, Group, Text, Title } from "@mantine/core";
+import { Button, Container, Group, Paper, Text, Title } from "@mantine/core";
 import {
   useMyPresence,
   useOthers,
@@ -77,35 +77,38 @@ function InteractiveRoom({ id }: { id: string }) {
       // h={innerHeight - 108}
     >
       <Container py="xl">
-        <Title ta="center">{userCount + 1} Users are in the room</Title>
-        <Text ta="center">
-          {cursor ? `${cursor.x} x ${cursor.y}` : "Move your cursor"}
-        </Text>
-        <Group justify="center" my="xl">
-          <Button
-            onClick={() => {
-              broadcast({ type: "increase" });
-              setCount((count) => count + 1);
-            }}
-            variant="outline"
-          >
-            +
-          </Button>
-          <Title key={count} ta="center">
-            {count}
-          </Title>
-          <Button
-            onClick={() => {
-              broadcast({ type: "decrease" });
-              setCount((count) => count - 1);
-            }}
-            variant="outline"
-          >
-            -
-          </Button>
-          <Button onClick={() => setOpacity(0.1)}>Read Mode</Button>
-          <Button onClick={() => setOpacity(1)}>Reset</Button>
-        </Group>
+        <Paper style={{ zIndex: -1 }} withBorder p="xl">
+          <Title ta="center">{userCount + 1} Users are in the room</Title>
+          <Text ta="center">
+            {cursor ? `${cursor.x} x ${cursor.y}` : "Move your cursor"}
+          </Text>
+          <Group justify="center" mt="xl">
+            <Button
+              style={{ zIndex: 2 }}
+              onClick={() => {
+                broadcast({ type: "increase" });
+                setCount((count) => count + 1);
+              }}
+              variant="outline"
+            >
+              +
+            </Button>
+            <Title key={count} ta="center">
+              {count}
+            </Title>
+            <Button
+              onClick={() => {
+                broadcast({ type: "decrease" });
+                setCount((count) => count - 1);
+              }}
+              variant="outline"
+            >
+              -
+            </Button>
+            <Button onClick={() => setOpacity(0.1)}>Read Mode</Button>
+            <Button onClick={() => setOpacity(1)}>Reset</Button>
+          </Group>
+        </Paper>
       </Container>
 
       {cursors.map((cursor) => {
