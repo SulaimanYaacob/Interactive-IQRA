@@ -44,8 +44,16 @@ export default function Cursor({ color, x, y, info, opacity }: Props) {
           fill={color}
         />
       </svg>
-      <Text fw={500} c={color} inline pos="absolute" left={25} fz="xs">
-        {info.name}
+      <Text
+        tt="capitalize"
+        fw={500}
+        c={color}
+        inline
+        pos="absolute"
+        left={25}
+        fz="xs"
+      >
+        {info.username ?? info.name}
       </Text>
     </Stack>
   );

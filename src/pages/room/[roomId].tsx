@@ -39,6 +39,7 @@ export default function Room() {
   );
 }
 
+//TODO if you have time, create a nickname when they first join the room
 function InteractiveRoom({ id }: { id: string }) {
   const [count, setCount] = useState(0);
   const broadcast = useBroadcastEvent();

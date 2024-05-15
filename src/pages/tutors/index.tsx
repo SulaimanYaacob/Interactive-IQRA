@@ -98,7 +98,7 @@ function Tutors() {
           <Paper withBorder>
             <Stack gap="0">
               {listOfTutors[activePage - 1]?.map(
-                ({ firstName, lastName, imageUrl }, idx) => {
+                ({ firstName, lastName, imageUrl, emailAddresses }, idx) => {
                   const bottomBorder =
                     (listOfTutors[activePage - 1] ?? []).length - 1 === idx
                       ? "none"
@@ -109,8 +109,12 @@ function Tutors() {
                       <Group my="xs" ml="md">
                         <Avatar src={imageUrl} color="blue" radius="xl" />
                         <Stack gap="0">
-                          <Text fw="500">{`${firstName} ${lastName}`}</Text>
-                          <Text c="dimmed"></Text>
+                          <Text fw="500">
+                            {`${firstName ?? ""} ${lastName ?? ""}`}
+                          </Text>
+                          <Text c="dimmed">
+                            {emailAddresses[0]?.emailAddress}
+                          </Text>
                         </Stack>
                       </Group>
                       <Anchor fw="500" td="none" mr="md">

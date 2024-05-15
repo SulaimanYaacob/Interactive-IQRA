@@ -19,7 +19,8 @@ export default async function handler(
     { userId: user.id, groupIds: [] },
     {
       userInfo: {
-        name: user.firstName!,
+        name: (user.firstName ?? "") + (user.lastName ?? ""),
+        username: user.username ?? "",
         avatar: user?.imageUrl,
         email: user.emailAddresses[0]?.emailAddress,
       },
