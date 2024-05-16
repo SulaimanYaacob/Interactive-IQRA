@@ -3,6 +3,8 @@ import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { clerkClient } from "@clerk/nextjs/server";
 import { z } from "zod";
 import chunk from "~/utils/paginationChunk";
+import { STATUS } from "@prisma/client";
+import { utapi } from "~/server/uploadthing";
 
 export const tutorRouter = createTRPCRouter({
   getTutors: protectedProcedure
@@ -59,4 +61,80 @@ export const tutorRouter = createTRPCRouter({
         });
       }
     }),
+  uploadApplication: protectedProcedure
+    .input(
+      z.object({
+        files: z.array(
+          z.object({
+            key: z.string(),
+            url: z.string(),
+            name: z.string(),
+            size: z.number(),
+            type: z.string(),
+          })
+        ),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const { files } = input;
+        await ctx.db.tutorApplication.create({
+          data: {
+            createdByClerkId: ctx.auth.id,
+            status: STATUS.PENDING,
+            files: {
+              createMany: {
+                data: files,
+              },
+            },
+          },
+        });
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: (error as Error).message,
+        });
+      }
+    }),
+  getUserApplicationStatus: protectedProcedure.query(async ({ ctx }) => {
+    try {
+      const status = await ctx.db.tutorApplication.findFirst({
+        where: { createdByClerkId: ctx.auth.id },
+        select: { status: true },
+      });
+
+      return status;
+    } catch (error) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: (error as Error).message,
+      });
+    }
+  }),
+  cancelApplication: protectedProcedure.mutation(async ({ ctx }) => {
+    try {
+      const filesKey = await ctx.db.tutorApplication.findFirst({
+        where: { createdByClerkId: ctx.auth.id },
+        select: { applicationId: true, files: { select: { key: true } } },
+      });
+
+      if (!filesKey)
+        throw new TRPCError({ code: "NOT_FOUND", message: "Files not found" });
+
+      const { files, applicationId } = filesKey;
+
+      //? Delete from UploadThing Server
+      await utapi.deleteFiles(files.map((file) => file.key));
+
+      //? Delete Entire Application with It's Files
+      await ctx.db.tutorApplication.delete({
+        where: { applicationId },
+      });
+    } catch (error) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: (error as Error).message,
+      });
+    }
+  }),
 });

@@ -4,7 +4,6 @@ import {
   Center,
   Container,
   Group,
-  Loader,
   Pagination,
   Paper,
   SimpleGrid,
@@ -26,6 +25,7 @@ import { api } from "~/utils/api";
 import { createServerSideHelpers } from "@trpc/react-query/server";
 import superjson from "superjson";
 import { createTRPCContext } from "~/server/api/trpc";
+import Loading from "~/components/Loading";
 
 //* Style each group with a border except the last group (Because it alr contain container border)
 const DynamicGroup = ({
@@ -143,11 +143,7 @@ function Tutors({ page, search }: { page: number; search: string }) {
         </>
       )}
       {/*//******************************** Error Handling  *********************************/}
-      {isLoading && (
-        <Stack mih="60vh" align="center" justify="center">
-          <Loader />
-        </Stack>
-      )}
+      {isLoading && <Loading />}
 
       {!listOfTutors && !isLoading && (
         //TODO Probably just find the name in database instead of using query from clerk

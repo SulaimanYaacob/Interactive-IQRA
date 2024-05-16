@@ -26,20 +26,32 @@ model TutorApplication {
     applicationId       String @id @unique @default(uuid())
     createdByIdentifier String @default(uuid())
     createdByClerkId    String
-    resume              String
-    status              Status
+    status              STATUS
+    files               File[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
 
-enum Role {
+model File {
+    fileId String @id @unique @default(uuid())
+    key    String
+    url    String
+    name   String
+    type   String
+    size   Int
+
+    application   TutorApplication @relation(fields: [applicationId], references: [applicationId], onDelete: Cascade)
+    applicationId String
+}
+
+enum ROLE {
     STUDENT
     TUTOR
     ADMIN
 }
 
-enum Status {
+enum STATUS {
     PENDING
     ACCEPTED
     REJECTED

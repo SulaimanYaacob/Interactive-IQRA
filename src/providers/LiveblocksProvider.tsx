@@ -1,7 +1,8 @@
 import { ClientSideSuspense } from "@liveblocks/react";
-import { Button, Center, Loader, Paper, Stack, Title } from "@mantine/core";
+import { Button, Center, Paper, Stack, Title } from "@mantine/core";
 import { RoomProvider } from "liveblocks.config";
 import { type ReactNode } from "react";
+import Loading from "~/components/Loading";
 import { api } from "~/utils/api";
 
 //TODO Create a current/selected room (selected room will replace once user create another room / join a room)
@@ -41,15 +42,7 @@ function LiveblocksProvider({ children, header, roomId }: Props) {
       id={String(roomId)}
       initialPresence={{ cursor: null, elementId: null }}
     >
-      <ClientSideSuspense
-        fallback={
-          header ?? (
-            <Center mih="75vh">
-              <Loader />
-            </Center>
-          )
-        }
-      >
+      <ClientSideSuspense fallback={header ?? <Loading />}>
         {() => children}
       </ClientSideSuspense>
     </RoomProvider>
