@@ -55,5 +55,5 @@ enum STATUS {
     PENDING
     ACCEPTED
     REJECTED
-    CANCELLED
+    CANCELLED //* Not used due to security and privacy reasons
 }

@@ -1,10 +1,15 @@
-import { Button, Container, Stack, Text, Title } from "@mantine/core";
+import { Button, Container, Paper, Stack, Text, Title } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { UploadDropzone } from "~/utils/uploadthing";
 import { errorProps, mutateProps } from "~/utils/notificationProps";
 import Loading from "~/components/Loading";
 import useHandleApplication from "~/hooks/useHandleApplication";
 import { api } from "~/utils/api";
+import { STATUS } from "@prisma/client";
+import {
+  PiCheckCircleDuotone,
+  PiFileMagnifyingGlassDuotone,
+} from "react-icons/pi";
 
 function TutorApplication() {
   const { uploadApplication, cancelApplication } = useHandleApplication();
@@ -53,19 +58,68 @@ function TutorApplication() {
         </>
       );
 
-    if (applicationStatus) {
+    if (applicationStatus === STATUS.PENDING) {
       return (
-        <Title ta="center">
-          Your application status is {applicationStatus.status}
-          <Button
-            onClick={() => cancelApplication()}
-            color="red"
-            variant="outline"
-            size="xs"
-          >
-            Cancel
-          </Button>
-        </Title>
+        <Paper withBorder p="md">
+          <Stack align="center">
+            <PiFileMagnifyingGlassDuotone
+              color="var(--mantine-color-orange-4)"
+              size="128"
+            />
+            <Stack align="center" gap="0">
+              <Title order={2} ta="center">
+                Your application is sent
+              </Title>
+              <Text c="dimmed" ta="center">
+                Please wait while we review your application
+              </Text>
+            </Stack>
+            <Button onClick={() => cancelApplication()} color="red">
+              Cancel Application
+            </Button>
+          </Stack>
+        </Paper>
+      );
+    } else if (applicationStatus === STATUS.ACCEPTED) {
+      return (
+        <Paper withBorder p="md">
+          <Stack align="center">
+            <PiCheckCircleDuotone
+              color="var(--mantine-color-green-4)"
+              size="128"
+            />
+            <Stack align="center" gap="0">
+              <Title order={2} ta="center">
+                Your application has been accepted!
+              </Title>
+              <Text c="dimmed" ta="center">
+                You are qualified to be a tutor
+              </Text>
+            </Stack>
+          </Stack>
+        </Paper>
+      );
+    } else if (applicationStatus === STATUS.REJECTED) {
+      return (
+        <Paper withBorder p="md">
+          <Stack align="center">
+            <PiCheckCircleDuotone
+              color="var(--mantine-color-red-4)"
+              size="128"
+            />
+            <Stack align="center" gap="0">
+              <Title order={2} ta="center">
+                Your application has been rejected
+              </Title>
+              <Text c="dimmed" ta="center">
+                We are sorry, you are not qualified to be a tutor
+              </Text>
+            </Stack>
+            <Button onClick={() => cancelApplication()}>
+              Submit a new application
+            </Button>
+          </Stack>
+        </Paper>
       );
     }
   };

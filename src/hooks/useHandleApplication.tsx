@@ -1,4 +1,5 @@
 import { notifications } from "@mantine/notifications";
+import { useRouter } from "next/router";
 import { api } from "~/utils/api";
 import {
   successProps,
@@ -8,6 +9,11 @@ import {
 
 const useHandleApplication = () => {
   const utils = api.useUtils();
+  const { reload } = useRouter();
+  const { data: applicationStatus } =
+    api.tutor.getUserApplicationStatus.useQuery(undefined, {
+      refetchOnWindowFocus: false,
+    });
 
   const { mutate: uploadApplication } = api.tutor.uploadApplication.useMutation(
     {
@@ -33,14 +39,14 @@ const useHandleApplication = () => {
           ...mutateProps,
         });
       },
-      onSuccess: async () => {
+      onSuccess: () => {
         notifications.update({
           id: "cancel-application",
           title: "Application Cancelled",
           message: "Your application has been cancelled",
           ...successProps,
         }),
-          await utils.tutor.getUserApplicationStatus.invalidate();
+          reload();
       },
       onError: (error) => {
         notifications.update({
@@ -53,7 +59,7 @@ const useHandleApplication = () => {
     }
   );
 
-  return { uploadApplication, cancelApplication };
+  return { uploadApplication, cancelApplication, applicationStatus };
 };
 
 export default useHandleApplication;

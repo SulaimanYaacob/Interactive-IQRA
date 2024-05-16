@@ -98,12 +98,14 @@ export const tutorRouter = createTRPCRouter({
     }),
   getUserApplicationStatus: protectedProcedure.query(async ({ ctx }) => {
     try {
-      const status = await ctx.db.tutorApplication.findFirst({
+      const application = await ctx.db.tutorApplication.findFirst({
         where: { createdByClerkId: ctx.auth.id },
         select: { status: true },
       });
 
-      return status;
+      if (!application) return;
+
+      return application.status;
     } catch (error) {
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
