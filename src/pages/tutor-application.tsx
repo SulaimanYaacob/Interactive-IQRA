@@ -58,6 +58,7 @@ function TutorApplication() {
         </>
       );
 
+    //TODO Refactor & Make it reusable
     if (applicationStatus === STATUS.PENDING) {
       return (
         <Paper withBorder p="md">

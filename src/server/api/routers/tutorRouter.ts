@@ -103,7 +103,7 @@ export const tutorRouter = createTRPCRouter({
         select: { status: true },
       });
 
-      if (!application) return;
+      if (!application) return null;
 
       return application.status;
     } catch (error) {
