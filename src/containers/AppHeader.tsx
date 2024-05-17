@@ -13,20 +13,41 @@ import ToggleTheme from "~/components/ToggleTheme";
 import { CiDark, CiLight } from "react-icons/ci";
 import Link from "next/link";
 
-function AppHeader() {
+type Props = {
+  openedMainNav: boolean;
+  toggleMainNav: () => void;
+};
+
+function AppHeader({ openedMainNav, toggleMainNav }: Props) {
   return (
     <AppShellHeader py="lg">
+      {/* <Burger
+        opened={openedMainNav}
+        onClick={toggleMainNav}
+        color="dimmed"
+        visibleFrom="lg"
+        pos="absolute"
+        mx="sm"
+      /> */}
       <Container>
         <Group pos="relative" justify="space-between">
-          <Burger hiddenFrom="sm" />
-          <UnstyledButton
-            visibleFrom="sm"
-            display="contents"
-            component={Link}
-            href="/"
-          >
-            <NativeImage src="/images/logo.png" alt="logo" width={150} />
-          </UnstyledButton>
+          <Group>
+            <Burger
+              opened={openedMainNav}
+              onClick={toggleMainNav}
+              // hiddenFrom="lg"
+              hiddenFrom="xs"
+              color="dimmed"
+            />
+            <UnstyledButton
+              visibleFrom="sm"
+              display="contents"
+              component={Link}
+              href="/"
+            >
+              <NativeImage src="/images/logo.png" alt="logo" width={150} />
+            </UnstyledButton>
+          </Group>
           <Group
             visibleFrom="sm"
             pos="absolute"
@@ -38,7 +59,7 @@ function AppHeader() {
             <Anchor
               variant="gradient"
               td="none"
-              fw={500}
+              fw="500"
               component={Link}
               href="/tutors/1"
             >
@@ -49,12 +70,12 @@ function AppHeader() {
               href="/tutor-application"
               variant="gradient"
               td="none"
-              fw={500}
+              fw="500"
             >
               Apply as Tutor!
             </Anchor>
           </Group>
-          <Group>
+          <Group justify="flex-end">
             <SignedOut>
               <SignInButton mode="modal">
                 <Button>Sign In</Button>

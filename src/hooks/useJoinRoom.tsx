@@ -37,7 +37,7 @@ const useJoinRoom = () => {
         message: "Redirecting you to the room",
         ...successProps,
       });
-      await push(`/room/${room?.id}`);
+      await push(`/room/${room?.id}`, undefined, { shallow: false });
     },
     onError: (error) => {
       notifications.update({

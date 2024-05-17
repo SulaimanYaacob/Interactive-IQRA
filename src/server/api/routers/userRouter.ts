@@ -14,4 +14,15 @@ export const userRouter = createTRPCRouter({
       });
     }
   }),
+  getCurrentUserRole: protectedProcedure.query(async ({ ctx }) => {
+    try {
+      const user = await clerkClient.users.getUser(ctx.auth.id);
+      return user.publicMetadata.role;
+    } catch (error) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: (error as Error).message,
+      });
+    }
+  }),
 });

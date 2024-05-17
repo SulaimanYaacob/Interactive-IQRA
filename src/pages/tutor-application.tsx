@@ -16,7 +16,6 @@ function TutorApplication() {
 
   const { data: applicationStatus, isLoading } =
     api.tutor.getUserApplicationStatus.useQuery(undefined, {
-      refetchOnMount: false,
       refetchOnWindowFocus: false,
     });
 

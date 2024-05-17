@@ -76,8 +76,10 @@ export default function Home() {
                 p="xs"
                 w="100%"
                 key={idx}
-                withBorder
-                style={{ borderWidth: "2px" }}
+                style={{
+                  borderWidth: "2px",
+                  boxShadow: "0px 0px 5px var(--mantine-color-blue-2)",
+                }}
               >
                 <Stack
                   h={{ base: 350, sm: 425 }}

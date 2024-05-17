@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { clerkClient } from "@clerk/nextjs/server";
 import { z } from "zod";
 import chunk from "~/utils/paginationChunk";
@@ -7,7 +7,7 @@ import { STATUS } from "@prisma/client";
 import { utapi } from "~/server/uploadthing";
 
 export const tutorRouter = createTRPCRouter({
-  getTutors: protectedProcedure
+  getTutors: publicProcedure
     .input(
       z.object({
         search: z.string().optional(),

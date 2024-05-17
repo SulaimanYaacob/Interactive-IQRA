@@ -16,7 +16,7 @@ function LiveblocksProvider({ children, header, roomId }: Props) {
   const { data, failureCount } =
     api.liveblocks.getCurrentUserRoomAccess.useQuery(
       { roomId },
-      { refetchOnWindowFocus: false, refetchOnMount: false }
+      { refetchOnWindowFocus: false }
     );
 
   if (!data && header) return;

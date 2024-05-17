@@ -70,10 +70,7 @@ function Tutors({ page, search }: { page: number; search: string }) {
     error,
   } = api.tutor.getTutors.useQuery(
     { search: search ?? "" },
-    {
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-    }
+    { refetchOnWindowFocus: false }
   );
 
   useEffect(() => setPage(Number(page)), [page]);
