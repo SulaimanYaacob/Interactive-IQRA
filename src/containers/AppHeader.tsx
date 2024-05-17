@@ -20,7 +20,7 @@ type Props = {
 
 function AppHeader({ openedMainNav, toggleMainNav }: Props) {
   return (
-    <AppShellHeader py="lg">
+    <AppShellHeader>
       {/* <Burger
         opened={openedMainNav}
         onClick={toggleMainNav}
@@ -29,8 +29,8 @@ function AppHeader({ openedMainNav, toggleMainNav }: Props) {
         pos="absolute"
         mx="sm"
       /> */}
-      <Container>
-        <Group pos="relative" justify="space-between">
+      <Container h="100%">
+        <Group h="100%" pos="relative" justify="space-between">
           <Group>
             <Burger
               opened={openedMainNav}

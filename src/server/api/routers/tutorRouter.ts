@@ -96,6 +96,35 @@ export const tutorRouter = createTRPCRouter({
         });
       }
     }),
+  getApplications: protectedProcedure.query(async ({ ctx }) => {
+    try {
+      const applications = await ctx.db.tutorApplication.findMany({
+        include: { files: true },
+      });
+
+      if (!applications) return null;
+
+      const users = await clerkClient.users.getUserList({
+        userId: applications.map((application) => application.createdByClerkId),
+      });
+
+      if (!users) return null;
+
+      const applicationsWithUser = applications.map((application) => {
+        const user = users.find(
+          (user) => user.id === application.createdByClerkId
+        );
+        return { ...application, user };
+      });
+
+      return applicationsWithUser;
+    } catch (error) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: (error as Error).message,
+      });
+    }
+  }),
   getUserApplicationStatus: protectedProcedure.query(async ({ ctx }) => {
     try {
       const application = await ctx.db.tutorApplication.findFirst({

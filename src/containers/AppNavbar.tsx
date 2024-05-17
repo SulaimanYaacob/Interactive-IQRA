@@ -53,7 +53,7 @@ function AppNavbar() {
               }
               active={
                 dynamicPath
-                  ? pathname.startsWith(`${dynamicPath}`)
+                  ? pathname.startsWith(dynamicPath)
                   : pathname === path
               }
             />

@@ -5,10 +5,11 @@ import { useRouter } from "next/router";
 import RoomHeader from "./RoomHeader";
 import AppNavbar from "./AppNavbar";
 import { useDisclosure } from "@mantine/hooks";
+import AdminHeader from "./AdminHeader";
 
 function AppLayout({ children }: { children: React.ReactNode }) {
   const [openedMainNav, { toggle: toggleMainNav, close: closeMainNav }] =
-    useDisclosure(false); //Coupled with AppHeader and AppNavbar
+    useDisclosure(false);
 
   const { pathname } = useRouter();
 
@@ -18,6 +19,7 @@ function AppLayout({ children }: { children: React.ReactNode }) {
       closeMainNav();
       return <RoomHeader />;
     }
+    if (pathname.includes("admin")) return <AdminHeader />;
 
     return (
       <AppHeader openedMainNav={openedMainNav} toggleMainNav={toggleMainNav} />

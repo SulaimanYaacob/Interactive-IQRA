@@ -43,9 +43,9 @@ function LiveblocksHeader({ roomPIN }: { roomPIN: string }) {
   const currentUser = useSelf();
 
   return (
-    <AppShellHeader py="lg">
-      <Container>
-        <Group pos="relative" justify="space-between">
+    <AppShellHeader>
+      <Container h="100%">
+        <Group h="100%" pos="relative" justify="space-between">
           <Button component="a" href="/" color="red">
             Exit Room
           </Button>
