@@ -1,9 +1,9 @@
 import { type AppType } from "next/app";
 import Head from "next/head";
-import AppLayout from "~/containers/AppLayout";
 import ClerkAuthProvider from "~/providers/ClerkAuthProvider";
 import MantineStyleProvider from "~/providers/MantineStyleProvider";
 import { api } from "~/utils/api";
+import AppLayout from "~/containers/AppLayout";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (

@@ -12,9 +12,12 @@ import superjson from "superjson";
 import { createTRPCContext } from "~/server/api/trpc";
 import dynamic from "next/dynamic";
 
-const LazyTutorsList = dynamic(() => import("~/components/TutorsList"), {
-  ssr: false,
-});
+const LazyTutorsList = dynamic(
+  () => import("~/components/dynamic-components/TutorsList"),
+  {
+    ssr: false,
+  }
+);
 
 //* Style each group with a border except the last group (Because it alr contain container border)
 

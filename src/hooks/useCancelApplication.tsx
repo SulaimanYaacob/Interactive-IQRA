@@ -1,34 +1,13 @@
 import { notifications } from "@mantine/notifications";
-import { useRouter } from "next/router";
 import { api } from "~/utils/api";
 import {
   successProps,
-  mutateProps,
   errorProps,
+  mutateProps,
 } from "~/utils/notificationProps";
 
-const useHandleApplication = () => {
+const useCancelApplication = () => {
   const utils = api.useUtils();
-  const { reload } = useRouter();
-  const { data: applicationStatus } =
-    api.tutor.getUserApplicationStatus.useQuery(undefined, {
-      refetchOnWindowFocus: false,
-    });
-
-  const { mutate: uploadApplication } = api.tutor.uploadApplication.useMutation(
-    {
-      onSuccess: async () => {
-        notifications.update({
-          id: "upload-application",
-          title: "Upload Complete",
-          message: "Your file has been uploaded",
-          ...successProps,
-        }),
-          await utils.tutor.getUserApplicationStatus.invalidate();
-      },
-    }
-  );
-
   const { mutate: cancelApplication } = api.tutor.cancelApplication.useMutation(
     {
       onMutate: () => {
@@ -39,14 +18,15 @@ const useHandleApplication = () => {
           ...mutateProps,
         });
       },
-      onSuccess: () => {
+      onSuccess: async () => {
         notifications.update({
           id: "cancel-application",
           title: "Application Cancelled",
           message: "Your application has been cancelled",
           ...successProps,
         }),
-          reload();
+          await utils.tutor.getUserApplicationStatus.invalidate();
+        // reload();
       },
       onError: (error) => {
         notifications.update({
@@ -59,7 +39,7 @@ const useHandleApplication = () => {
     }
   );
 
-  return { uploadApplication, cancelApplication, applicationStatus };
+  return { cancelApplication };
 };
 
-export default useHandleApplication;
+export default useCancelApplication;

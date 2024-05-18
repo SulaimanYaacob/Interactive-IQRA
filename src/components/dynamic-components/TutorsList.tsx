@@ -11,7 +11,7 @@ import {
 } from "@mantine/core";
 import { type ReactNode, useState } from "react";
 import { api } from "~/utils/api";
-import Loading from "./Loading";
+import Loading from "../Loading";
 import { useRouter } from "next/router";
 
 const DynamicGroup = ({
@@ -74,7 +74,12 @@ const TutorsList = ({ page, search }: { page: number; search: string }) => {
                   return (
                     <DynamicGroup key={idx} bottomBorder={bottomBorder}>
                       <Group my="xs" ml="md">
-                        <Avatar src={imageUrl} color="blue" radius="xl" />
+                        <Avatar
+                          alt={imageUrl}
+                          src={imageUrl}
+                          color="blue"
+                          radius="xl"
+                        />
                         <Stack gap="0">
                           <Text fw="500">
                             {`${firstName ?? ""} ${lastName ?? ""}`}

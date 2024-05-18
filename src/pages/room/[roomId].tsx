@@ -110,7 +110,6 @@ function InteractiveRoom({ id }: { id: string }) {
           </Group>
         </Paper>
       </Container>
-
       {cursors.map((cursor) => {
         if (!cursor?.connectionId) return null;
         const { connectionId, x, y, info } = cursor;
