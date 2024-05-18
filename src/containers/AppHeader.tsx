@@ -49,11 +49,11 @@ function AppHeader({ openedMainNav, toggleMainNav }: Props) {
             </UnstyledButton>
           </Group>
           <Group
-            visibleFrom="sm"
+            visibleFrom="xs"
             pos="absolute"
             gap="xl"
-            left="30%"
-            right="30%"
+            left="20%"
+            right="20%"
             justify="center"
           >
             <Anchor
