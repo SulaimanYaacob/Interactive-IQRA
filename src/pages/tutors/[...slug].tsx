@@ -1,79 +1,26 @@
-import {
-  Anchor,
-  Avatar,
-  Center,
-  Container,
-  Group,
-  Pagination,
-  Paper,
-  SimpleGrid,
-  Stack,
-  Text,
-  TextInput,
-  Title,
-} from "@mantine/core";
+import { Container, SimpleGrid, TextInput } from "@mantine/core";
 import type {
   GetServerSidePropsContext,
   NextApiRequest,
   NextApiResponse,
 } from "next";
 import { useRouter } from "next/router";
-import { type ReactNode, useState, useEffect } from "react";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { appRouter } from "~/server/api/root";
-import { api } from "~/utils/api";
 import { createServerSideHelpers } from "@trpc/react-query/server";
 import superjson from "superjson";
 import { createTRPCContext } from "~/server/api/trpc";
-import Loading from "~/components/Loading";
+import dynamic from "next/dynamic";
+
+const LazyTutorsList = dynamic(() => import("~/components/TutorsList"), {
+  ssr: false,
+});
 
 //* Style each group with a border except the last group (Because it alr contain container border)
-const DynamicGroup = ({
-  children,
-  bottomBorder,
-}: {
-  children: ReactNode;
-  bottomBorder: string;
-}) => {
-  return (
-    <>
-      <Group
-        justify="space-between"
-        style={(theme) => ({
-          borderBottom: `1px ${bottomBorder} ${theme.colors.gray[3]}`,
-        })}
-        darkHidden
-      >
-        {children}
-      </Group>
-      <Group
-        justify="space-between"
-        style={(theme) => ({
-          borderBottom: `1px ${bottomBorder} ${theme.colors.gray[7]}`,
-        })}
-        lightHidden
-      >
-        {children}
-      </Group>
-    </>
-  );
-};
 
 function Tutors({ page, search }: { page: number; search: string }) {
   //TODO Fix Abort Fetching Component Error
   const { push } = useRouter();
-
-  const [activePage, setPage] = useState(Number(page));
-  const {
-    data: listOfTutors,
-    isLoading,
-    error,
-  } = api.tutor.getTutors.useQuery(
-    { search: search ?? "" },
-    { refetchOnWindowFocus: false }
-  );
-
-  useEffect(() => setPage(Number(page)), [page]);
 
   //* Define number of tutors to display per page
   return (
@@ -93,65 +40,7 @@ function Tutors({ page, search }: { page: number; search: string }) {
           }}
         />
       </SimpleGrid>
-      {listOfTutors && (
-        <>
-          <Paper withBorder>
-            <Stack gap="0">
-              {listOfTutors[activePage - 1]?.map(
-                ({ firstName, lastName, imageUrl, emailAddresses }, idx) => {
-                  const bottomBorder =
-                    (listOfTutors[activePage - 1] ?? []).length - 1 === idx
-                      ? "none"
-                      : "solid";
-
-                  return (
-                    <DynamicGroup key={idx} bottomBorder={bottomBorder}>
-                      <Group my="xs" ml="md">
-                        <Avatar src={imageUrl} color="blue" radius="xl" />
-                        <Stack gap="0">
-                          <Text fw="500">
-                            {`${firstName ?? ""} ${lastName ?? ""}`}
-                          </Text>
-                          <Text c="dimmed">
-                            {emailAddresses[0]?.emailAddress}
-                          </Text>
-                        </Stack>
-                      </Group>
-                      <Anchor fw="500" td="none" mr="md">
-                        View
-                      </Anchor>
-                    </DynamicGroup>
-                  );
-                }
-              )}
-            </Stack>
-          </Paper>
-          <Center my="xl">
-            <Pagination
-              total={listOfTutors.length}
-              value={activePage}
-              disabled={isLoading}
-              onChange={async (e) => {
-                setPage(e);
-                await push(`/tutors/${e}${search ? `/${String(search)}` : ""}`);
-              }}
-            />
-          </Center>
-        </>
-      )}
-      {/*//******************************** Error Handling  *********************************/}
-      {isLoading && <Loading />}
-
-      {!listOfTutors && !isLoading && (
-        //TODO Probably just find the name in database instead of using query from clerk
-        <Center mih="60vh">
-          {/* {search && search.length < 3 ? (
-              <Title fw="500">Please enter at least 3 characters</Title>
-            ) : ( */}
-          <Title>{error?.message ?? "No tutors found"}</Title>
-          {/* )} */}
-        </Center>
-      )}
+      <LazyTutorsList page={page} search={search} />
     </Container>
   );
 }

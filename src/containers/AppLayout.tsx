@@ -2,10 +2,11 @@ import { AppShell } from "@mantine/core";
 import React from "react";
 import AppHeader from "./AppHeader";
 import { useRouter } from "next/router";
-import RoomHeader from "./RoomHeader";
 import AppNavbar from "./AppNavbar";
 import { useDisclosure } from "@mantine/hooks";
 import AdminHeader from "./AdminHeader";
+import dynamic from "next/dynamic";
+const DynamicRoomHeader = dynamic(() => import("./RoomHeader"), { ssr: false });
 
 function AppLayout({ children }: { children: React.ReactNode }) {
   const [openedMainNav, { toggle: toggleMainNav, close: closeMainNav }] =
@@ -17,8 +18,9 @@ function AppLayout({ children }: { children: React.ReactNode }) {
     if (pathname === "/404") return null;
     if (pathname === "/room/[roomId]") {
       closeMainNav();
-      return <RoomHeader />;
+      return <DynamicRoomHeader />;
     }
+
     if (pathname.includes("admin")) return <AdminHeader />;
 
     return (
