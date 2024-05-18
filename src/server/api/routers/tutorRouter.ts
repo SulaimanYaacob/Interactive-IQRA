@@ -62,6 +62,8 @@ export const tutorRouter = createTRPCRouter({
         });
       }
     }),
+
+  //******************************************** Applications ********************************************//
   uploadApplication: protectedProcedure
     .input(
       z.object({
@@ -172,7 +174,6 @@ export const tutorRouter = createTRPCRouter({
       });
     }
   }),
-  //TODO Update user role as well
   updateApplicationStatus: protectedProcedure
     .input(
       z.object({

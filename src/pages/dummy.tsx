@@ -37,7 +37,6 @@ import {
   TextInput,
 } from "@mantine/core";
 import { useState } from "react";
-import { api } from "~/utils/api";
 
 const DummyPage = () => {
   const [isRecording, setIsRecording] = useState(false);
@@ -78,7 +77,6 @@ const DummyPage = () => {
 
   //! Don't use this cause U can't validate afterwards.
   const { session } = useSession();
-  const { mutate } = api.profile.updateProfile.useMutation();
   const [newName, setNewName] = useState<string>("Undefined");
 
   return (
@@ -97,11 +95,7 @@ const DummyPage = () => {
                 placeholder="Your weird name"
               />
             </Grid.Col>
-            <Grid.Col span="content">
-              <Button onClick={() => mutate({ name: newName })} color="green">
-                Update Name
-              </Button>
-            </Grid.Col>
+            <Grid.Col span="content"></Grid.Col>
           </Grid>
           <Stack>
             <Button fullWidth onClick={toggleRecording}>
