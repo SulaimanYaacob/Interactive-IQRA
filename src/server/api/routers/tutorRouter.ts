@@ -5,6 +5,7 @@ import { z } from "zod";
 import chunk from "~/utils/paginationChunk";
 import { STATUS } from "@prisma/client";
 import { utapi } from "~/server/uploadthing";
+import { ROLE } from "~/utils/constants";
 
 export const tutorRouter = createTRPCRouter({
   getTutors: publicProcedure
@@ -78,6 +79,7 @@ export const tutorRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       try {
         const { files } = input;
+
         await ctx.db.tutorApplication.create({
           data: {
             createdByClerkId: ctx.auth.id,
@@ -100,6 +102,7 @@ export const tutorRouter = createTRPCRouter({
     try {
       const applications = await ctx.db.tutorApplication.findMany({
         include: { files: true },
+        orderBy: { createdAt: "asc" },
       });
 
       if (!applications) return null;
@@ -125,6 +128,7 @@ export const tutorRouter = createTRPCRouter({
       });
     }
   }),
+  //******************************************** Application Status ********************************************//
   getUserApplicationStatus: protectedProcedure.query(async ({ ctx }) => {
     try {
       const application = await ctx.db.tutorApplication.findFirst({
@@ -154,13 +158,13 @@ export const tutorRouter = createTRPCRouter({
 
       const { files, applicationId } = filesKey;
 
-      //? Delete from UploadThing Server
-      await utapi.deleteFiles(files.map((file) => file.key));
-
-      //? Delete Entire Application with It's Files
-      await ctx.db.tutorApplication.delete({
-        where: { applicationId },
-      });
+      //? Delete from UploadThing Server & Delete Entire Application with It's Files
+      await Promise.all([
+        utapi.deleteFiles(files.map((file) => file.key)),
+        ctx.db.tutorApplication.delete({
+          where: { applicationId },
+        }),
+      ]);
     } catch (error) {
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
@@ -168,4 +172,33 @@ export const tutorRouter = createTRPCRouter({
       });
     }
   }),
+  //TODO Update user role as well
+  updateApplicationStatus: protectedProcedure
+    .input(
+      z.object({
+        userId: z.string(),
+        applicationId: z.string(),
+        status: z.nativeEnum(STATUS),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const { applicationId, status, userId } = input;
+        await Promise.all([
+          ctx.db.tutorApplication.update({
+            where: { applicationId: applicationId },
+            data: { status },
+          }),
+          status === STATUS.ACCEPTED &&
+            clerkClient.users.updateUserMetadata(userId, {
+              publicMetadata: { role: ROLE.TUTOR },
+            }),
+        ]);
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: (error as Error).message,
+        });
+      }
+    }),
 });

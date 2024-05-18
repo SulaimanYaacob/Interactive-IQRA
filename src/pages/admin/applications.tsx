@@ -20,10 +20,9 @@ import { api } from "~/utils/api";
 function Applications() {
   const { data: applications, isLoading } = api.tutor.getApplications.useQuery(
     undefined,
-    {
-      refetchOnWindowFocus: false,
-    }
+    { refetchOnWindowFocus: false }
   );
+  const { mutate } = api.tutor.updateApplicationStatus.useMutation();
 
   if (isLoading) return <Loading />;
 
@@ -36,26 +35,34 @@ function Applications() {
         <Stack>
           <Accordion chevronPosition="left">
             {applications.map(
-              ({ applicationId, files, status, user, createdAt }) => {
+              ({
+                applicationId,
+                files,
+                status,
+                user,
+                createdAt,
+                createdByClerkId,
+              }) => {
                 return (
                   <Accordion.Item key={user?.id} value={applicationId}>
                     <Center pos="relative">
                       <Accordion.Control>
                         <Group gap="xs">
                           <Avatar visibleFrom="xs" src={user?.imageUrl} />
-                          <Text hiddenFrom="xs" size="xs">
-                            {user?.firstName}
-                          </Text>
-                          <Box visibleFrom="xs">
+                          <Box w={{ base: "125px", xs: "auto" }}>
                             <Group gap="xs">
                               <Text fz={{ base: "xs", xs: "md" }} fw="500">
                                 {user?.firstName ?? "" + user?.lastName ?? ""}
                               </Text>
-                              <Text size="xs" c="dimmed">
+                              <Text size="xs" c="dimmed" visibleFrom="xs">
                                 {new Date(createdAt).toLocaleDateString()}
                               </Text>
                             </Group>
-                            <Text fz={{ base: "xs", xs: "sm" }} c="dimmed">
+                            <Text
+                              visibleFrom="xs"
+                              fz={{ base: "xs", xs: "sm" }}
+                              c="dimmed"
+                            >
                               {user?.emailAddresses[0]?.emailAddress}
                             </Text>
                           </Box>
@@ -64,6 +71,7 @@ function Applications() {
                       <Select
                         mx="md"
                         fw="500"
+                        w="200px"
                         right={0}
                         pos="absolute"
                         visibleFrom="xs"
@@ -71,7 +79,26 @@ function Applications() {
                         allowDeselect={false}
                         defaultValue={status}
                         data={Object.values(STATUS)}
-                        w={{ base: "125px", md: "200px" }}
+                        onChange={(status) =>
+                          mutate({
+                            applicationId,
+                            status: status as STATUS,
+                            userId: createdByClerkId,
+                          })
+                        }
+                      />
+                      <Select
+                        mx="md"
+                        fw="500"
+                        w="100px"
+                        size="xs"
+                        right={0}
+                        hiddenFrom="xs"
+                        pos="absolute"
+                        withCheckIcon={false}
+                        allowDeselect={false}
+                        defaultValue={status}
+                        data={Object.values(STATUS)}
                       />
                     </Center>
                     <Accordion.Panel>
