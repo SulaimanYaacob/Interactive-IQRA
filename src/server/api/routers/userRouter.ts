@@ -1,8 +1,30 @@
 import { clerkClient } from "@clerk/nextjs/server";
-import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 
 export const userRouter = createTRPCRouter({
+  getProfileById: publicProcedure
+    .input(z.object({ userId: z.string() }))
+    .query(async ({ input }) => {
+      try {
+        const { userId } = input;
+        const user = await clerkClient.users.getUser(userId);
+
+        if (!user)
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "User not found",
+          });
+
+        return user;
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: (error as Error).message,
+        });
+      }
+    }),
   getAllProfile: protectedProcedure.query(async () => {
     try {
       const users = await clerkClient.users.getUserList({});

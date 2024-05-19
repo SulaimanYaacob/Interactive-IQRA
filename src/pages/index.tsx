@@ -90,7 +90,14 @@ export default function Home() {
                   px="xs"
                   py="xl"
                 >
-                  <Image src={icons} alt={title} width={125} height={125} />
+                  <Image
+                    priority
+                    src={icons}
+                    alt={title}
+                    width={125}
+                    height={125}
+                    style={{ objectFit: "contain" }}
+                  />
                   <Text fw="500">{description}</Text>
                   <ClerkLoaded>
                     <SignedIn>

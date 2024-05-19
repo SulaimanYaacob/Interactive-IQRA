@@ -1,4 +1,10 @@
-import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import {
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+  useSession,
+} from "@clerk/nextjs";
 import {
   Anchor,
   AppShellHeader,
@@ -19,6 +25,8 @@ type Props = {
 };
 
 function AppHeader({ openedMainNav, toggleMainNav }: Props) {
+  const { session } = useSession();
+
   return (
     <AppShellHeader>
       {/* <Burger
@@ -84,7 +92,7 @@ function AppHeader({ openedMainNav, toggleMainNav }: Props) {
             <SignedIn>
               <UserButton
                 userProfileMode="navigation"
-                userProfileUrl="/profile"
+                userProfileUrl={`/profile/${session?.user.id}`}
                 afterSignOutUrl="/"
               />
             </SignedIn>
