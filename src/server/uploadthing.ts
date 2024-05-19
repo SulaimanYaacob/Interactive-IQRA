@@ -22,6 +22,9 @@ export const ourFileRouter = {
       // Whatever is returned here is accessible in onUploadComplete as `metadata`
       return { userId };
     })
+    .onUploadError(({ error }) => {
+      console.log(error);
+    })
     .onUploadComplete(({ metadata }) => {
       // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
       return { uploadedBy: metadata.userId };

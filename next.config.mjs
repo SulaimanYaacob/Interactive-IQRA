@@ -18,15 +18,9 @@ const config = {
     locales: ["en"],
     defaultLocale: "en",
   },
-  // experimental: {
-  //   optimizePackageImports: [
-  //     // "@mantine/core",
-  //     // "@mantine/hooks",
-  //     // "@mantine/form",
-  //     // "@mantine/modals",
-  //     // "@mantine/notifications",
-  //   ],
-  // },
+  experimental: {
+    optimizePackageImports: ["@mantine/hooks"],
+  },
 };
 
 import bundleAnalyzer from "@next/bundle-analyzer";

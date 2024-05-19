@@ -1,13 +1,4 @@
-import {
-  Button,
-  Divider,
-  FocusTrap,
-  PinInput,
-  Stack,
-  Text,
-} from "@mantine/core";
 import { modals } from "@mantine/modals";
-import { hasLength, useForm } from "@mantine/form";
 import { api } from "~/utils/api";
 import { useRouter } from "next/router";
 import { notifications } from "@mantine/notifications";
@@ -16,7 +7,11 @@ import {
   successProps,
   mutateProps,
 } from "~/utils/notificationProps";
-
+import dynamic from "next/dynamic";
+const LazyJoinRoomModalContent = dynamic(
+  import("~/components/dynamic-components/modals/JoinRoomModalContent"),
+  { ssr: false }
+);
 const useJoinRoom = () => {
   const { push } = useRouter();
 
@@ -50,7 +45,7 @@ const useJoinRoom = () => {
 
   const openJoinRoomModal = () => {
     modals.open({
-      children: <RoomModalForm mutate={mutate} />,
+      children: <LazyJoinRoomModalContent mutate={mutate} />,
       withCloseButton: false,
       trapFocus: true,
       centered: true,
@@ -62,57 +57,5 @@ const useJoinRoom = () => {
 };
 
 //* Currently This is the Best Way
-const RoomModalForm = ({
-  mutate,
-}: {
-  mutate: ({ roomPIN }: { roomPIN: string }) => void;
-}) => {
-  const { getInputProps, onSubmit } = useForm({
-    mode: "uncontrolled",
-    initialValues: { roomPIN: "" },
-    validate: { roomPIN: hasLength({ min: 6, max: 6 }) },
-  });
-
-  return (
-    <form
-      onSubmit={onSubmit((val) => {
-        mutate(val), modals.closeAll();
-      })}
-    >
-      <Stack>
-        <Divider
-          label={
-            <Text c="gray" fw={500}>
-              Enter Valid Room PIN
-            </Text>
-          }
-        />
-        <Stack ta="center" align="center">
-          <FocusTrap>
-            <PinInput
-              visibleFrom="sm"
-              value=""
-              fw={500}
-              length={6}
-              {...getInputProps("roomPIN")}
-            />
-          </FocusTrap>
-          <FocusTrap>
-            <PinInput
-              hiddenFrom="sm"
-              size="xs"
-              value=""
-              fw={500}
-              length={6}
-              {...getInputProps("roomPIN")}
-            />
-          </FocusTrap>
-        </Stack>
-        <Divider />
-        <Button type="submit">Enter Room</Button>
-      </Stack>
-    </form>
-  );
-};
 
 export default useJoinRoom;

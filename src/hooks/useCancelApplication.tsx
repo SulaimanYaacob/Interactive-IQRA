@@ -26,7 +26,6 @@ const useCancelApplication = () => {
           ...successProps,
         }),
           await utils.tutor.getUserApplicationStatus.invalidate();
-        // reload();
       },
       onError: (error) => {
         notifications.update({
