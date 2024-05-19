@@ -5,6 +5,7 @@
 await import("./src/env.mjs");
 
 /** @type {import("next").NextConfig} */
+
 const config = {
   reactStrictMode: true,
   compress: true,
@@ -17,15 +18,20 @@ const config = {
     locales: ["en"],
     defaultLocale: "en",
   },
-  experimental: {
-    optimizePackageImports: [
-      "@mantine/core",
-      "@mantine/hooks",
-      "@mantine/form",
-      "@mantine/modals",
-      "@mantine/notifications",
-    ],
-  },
+  // experimental: {
+  //   optimizePackageImports: [
+  //     // "@mantine/core",
+  //     // "@mantine/hooks",
+  //     // "@mantine/form",
+  //     // "@mantine/modals",
+  //     // "@mantine/notifications",
+  //   ],
+  // },
 };
 
-export default config;
+import bundleAnalyzer from "@next/bundle-analyzer";
+const withBundleAnalyzer = bundleAnalyzer({
+  enabled: process.env.ANALYZE === "true",
+});
+
+export default withBundleAnalyzer(config);

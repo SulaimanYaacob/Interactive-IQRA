@@ -5,7 +5,6 @@ import {
   PiFileMagnifyingGlassDuotone,
 } from "react-icons/pi";
 import { api } from "~/utils/api";
-import { STATUS } from "@prisma/client";
 import dynamic from "next/dynamic";
 const LazyStatusDisplay = dynamic(
   () => import("~/components/dynamic-components/StatusDisplay"),
@@ -26,7 +25,7 @@ function TutorApplication() {
     if (!applicationStatus && isLoading) return <Loading />;
 
     switch (applicationStatus) {
-      case STATUS.PENDING:
+      case "PENDING":
         return (
           <LazyStatusDisplay
             title="Your application is sent"
@@ -36,7 +35,7 @@ function TutorApplication() {
             Icon={PiFileMagnifyingGlassDuotone}
           />
         );
-      case STATUS.ACCEPTED:
+      case "ACCEPTED":
         return (
           <LazyStatusDisplay
             title="Your application has been accepted!"
@@ -45,7 +44,7 @@ function TutorApplication() {
             Icon={PiCheckCircleDuotone}
           />
         );
-      case STATUS.REJECTED:
+      case "REJECTED":
         return (
           <LazyStatusDisplay
             title="Your application has been rejected"

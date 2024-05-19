@@ -11,7 +11,6 @@ import { hasLength, useForm } from "@mantine/form";
 import { api } from "~/utils/api";
 import { useRouter } from "next/router";
 import { notifications } from "@mantine/notifications";
-import { useEffect } from "react";
 import {
   errorProps,
   successProps,
@@ -68,20 +67,11 @@ const RoomModalForm = ({
 }: {
   mutate: ({ roomPIN }: { roomPIN: string }) => void;
 }) => {
-  const { getInputProps, onSubmit, errors } = useForm({
+  const { getInputProps, onSubmit } = useForm({
     mode: "uncontrolled",
     initialValues: { roomPIN: "" },
-    validate: { roomPIN: hasLength({ min: 6, max: 6 }, "Invalid Room PIN") },
+    validate: { roomPIN: hasLength({ min: 6, max: 6 }) },
   });
-
-  useEffect(() => {
-    if (errors.roomPIN)
-      notifications.show({
-        title: "Invalid Room PIN",
-        message: "Please enter a valid Room PIN",
-        color: "red",
-      });
-  }, [errors.roomPIN]);
 
   return (
     <form

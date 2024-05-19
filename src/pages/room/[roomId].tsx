@@ -7,7 +7,7 @@ import {
 } from "liveblocks.config";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Cursor from "~/components/Cursor";
 import { useElementLiveCursors } from "~/hooks/useElementLiveCursors";
 const LiveblocksProvider = dynamic(
@@ -51,9 +51,7 @@ function InteractiveRoom({ id }: { id: string }) {
   const cursors = useElementLiveCursors(id, containerRef);
   const [opacity, setOpacity] = useState(1);
 
-  useEffect(() => {
-    document.body.style.overflow = "hidden";
-  }, []);
+  document.body.style.overflow = "hidden";
 
   useEventListener(({ event }) => {
     switch (event.type) {

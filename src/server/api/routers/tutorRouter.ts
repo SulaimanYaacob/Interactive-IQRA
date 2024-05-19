@@ -3,9 +3,8 @@ import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { clerkClient } from "@clerk/nextjs/server";
 import { z } from "zod";
 import chunk from "~/utils/paginationChunk";
-import { STATUS } from "@prisma/client";
 import { utapi } from "~/server/uploadthing";
-import { ROLE } from "~/utils/constants";
+import { ROLE, STATUS } from "~/utils/constants";
 
 export const tutorRouter = createTRPCRouter({
   getTutors: publicProcedure

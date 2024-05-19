@@ -6,6 +6,7 @@ import "@mantine/notifications/styles.css";
 import "@mantine/core/styles.css";
 
 const theme = createTheme({
+  respectReducedMotion: true,
   components: {
     Button: Button.extend({
       defaultProps: {

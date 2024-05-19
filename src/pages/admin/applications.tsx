@@ -11,11 +11,11 @@ import {
   Text,
   Title,
 } from "@mantine/core";
-import { STATUS } from "@prisma/client";
 import Link from "next/link";
 import { BsFileEarmark } from "react-icons/bs";
 import Loading from "~/components/Loading";
 import { api } from "~/utils/api";
+import { STATUS } from "~/utils/constants";
 
 function Applications() {
   const { data: applications, isLoading } = api.tutor.getApplications.useQuery(
