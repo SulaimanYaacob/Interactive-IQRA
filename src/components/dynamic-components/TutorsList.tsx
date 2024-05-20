@@ -13,6 +13,7 @@ import { type ReactNode, useState } from "react";
 import { api } from "~/utils/api";
 import Loading from "../Loading";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 const DynamicGroup = ({
   children,
@@ -65,7 +66,10 @@ const TutorsList = ({ page, search }: { page: number; search: string }) => {
           <Paper withBorder>
             <Stack gap="0">
               {listOfTutors[activePage - 1]?.map(
-                ({ firstName, lastName, imageUrl, emailAddresses }, idx) => {
+                (
+                  { firstName, lastName, imageUrl, emailAddresses, id },
+                  idx
+                ) => {
                   const bottomBorder =
                     (listOfTutors[activePage - 1] ?? []).length - 1 === idx
                       ? "none"
@@ -89,7 +93,13 @@ const TutorsList = ({ page, search }: { page: number; search: string }) => {
                           </Text>
                         </Stack>
                       </Group>
-                      <Anchor fw="500" td="none" mr="md">
+                      <Anchor
+                        component={Link}
+                        href={`/profile/${id}`}
+                        fw="500"
+                        td="none"
+                        mr="md"
+                      >
                         View
                       </Anchor>
                     </DynamicGroup>

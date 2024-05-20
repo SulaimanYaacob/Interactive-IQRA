@@ -14,9 +14,7 @@ import dynamic from "next/dynamic";
 
 const LazyTutorsList = dynamic(
   () => import("~/components/dynamic-components/TutorsList"),
-  {
-    ssr: false,
-  }
+  { ssr: false }
 );
 
 //* Style each group with a border except the last group (Because it alr contain container border)

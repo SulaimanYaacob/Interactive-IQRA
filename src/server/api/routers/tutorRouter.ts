@@ -30,7 +30,7 @@ export const tutorRouter = createTRPCRouter({
         //* If query exists filter the users
         if (search) {
           const filteredUsers = users.filter((user) => {
-            const name = (user.firstName ?? "") + (user?.lastName ?? "");
+            const name = `${user.firstName ?? ""} ${user.lastName ?? ""}`;
             return name.toLowerCase().includes(search.toLowerCase());
           });
 

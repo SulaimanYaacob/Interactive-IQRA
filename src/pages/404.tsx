@@ -8,18 +8,24 @@ function Error404() {
       <Stack
         gap="0"
         style={{
-          border: "solid 1px var(--mantine-color-dimmed)",
-          boxShadow: "5px 5px 0 var(--mantine-color-dimmed)",
+          border: "solid 1px",
+          boxShadow: "5px 5px 0",
         }}
         p="xl"
       >
         <Text fw="700" inline fz={{ base: "3rem", sm: "7rem" }}>
           404 Error
         </Text>
-        <Text inline fz={{ base: "1.5rem", sm: "2rem" }}>
+        <Text fw="500" inline fz={{ base: "1.5rem", sm: "2rem" }}>
           Page not found
         </Text>
-        <Button variant="default" mt="xl" component={Link} href="/">
+        <Button
+          variant="default"
+          style={{ border: "solid 1px" }}
+          mt="xl"
+          component={Link}
+          href="/"
+        >
           Return Home
         </Button>
       </Stack>
