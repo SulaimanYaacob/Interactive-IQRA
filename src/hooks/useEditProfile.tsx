@@ -11,7 +11,7 @@ import {
 
 const useEditProfile = () => {
   const { reload } = useRouter();
-  const { mutate, isLoading } = api.user.editUserProfile.useMutation({
+  const { mutate } = api.user.editUserProfile.useMutation({
     onMutate: () => {
       notifications.show({
         id: "update-profile-info",
@@ -20,7 +20,7 @@ const useEditProfile = () => {
         ...mutateProps,
       });
     },
-    onSuccess: (room) => {
+    onSuccess: () => {
       notifications.update({
         id: "update-profile-info",
         title: "Profile Updated!",

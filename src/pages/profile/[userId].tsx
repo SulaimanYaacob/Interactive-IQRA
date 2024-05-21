@@ -18,8 +18,6 @@ const LazyProfileButton = dynamic(
   () => import("~/components/dynamic-components/ProfileButton"),
   { ssr: false }
 );
-
-//TODO Use Width for text
 const Profile = ({ user }: { user: User }) => {
   const { bio, role } = user.publicMetadata as unknown as ClerkPublicMetadata;
 

@@ -1,56 +1,112 @@
 import { useSession } from "@clerk/nextjs";
 
-import { Button, SimpleGrid, Stack, TextInput, Textarea } from "@mantine/core";
-import { useForm } from "@mantine/form";
+import {
+  Avatar,
+  Button,
+  Center,
+  Divider,
+  FileButton,
+  SimpleGrid,
+  Stack,
+  TextInput,
+  Textarea,
+} from "@mantine/core";
+import { hasLength, useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
 import type { EditProfileInput } from "~/server/api/routers/userRouter";
 
 //TODO Add Validations
+
+interface EditProfileImage extends EditProfileInput {
+  profileImage: Blob | File | string | undefined;
+}
+
 const EditProfileModalContent = ({
   mutate,
 }: {
   mutate: (profileInput: EditProfileInput) => void;
 }) => {
   const { session } = useSession();
-  const { getInputProps, onSubmit } = useForm<EditProfileInput>({
+  const { getInputProps, onSubmit, values } = useForm<EditProfileImage>({
     initialValues: {
+      profileImage: session?.user.imageUrl ?? "",
       firstName: session?.user.firstName ?? "",
       lastName: session?.user.lastName ?? "",
       username: session?.user.username ?? "",
       bio: String(session?.user.publicMetadata.bio ?? ""),
     },
-    validate: {},
+    validate: {
+      firstName: hasLength(
+        { min: 2, max: 20 },
+        "First Name must be 2-20 characters"
+      ),
+      lastName: hasLength({ max: 20 }, "Last Name must be under 20 characters"),
+      username: hasLength(
+        { min: 2, max: 20 },
+        "Username must be 2-20 characters"
+      ),
+      bio: hasLength({ max: 100 }, "Bio must be under 100 characters"),
+    },
   });
 
   if (!session) return null;
 
-  //   const imageURL =
-  //     typeof values.profileImage === "object"
-  //       ? URL.createObjectURL(values.profileImage as Blob)
-  //       : null;
+  const imageURL =
+    typeof values.profileImage === "object"
+      ? URL.createObjectURL(values.profileImage as Blob)
+      : null;
 
   return (
     <form
-      onSubmit={onSubmit((val) => {
-        mutate(val);
+      onSubmit={onSubmit(({ profileImage, ...rest }) => {
+        void Promise.all([
+          session?.user.setProfileImage({ file: profileImage as File }),
+          mutate(rest),
+        ]);
         modals.closeAll();
       })}
     >
       <Stack>
-        <SimpleGrid cols={{ base: 1, sm: 2 }}>
-          <TextInput label="First Name" {...getInputProps("firstName")} />
+        <Stack align="center">
+          <FileButton {...getInputProps("profileImage")}>
+            {(props) => (
+              <Center>
+                <Avatar
+                  {...props}
+                  my="xs"
+                  size="128"
+                  alt="Profile Image"
+                  src={imageURL ?? session?.user.imageUrl}
+                  style={{ cursor: "pointer" }}
+                />
+              </Center>
+            )}
+          </FileButton>
+        </Stack>
+
+        <Divider />
+        <Stack>
+          <SimpleGrid cols={{ base: 1, sm: 2 }}>
+            <TextInput label="First Name" {...getInputProps("firstName")} />
+            <TextInput
+              label="Last Name (Optional)"
+              {...getInputProps("lastName")}
+            />
+          </SimpleGrid>
           <TextInput
-            label="Last Name (Optional)"
-            {...getInputProps("lastName")}
+            styles={{ input: { textTransform: "lowercase" } }}
+            label="Username"
+            {...getInputProps("username")}
           />
-        </SimpleGrid>
-        <TextInput
-          styles={{ input: { textTransform: "lowercase" } }}
-          label="Username"
-          {...getInputProps("username")}
-        />
-        <Textarea label="Bio (Optional)" {...getInputProps("bio")} />
-        <Button type="submit">Update</Button>
+          <Textarea
+            autosize
+            maxRows={4}
+            label="Bio (Optional)"
+            description="Max 100 characters"
+            {...getInputProps("bio")}
+          />
+          <Button type="submit">Update</Button>
+        </Stack>
       </Stack>
     </form>
   );
