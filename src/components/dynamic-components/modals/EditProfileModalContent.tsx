@@ -59,10 +59,15 @@ const EditProfileModalContent = ({
   return (
     <form
       onSubmit={onSubmit(({ profileImage, ...rest }) => {
-        void Promise.all([
-          session?.user.setProfileImage({ file: profileImage as File }),
-          mutate(rest),
-        ]);
+        if (typeof profileImage !== "object") mutate(rest);
+        else {
+          void Promise.all([
+            session?.user.setProfileImage({
+              file: (profileImage as File) ?? "",
+            }),
+            mutate(rest),
+          ]);
+        }
         modals.closeAll();
       })}
     >
