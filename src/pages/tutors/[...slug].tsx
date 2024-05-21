@@ -12,6 +12,7 @@ import superjson from "superjson";
 import { createTRPCContext } from "~/server/api/trpc";
 import dynamic from "next/dynamic";
 
+//TODO Use SSG Instead.
 const LazyTutorsList = dynamic(
   () => import("~/components/dynamic-components/TutorsList"),
   { ssr: false }

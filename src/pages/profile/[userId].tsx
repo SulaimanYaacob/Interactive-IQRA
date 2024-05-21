@@ -12,15 +12,16 @@ import {
   Title,
 } from "@mantine/core";
 import type { GetStaticPropsContext } from "next";
-import type { ROLE } from "~/utils/constants";
 import dynamic from "next/dynamic";
+import type { ClerkPublicMetadata } from "~/types/publicMetadata";
 const LazyProfileButton = dynamic(
   () => import("~/components/dynamic-components/ProfileButton"),
   { ssr: false }
 );
 
+//TODO Use Width for text
 const Profile = ({ user }: { user: User }) => {
-  const role = user.publicMetadata.role as ROLE;
+  const { bio, role } = user.publicMetadata as unknown as ClerkPublicMetadata;
 
   return (
     <Container my="xl">
@@ -28,29 +29,30 @@ const Profile = ({ user }: { user: User }) => {
         <Paper withBorder p="xl">
           <Stack>
             <div>
-              <Group justify="space-between" align="start">
-                <Group>
+              <Group justify="space-between" align="start" pos="relative">
+                <Group mr="46px">
                   <Avatar src={user.imageUrl} alt={user.imageUrl} size="xl" />
                   <div>
-                    <Title order={2}>
+                    <Title fz="xl">
                       {`${user.firstName ?? ""} ${user.lastName ?? ""}`}
                     </Title>
+
                     <Text inline c="dimmed">
                       {user.emailAddresses[0]?.emailAddress}
                     </Text>
-                    <Badge variant="light" mt="xs" radius="xs">
-                      {role ?? "STUDENT"}
-                    </Badge>
+                    <Group mt="xs">
+                      <Badge variant="default" radius="xs" tt="lowercase">
+                        {user.username ?? ""}
+                      </Badge>
+                      <Badge variant="gradient" radius="xs">
+                        {role ?? "STUDENT"}
+                      </Badge>
+                    </Group>
                   </div>
                 </Group>
                 <LazyProfileButton profileId={user.id} profileRole={role} />
               </Group>
-              <Text mt="xs">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Nam sed
-                delectus reiciendis quisquam deleniti modi aut quam provident
-                odio, tempora placeat doloremque vel quidem impedit, beatae
-                natus repudiandae, ut voluptatem!
-              </Text>
+              <Text mt="xs">{bio}</Text>
             </div>
           </Stack>
         </Paper>

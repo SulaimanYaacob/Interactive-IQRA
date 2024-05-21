@@ -47,7 +47,6 @@ const useJoinRoom = () => {
     modals.open({
       children: <LazyJoinRoomModalContent mutate={mutate} />,
       withCloseButton: false,
-      trapFocus: true,
       centered: true,
       size: "sm",
     });
