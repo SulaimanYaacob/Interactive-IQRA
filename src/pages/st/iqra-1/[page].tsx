@@ -1,4 +1,4 @@
-import { Box, Pagination, Stack } from "@mantine/core";
+import { Pagination, Stack } from "@mantine/core";
 import IqraContent from "~/components/IqraContent";
 import type {
   GetStaticPaths,
@@ -14,36 +14,39 @@ const IqraPage = ({
   totalPages,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { push } = useRouter();
+
   return (
     <>
       {/* <NextSeo title="Talaqqi | Iqra 1" /> */}
-      <Stack align={"center"} gap="xl" p="md">
+
+      <Stack align="center" gap="xl" p="md">
         {content && (
           <IqraContent
             page={page}
             nextPageLink={
-              page === totalPages ? "/st/iqra-2/1" : `/st/iqra-1/${page + 1}`
+              page === totalPages ? undefined : `/st/iqra-1/${page + 1}`
             }
             prevPageLink={page === 1 ? undefined : `/st/iqra-1/${page - 1} `}
             content={content}
           />
         )}
-        <Box visibleFrom="xs">
-          <Pagination
-            defaultValue={page || 1}
-            onChange={(number) => push(`/st/iqra-1/${number}`)}
-            total={totalPages}
-          />
-        </Box>
-        <Box display={{ xs: "flex" }}>
-          <Pagination
-            display="none"
-            size="sm"
-            defaultValue={page || 1}
-            onChange={(number) => push(`/st/iqra-1/${number}`)}
-            total={totalPages}
-          />
-        </Box>
+        <Pagination
+          bottom={25}
+          pos="absolute"
+          visibleFrom="xs"
+          value={page || 1}
+          total={totalPages}
+          onChange={(number) => push(`/st/iqra-1/${number}`)}
+        />
+        <Pagination
+          size="sm"
+          bottom={25}
+          pos="absolute"
+          hiddenFrom="xs"
+          value={page || 1}
+          total={totalPages}
+          onChange={(number) => push(`/st/iqra-1/${number}`)}
+        />
       </Stack>
     </>
   );

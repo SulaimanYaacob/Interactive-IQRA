@@ -1,5 +1,5 @@
 import type { MantineColor } from "@mantine/core";
-import { Box, Text } from "@mantine/core";
+import { Text } from "@mantine/core";
 import { quranFont } from "../utils/nextFont";
 
 // TODO: Padding control
@@ -27,31 +27,26 @@ const QuranText = ({
   letterSpacing = 0.5,
 }: Props) => {
   return (
-    <Box px={{ xs: 3 }} fz={{ xs: size * 0.8 }}>
-      <Text
-        className={quranFont.className}
-        fz={{ base: 26 }}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        span
-        ta={align}
-        px="sm"
-        pb={5}
-        pt={10}
-        style={{
-          letterSpacing: letterSpacing,
-          cursor: "pointer",
-          transition: "1s cubic-bezier(0, 0.52, 1, 1) ",
-          ":hover": {
-            transitionDuration: "0.2s",
-          },
-        }}
-        // color={isHighlighted ? 'blue.6' : 'dark'}
-        bg={isHighlighted ? "blue.2" : "transparent"}
-      >
-        {isNumber ? `(${word})` : ` ${word} `}
-      </Text>
-    </Box>
+    <Text
+      className={quranFont.className}
+      fz={{ base: size * 0.8, xs: size * 0.9, sm: size, md: size * 1.1 }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      span
+      ta={align}
+      px={{ base: 1, xs: 3 }}
+      pb={5}
+      pt={10}
+      style={{
+        letterSpacing: letterSpacing,
+        cursor: "pointer",
+        // transition: "1s cubic-bezier(0, 0.52, 1, 1) ",
+      }}
+      c={isHighlighted ? "cyan" : "dark"}
+      // bg={isHighlighted ? "blue.2" : "transparent"}
+    >
+      {isNumber ? `(${word})` : ` ${word} `}
+    </Text>
   );
 };
 

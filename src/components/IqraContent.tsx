@@ -1,4 +1,4 @@
-import { ActionIcon, Box, Container, Group, Stack } from "@mantine/core";
+import { ActionIcon, Box, Group, Stack, useMatches } from "@mantine/core";
 import QuranText from "./QuranText";
 import Link from "next/link";
 import { useState } from "react";
@@ -15,17 +15,23 @@ type Props = {
   };
 };
 
+//TODO Add Audio
 const IqraContent = ({ page, content, nextPageLink, prevPageLink }: Props) => {
+  const textBoxSpacing = useMatches({
+    base: 1,
+    xs: "xs",
+  });
   const [hoveredWord, setHoveredWord] = useState<string>();
   return (
-    <Container>
+    <>
       <Stack
-        w="100%"
-        align="center"
+        gap={0}
         px="lg"
         bg="white"
-        gap={0}
+        maw="800px"
+        w="100%"
         pos="relative"
+        align="center"
         style={(t) => ({
           border: `1px solid ${t.colors.gray[3]}`,
         })}
@@ -33,25 +39,23 @@ const IqraContent = ({ page, content, nextPageLink, prevPageLink }: Props) => {
         <ActionIcon
           pos="absolute"
           variant="filled"
-          left={-16}
-          top="48%"
+          left="-16px"
+          top="50%"
           size="lg"
           component={Link}
           disabled={!prevPageLink}
           href={prevPageLink ?? "#"}
-          color={"blue"}
         >
           <MdOutlineChevronLeft size={20} />
         </ActionIcon>
         <ActionIcon
           pos="absolute"
           variant="filled"
-          right={-16}
-          top="48%"
+          right="-16px"
+          top="50%"
           component={Link}
           disabled={!nextPageLink}
           href={nextPageLink ?? "#"}
-          color={"blue"}
         >
           <MdOutlineChevronRight size={20} />
         </ActionIcon>
@@ -61,22 +65,18 @@ const IqraContent = ({ page, content, nextPageLink, prevPageLink }: Props) => {
             line.length === 1 && !!line[0]?.match(/[aeiou]/gi)?.length;
           const isSingleColumn = line.length === 1;
 
-          const charactersPerLine =
-            line
-              .flatMap((item) => item)
-              .join("")
-              .replace(/ /g, "").length / 2; // * divided by 2 because
-          const spacing = characterCountToSpacingMapper(charactersPerLine);
+          // const charactersPerLine =
+          //   line
+          //     .flatMap((item) => item)
+          //     .join("")
+          //     .replace(/ /g, "").length / 2; // * divided by 2 because
+
+          // const spacing = characterCountToSpacingMapper(charactersPerLine);
 
           return !isRomanText ? (
-            <Box
-              w="100%"
-              key={`line-${lineIdx}`}
-              py={{ xs: "xs" }}
-              style={{ gap: 0 }}
-            >
+            <Box w="100%" key={`line-${lineIdx}`}>
               <Group
-                py="md"
+                py={{ base: "xs", xs: "sm" }}
                 gap="xs"
                 w="100%"
                 justify={isSingleColumn ? "center" : "space-between"}
@@ -90,15 +90,10 @@ const IqraContent = ({ page, content, nextPageLink, prevPageLink }: Props) => {
               >
                 {line.map((cell, cellIdx) => {
                   return (
-                    <Box
-                      key={`${cellIdx}-${lineIdx}`}
-                      style={{ gap: 0 }}
-                      // smallerThan="xs"
-                      // styles={{ gap: 0 }}
-                    >
+                    <Box key={`${cellIdx}-${lineIdx}`}>
                       <Group
-                        style={{ gap: spacing, flexDirection: "row-reverse" }}
-                        gap={0}
+                        style={{ flexDirection: "row-reverse" }}
+                        gap={textBoxSpacing}
                       >
                         {cell.split(" ").map((word, wordIdx) => {
                           const key = `line-${lineIdx}-cell-${cellIdx}-word-${wordIdx}`;
@@ -130,18 +125,19 @@ const IqraContent = ({ page, content, nextPageLink, prevPageLink }: Props) => {
           );
         })}
       </Stack>
-    </Container>
+    </>
   );
 };
 
 export default IqraContent;
 
-const characterCountToSpacingMapper = (count: number) => {
-  let spacing = "2vw";
-  if (count < 10) {
-    spacing = "2.5vw";
-  } else if (count < 14) {
-    spacing = "2vw";
-  }
-  return spacing;
-};
+// const characterCountToSpacingMapper = (count: number) => {
+//   let spacing = "2vw";
+//   if (count < 10) {
+//     spacing = "2.5vw";
+//   } else if (count < 14) {
+//     spacing = "2vw";
+//   }
+
+//   return spacing;
+// };
