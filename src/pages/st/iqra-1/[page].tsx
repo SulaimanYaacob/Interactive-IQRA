@@ -1,4 +1,4 @@
-import { Pagination, Stack } from "@mantine/core";
+import { Center, Pagination } from "@mantine/core";
 import IqraContent from "~/components/IqraContent";
 import type {
   GetStaticPaths,
@@ -19,10 +19,9 @@ const IqraPage = ({
     <>
       {/* <NextSeo title="Talaqqi | Iqra 1" /> */}
 
-      <Stack align="center" gap="xl" p="md">
+      <Center pos="absolute" mih="100vh" w="100%" top={0} p="md">
         {content && (
           <IqraContent
-            page={page}
             nextPageLink={
               page === totalPages ? undefined : `/st/iqra-1/${page + 1}`
             }
@@ -47,7 +46,7 @@ const IqraPage = ({
           total={totalPages}
           onChange={(number) => push(`/st/iqra-1/${number}`)}
         />
-      </Stack>
+      </Center>
     </>
   );
 };
@@ -55,11 +54,8 @@ const IqraPage = ({
 export default IqraPage;
 
 export const getStaticProps = ({ params }: GetStaticPropsContext) => {
-  const page = Number((params?.page ?? "1") as string);
-
-  // TODO: handle last page
-
   try {
+    const page = Number((params?.page ?? "1") as string);
     const content = iqraOneJson[page - 1];
     const totalPages = iqraOneJson.length;
     return {

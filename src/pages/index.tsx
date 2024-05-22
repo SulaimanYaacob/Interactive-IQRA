@@ -56,7 +56,7 @@ export default function Home() {
 
   return (
     <Container>
-      <Stack h="100%" gap="xl" mih="75vh" justify="center">
+      <Stack gap="xl" mih="75vh" justify="center">
         <Title
           fz={{ base: "40px", sm: "60px" }}
           className={logoFont.className}
