@@ -45,7 +45,7 @@ const EditProfileModalContent = ({
         /^[a-zA-Z0-9_-]{5,10}$/,
         "Username must be 5-10 characters and contain only letters, numbers, and dashes"
       ),
-      bio: hasLength({ max: 100 }, "Bio must be under 100 characters"),
+      bio: hasLength({ max: 300 }, "Bio must be under 300 characters"),
     },
   });
 
@@ -88,7 +88,6 @@ const EditProfileModalContent = ({
             )}
           </FileButton>
         </Stack>
-
         <Divider />
         <Stack>
           <SimpleGrid cols={{ base: 1, sm: 2 }}>
@@ -108,7 +107,7 @@ const EditProfileModalContent = ({
             maxRows={4}
             minRows={2}
             label="Bio (Optional)"
-            description="Max 100 characters"
+            description="Max 300 characters"
             {...getInputProps("bio")}
           />
           <Button type="submit">Update</Button>

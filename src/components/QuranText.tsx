@@ -1,6 +1,7 @@
 import type { MantineColor } from "@mantine/core";
 import { Text } from "@mantine/core";
 import { quranFont } from "../utils/nextFont";
+import { playIqra1Audio } from "~/utils/iqra-audio";
 
 // TODO: Padding control
 type Props = {
@@ -39,9 +40,11 @@ const QuranText = ({
         pt={10}
         ta={align}
         darkHidden
+        lts={letterSpacing}
         className={quranFont.className}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
+        onClick={() => playIqra1Audio(word)}
         c={isHighlighted ? "cyan" : "dark"}
         px={{ base: 1, xs: 5, sm: 10, md: 15 }}
         fz={{ base: size * 0.8, xs: size * 0.9, sm: size, md: size * 1.1 }}
@@ -55,13 +58,14 @@ const QuranText = ({
         pt={10}
         style={{
           cursor: "pointer",
-          letterSpacing: letterSpacing,
         }}
         ta={align}
         lightHidden
+        lts={letterSpacing}
         className={quranFont.className}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
+        onClick={() => playIqra1Audio(word)}
         c={isHighlighted ? "cyan" : "white"}
         px={{ base: 1, xs: 5, sm: 10, md: 15 }}
         fz={{ base: size * 0.8, xs: size * 0.9, sm: size, md: size * 1.1 }}
