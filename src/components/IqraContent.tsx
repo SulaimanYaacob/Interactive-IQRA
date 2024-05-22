@@ -41,12 +41,11 @@ const IqraContent = ({ page, content, nextPageLink, prevPageLink }: Props) => {
           variant="filled"
           left="-16px"
           top="50%"
-          size="lg"
           component={Link}
           disabled={!prevPageLink}
           href={prevPageLink ?? "#"}
         >
-          <MdOutlineChevronLeft size={20} />
+          <MdOutlineChevronLeft size={24} />
         </ActionIcon>
         <ActionIcon
           pos="absolute"
@@ -57,21 +56,13 @@ const IqraContent = ({ page, content, nextPageLink, prevPageLink }: Props) => {
           disabled={!nextPageLink}
           href={nextPageLink ?? "#"}
         >
-          <MdOutlineChevronRight size={20} />
+          <MdOutlineChevronRight size={24} />
         </ActionIcon>
 
         {content?.lines.map((line, lineIdx) => {
           const isRomanText =
             line.length === 1 && !!line[0]?.match(/[aeiou]/gi)?.length;
           const isSingleColumn = line.length === 1;
-
-          // const charactersPerLine =
-          //   line
-          //     .flatMap((item) => item)
-          //     .join("")
-          //     .replace(/ /g, "").length / 2; // * divided by 2 because
-
-          // const spacing = characterCountToSpacingMapper(charactersPerLine);
 
           return !isRomanText ? (
             <Box w="100%" key={`line-${lineIdx}`}>
