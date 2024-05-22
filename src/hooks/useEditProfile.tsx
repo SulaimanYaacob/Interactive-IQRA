@@ -42,7 +42,6 @@ const useEditProfile = () => {
   const openEditProfileModal = () => {
     modals.open({
       children: <EditProfileModalContent mutate={mutate} />,
-      withCloseButton: false,
       centered: true,
       size: "md",
     });

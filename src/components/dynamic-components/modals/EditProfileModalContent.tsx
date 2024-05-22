@@ -11,7 +11,7 @@ import {
   TextInput,
   Textarea,
 } from "@mantine/core";
-import { hasLength, useForm } from "@mantine/form";
+import { hasLength, matches, useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
 import type { EditProfileInput } from "~/server/api/routers/userRouter";
 
@@ -41,9 +41,9 @@ const EditProfileModalContent = ({
         "First Name must be 2-20 characters"
       ),
       lastName: hasLength({ max: 20 }, "Last Name must be under 20 characters"),
-      username: hasLength(
-        { min: 2, max: 20 },
-        "Username must be 2-20 characters"
+      username: matches(
+        /^[a-zA-Z0-9_-]{5,10}$/,
+        "Username must be 5-10 characters and contain only letters, numbers, and dashes"
       ),
       bio: hasLength({ max: 100 }, "Bio must be under 100 characters"),
     },
@@ -106,6 +106,7 @@ const EditProfileModalContent = ({
           <Textarea
             autosize
             maxRows={4}
+            minRows={2}
             label="Bio (Optional)"
             description="Max 100 characters"
             {...getInputProps("bio")}
