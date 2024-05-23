@@ -1,6 +1,5 @@
 import {
   Paper,
-  Stack,
   Group,
   Avatar,
   Anchor,
@@ -64,7 +63,7 @@ const TutorsList = ({ page, search }: { page: number; search: string }) => {
       {listOfTutors && (
         <>
           <Paper withBorder>
-            <Stack gap="0">
+            <div>
               {listOfTutors[activePage - 1]?.map(
                 (
                   { firstName, lastName, imageUrl, emailAddresses, id },
@@ -84,14 +83,14 @@ const TutorsList = ({ page, search }: { page: number; search: string }) => {
                           color="blue"
                           radius="xl"
                         />
-                        <Stack gap="0">
+                        <div>
                           <Text fw="500">
                             {`${firstName ?? ""} ${lastName ?? ""}`}
                           </Text>
                           <Text c="dimmed">
                             {emailAddresses[0]?.emailAddress}
                           </Text>
-                        </Stack>
+                        </div>
                       </Group>
                       <Anchor
                         component={Link}
@@ -106,7 +105,7 @@ const TutorsList = ({ page, search }: { page: number; search: string }) => {
                   );
                 }
               )}
-            </Stack>
+            </div>
           </Paper>
           <Center my="xl">
             <Pagination

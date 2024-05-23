@@ -1,5 +1,5 @@
 import { SignedIn, useClerk } from "@clerk/nextjs";
-import { AppShell, Divider, NavLink, Stack, Text } from "@mantine/core";
+import { AppShell, Divider, NavLink, Text } from "@mantine/core";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
@@ -35,7 +35,7 @@ function AppNavbar() {
 
   return (
     <AppShell.Navbar>
-      <Stack gap="0">
+      <div>
         <Text inline m="md" c="dimmed">
           Fundamentals
         </Text>
@@ -98,7 +98,7 @@ function AppNavbar() {
             }
           />
         </SignedIn>
-      </Stack>
+      </div>
     </AppShell.Navbar>
   );
 }
