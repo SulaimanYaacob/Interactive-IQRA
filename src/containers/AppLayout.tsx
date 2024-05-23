@@ -5,7 +5,8 @@ import AppHeader from "./AppHeader";
 import AdminHeader from "./AdminHeader";
 import { useRouter } from "next/router";
 import { useDisclosure } from "@mantine/hooks";
-import { AppShell, AppShellMain } from "@mantine/core";
+import { AppShell } from "@mantine/core";
+import AppFooter from "./AppFooter";
 const DynamicRoomHeader = dynamic(() => import("./RoomHeader"), { ssr: false });
 
 function AppLayout({ children }: { children: React.ReactNode }) {
@@ -33,10 +34,13 @@ function AppLayout({ children }: { children: React.ReactNode }) {
         width: { xs: 200, md: 300 },
         collapsed: { desktop: true, mobile: !openedMainNav },
       }}
+      footer={{ height: 50 }}
     >
       <DynamicHeader />
-      <AppShellMain>{children}</AppShellMain>
+      <AppShell.Main>{children}</AppShell.Main>
+
       <AppNavbar />
+      <AppFooter />
     </AppShell>
   );
 }

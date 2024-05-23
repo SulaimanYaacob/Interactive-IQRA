@@ -1,5 +1,5 @@
 import {
-  AppShellHeader,
+  AppShell,
   Avatar,
   AvatarGroup,
   Button,
@@ -43,7 +43,7 @@ function LiveblocksHeader({ roomPIN }: { roomPIN: string }) {
   const currentUser = useSelf();
 
   return (
-    <AppShellHeader>
+    <AppShell.Header>
       <Container h="100%">
         <Group h="100%" pos="relative" justify="space-between">
           <Button component="a" href="/" color="red">
@@ -86,6 +86,6 @@ function LiveblocksHeader({ roomPIN }: { roomPIN: string }) {
           </Group>
         </Group>
       </Container>
-    </AppShellHeader>
+    </AppShell.Header>
   );
 }

@@ -7,7 +7,7 @@ import {
 } from "@clerk/nextjs";
 import {
   Anchor,
-  AppShellHeader,
+  AppShell,
   Burger,
   Button,
   Container,
@@ -28,7 +28,7 @@ function AppHeader({ openedMainNav, toggleMainNav }: Props) {
   const { session } = useSession();
 
   return (
-    <AppShellHeader>
+    <AppShell.Header>
       {/* <Burger
         opened={openedMainNav}
         onClick={toggleMainNav}
@@ -38,7 +38,7 @@ function AppHeader({ openedMainNav, toggleMainNav }: Props) {
         mx="sm"
       /> */}
       <Container h="100%">
-        <Group h="100%" pos="relative" justify="space-between">
+        <Group h="100%" pos="relative" justify="space-between" align="center">
           <Group>
             <Burger
               opened={openedMainNav}
@@ -100,7 +100,7 @@ function AppHeader({ openedMainNav, toggleMainNav }: Props) {
           </Group>
         </Group>
       </Container>
-    </AppShellHeader>
+    </AppShell.Header>
   );
 }
 
