@@ -12,8 +12,9 @@ function AppFooter() {
     <AppShell.Footer withBorder={false}>
       <Container h="100%">
         <Group c="dimmed" gap="xs" h="100%" justify="center">
-          <FaRegCopyright />
+          <FaRegCopyright size="12px" />
           <Text
+            size="sm"
             target="_blank"
             component={Link}
             href="https://github.com/SulaimanYaacob"
