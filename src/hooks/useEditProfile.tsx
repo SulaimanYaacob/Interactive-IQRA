@@ -1,7 +1,7 @@
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/router";
-import EditProfileModalContent from "~/components/dynamic-components/modals/EditProfileModalContent";
+import EditProfileModalContent from "~/components/dynamic/modals/EditProfileModalContent";
 import { api } from "~/utils/api";
 import {
   errorProps,

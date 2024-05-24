@@ -14,7 +14,7 @@ import dynamic from "next/dynamic";
 
 //TODO Use SSG Instead.
 const LazyTutorsList = dynamic(
-  () => import("~/components/dynamic-components/TutorsList"),
+  () => import("~/components/dynamic/TutorsList"),
   { ssr: false }
 );
 

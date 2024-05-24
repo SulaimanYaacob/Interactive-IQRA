@@ -1,15 +1,12 @@
-import { Button, Container, Group, Paper, Text, Title } from "@mantine/core";
-import {
-  useMyPresence,
-  useOthers,
-  useBroadcastEvent,
-  useEventListener,
-} from "liveblocks.config";
+import { Center, Pagination } from "@mantine/core";
+import { useBroadcastEvent, useStorage, useMutation } from "liveblocks.config";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useRef, useState } from "react";
 import Cursor from "~/components/Cursor";
 import { useElementLiveCursors } from "~/hooks/useElementLiveCursors";
+import iqraOneJson from "~/../public/iqra/iqra-1.json";
+import IqraContent from "~/components/main-content.tsx/IqraContent";
 const LiveblocksProvider = dynamic(
   () => import("~/providers/LiveblocksProvider"),
   { ssr: false }
@@ -41,40 +38,91 @@ export default function Room() {
 
 //TODO if you have time, create a nickname when they first join the room
 function InteractiveRoom({ id }: { id: string }) {
-  const [count, setCount] = useState(0);
-  const broadcast = useBroadcastEvent();
-  const others = useOthers();
-  const userCount = others.length;
-  const [{ cursor }] = useMyPresence();
-
+  document.body.style.overflow = "hidden";
+  const [opacity, setOpacity] = useState(1);
   const containerRef = useRef<HTMLDivElement>(null);
   const cursors = useElementLiveCursors(id, containerRef);
-  const [opacity, setOpacity] = useState(1);
+  const broadcast = useBroadcastEvent();
 
-  document.body.style.overflow = "hidden";
+  // const [count, setCount] = useState(0);
+  // const others = useOthers();
+  // useEventListener(({ event }) => {
+  //   switch (event.type) {
+  //     case "increase":
+  //       setCount((count) => count + 1);
+  //       break;
+  //     case "decrease":
+  //       setCount((count) => count - 1);
+  //       break;
+  //   }
+  // });
 
-  useEventListener(({ event }) => {
-    switch (event.type) {
-      case "increase":
-        setCount((count) => count + 1);
-        break;
-      case "decrease":
-        setCount((count) => count - 1);
-        break;
-    }
-  });
+  //********************************************************************************/
 
+  const page = useStorage((root) => root.page);
+  const totalPages = iqraOneJson.length;
+  const content = iqraOneJson[page - 1]!;
+  const nextPageLink = useMutation(
+    ({ storage }, number: number) => {
+      storage.set("page", number);
+    },
+    [page]
+  );
+
+  //TODO add iqra page!!
   //* Using Margin Will Affect Cursor Position. Use Padding Instead.
   return (
-    <Container
-      fluid
-      ref={containerRef}
-      h={innerHeight - 76}
-      //? Only when padding is necessary (Balance need to be added into the cursor position)
-      // w={innerWidth - 64}
-      // h={innerHeight - 108}
-    >
-      <Container py="xl">
+    //? Only when padding is necessary (Balance need to be added into the cursor position
+    <>
+      <Center
+        ref={containerRef}
+        mih="100vh"
+        pos="absolute"
+        w="100%"
+        top={0}
+        // w={innerWidth - 64}
+        // h={innerHeight - 108}
+      >
+        <IqraContent content={content} />
+        <Pagination
+          bottom={25}
+          pos="absolute"
+          visibleFrom="xs"
+          value={page || 1}
+          total={totalPages}
+          onChange={(number) => nextPageLink(number)}
+        />
+        <Pagination
+          size="sm"
+          bottom={25}
+          pos="absolute"
+          hiddenFrom="xs"
+          value={page || 1}
+          total={totalPages}
+          onChange={(number) => nextPageLink(number)}
+        />
+      </Center>
+      {cursors.map((cursor) => {
+        if (!cursor?.connectionId) return null;
+        const { connectionId, x, y, info } = cursor;
+        return (
+          <Cursor
+            opacity={opacity}
+            key={connectionId}
+            info={info}
+            color={String(COLORS[connectionId % COLORS.length])}
+            // x={x + 32}
+            x={x}
+            y={y}
+          />
+        );
+      })}
+    </>
+  );
+}
+
+{
+  /* <Container py="xl">
         <Paper style={{ zIndex: -1 }} withBorder p="xl">
           <Title ta="center">{userCount + 1} Users are in the room</Title>
           <Text ta="center">
@@ -107,22 +155,5 @@ function InteractiveRoom({ id }: { id: string }) {
             <Button onClick={() => setOpacity(1)}>Reset</Button>
           </Group>
         </Paper>
-      </Container>
-      {cursors.map((cursor) => {
-        if (!cursor?.connectionId) return null;
-        const { connectionId, x, y, info } = cursor;
-        return (
-          <Cursor
-            opacity={opacity}
-            key={connectionId}
-            info={info}
-            color={String(COLORS[connectionId % COLORS.length])}
-            // x={x + 32}
-            x={x}
-            y={y + 76}
-          />
-        );
-      })}
-    </Container>
-  );
+      </Container> */
 }

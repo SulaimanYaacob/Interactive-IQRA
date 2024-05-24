@@ -62,6 +62,7 @@ type Presence = {
 // LiveList, LiveMap, LiveObject instances, for which updates are
 // automatically persisted and synced to all connected clients.
 type Storage = {
+  page: number;
   // author: LiveObject<{ firstName: string, lastName: string }>,
   // ...
 };

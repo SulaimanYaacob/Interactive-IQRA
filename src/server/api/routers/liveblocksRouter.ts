@@ -1,6 +1,6 @@
 import { Liveblocks } from "@liveblocks/node";
 import { TRPCError } from "@trpc/server";
-import { string, z } from "zod";
+import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import type { RouterInputs } from "~/utils/api";
 
@@ -25,7 +25,7 @@ function generatePinNumber(): string {
 
 export const liveblocksRouter = createTRPCRouter({
   getCurrentRoomDetails: protectedProcedure
-    .input(z.object({ roomId: string() }))
+    .input(z.object({ roomId: z.string() }))
     .query(async ({ ctx, input }) => {
       try {
         const { roomId } = input;
@@ -44,7 +44,7 @@ export const liveblocksRouter = createTRPCRouter({
       }
     }),
   getCurrentUserRoomAccess: protectedProcedure
-    .input(z.object({ roomId: string() }))
+    .input(z.object({ roomId: z.string() }))
     .query(async ({ ctx, input }) => {
       try {
         const { roomId } = input;
@@ -75,7 +75,7 @@ export const liveblocksRouter = createTRPCRouter({
       }
     }),
   searchingRoom: protectedProcedure
-    .input(z.object({ roomPIN: string() }))
+    .input(z.object({ roomPIN: z.string() }))
     .mutation(async ({ ctx, input }) => {
       try {
         const { roomPIN } = input;
@@ -139,7 +139,7 @@ export const liveblocksRouter = createTRPCRouter({
         const liveblocksRoom = await liveblocks.createRoom(
           String(prismaRoom.roomId),
           {
-            defaultAccesses: ["room:read", "room:presence:write"],
+            defaultAccesses: ["room:write"],
             usersAccesses: {
               [String(ctx.auth.emailAddresses[0]?.emailAddress)]: [
                 "room:write",
@@ -158,19 +158,19 @@ export const liveblocksRouter = createTRPCRouter({
     }),
   //!For Development Purpose
   deleteRoom: protectedProcedure
-    .input(z.object({ roomId: string() }))
+    .input(z.object({ roomId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       try {
         const { roomId } = input;
 
-        await liveblocks.deleteRoom(roomId); //? FYI, No Data Retrieve from deleting room
-
-        const prismaRoom = await ctx.db.room.delete({
-          where: {
-            roomId,
-          },
-        });
-        return prismaRoom;
+        await Promise.all([
+          liveblocks.deleteRoom(roomId), //? FYI, No Data Retrieve from deleting room
+          ctx.db.room.delete({
+            where: {
+              roomId,
+            },
+          }),
+        ]);
       } catch (error) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",

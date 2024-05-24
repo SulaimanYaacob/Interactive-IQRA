@@ -1,5 +1,5 @@
 import { Center, Pagination } from "@mantine/core";
-import IqraContent from "~/components/IqraContent";
+import IqraContent from "~/components/main-content.tsx/IqraContent";
 import type {
   GetStaticPaths,
   GetStaticPropsContext,

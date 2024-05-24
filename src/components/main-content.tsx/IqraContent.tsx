@@ -22,7 +22,6 @@ type Props = {
   };
 };
 
-//TODO Add Audio
 const BackgroundTheme = ({ children }: { children: ReactNode }) => {
   const sharedProps = {
     gap: 0,
@@ -109,13 +108,13 @@ const IqraContent = ({ content, nextPageLink, prevPageLink }: Props) => {
                         const key = `line-${lineIdx}-cell-${cellIdx}-word-${wordIdx}`;
                         return (
                           <QuranText
-                            align="center"
                             size={30}
+                            key={key}
+                            word={word}
+                            align="center"
                             isHighlighted={hoveredWord === key}
                             handleMouseEnter={() => setHoveredWord(key)}
                             handleMouseLeave={() => setHoveredWord(undefined)}
-                            key={key}
-                            word={word}
                           />
                         );
                       })}

@@ -11,8 +11,7 @@
       ["بَ أَ بَ", "أَ بَ أَ"],
       ["أَ أَ أَ", "بَ بَ بَ"],
       ["أَ بَ", "أَ بَ", "أَ بَ"]
-    ],
-    "instruction": "Baca أَ بَ dan seterusnya, tidak perlu dieja. Baca dengan pendek."
+    ]
   },
   {
     "index": 1,
@@ -26,8 +25,7 @@
       ["تَ أَ تَ", "بَ أَ تَ"],
       ["أَ تَ بَ", "تَ تَ أَ"],
       ["أَ بَ تَ", "أَ بَ تَ"]
-    ],
-    "instruction": "Baca أَ بَ ت dan seterusnya, tidak perlu dieja. Baca dengan pendek."
+    ]
   },
   {
     "index": 2,
@@ -419,7 +417,6 @@
       ["خَ - غَ", "تَ - طَ"],
       ["خَ - قَ", "ذَ - ظَ"],
       ["كَ - قَ", "ظَ - ضَ"]
-    ],
-    "instruction": "Perhatian ! Bezakan dengan jelas antara:"
+    ]
   }
 ]

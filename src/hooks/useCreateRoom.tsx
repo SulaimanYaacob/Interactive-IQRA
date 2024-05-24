@@ -9,7 +9,7 @@ import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 import dynamic from "next/dynamic";
 const LazyCreateRoomModalContent = dynamic(
-  import("~/components/dynamic-components/modals/CreateRoomModalContent"),
+  import("~/components/dynamic/modals/CreateRoomModalContent"),
   { ssr: false }
 );
 

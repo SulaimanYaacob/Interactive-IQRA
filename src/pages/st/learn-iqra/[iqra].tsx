@@ -1,4 +1,4 @@
-import { Alert, Container, Paper, Stack, Title } from "@mantine/core";
+import { Container, Paper, Stack, Title } from "@mantine/core";
 import { useRouter } from "next/router";
 import iqraOne from "public/iqra/iqra-1.json";
 import { useEffect, useState } from "react";
@@ -31,10 +31,9 @@ function Iqra() {
         <Title ta="center">Current Iqra: {iqra}</Title>
         <Paper p="xs" withBorder>
           {selectedIqra.map(
-            ({ lines, page, instruction }) =>
+            ({ lines, page }) =>
               page === "page1" && (
                 <>
-                  <Alert>{instruction}</Alert>
                   {lines.map((line, idx) => {
                     return (
                       <>

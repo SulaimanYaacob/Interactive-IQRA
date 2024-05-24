@@ -9,7 +9,7 @@ import {
 } from "~/utils/notificationProps";
 import dynamic from "next/dynamic";
 const LazyJoinRoomModalContent = dynamic(
-  import("~/components/dynamic-components/modals/JoinRoomModalContent"),
+  import("~/components/dynamic/modals/JoinRoomModalContent"),
   { ssr: false }
 );
 const useJoinRoom = () => {

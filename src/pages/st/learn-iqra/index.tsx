@@ -15,7 +15,7 @@ function LearnIQRA() {
         <Card padding="md">
           <CardSection>
             <Image
-              src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png"
+              src="https://html.scribdassets.com/9plgc5srpc26892h/images/1-2464e1e7a3.jpg"
               height={160}
               alt="Norway"
             />
@@ -32,7 +32,7 @@ function LearnIQRA() {
               alt="Norway"
             />
           </CardSection>
-          <Button mt="md" component={Link} href="/st/iqra-1/1">
+          <Button disabled mt="md" component={Link} href="#">
             IQRA 2
           </Button>
         </Card>
@@ -44,7 +44,7 @@ function LearnIQRA() {
               alt="Norway"
             />
           </CardSection>
-          <Button mt="md" component={Link} href="/st/iqra-1/1">
+          <Button disabled mt="md" component={Link} href="#">
             IQRA 3
           </Button>
         </Card>

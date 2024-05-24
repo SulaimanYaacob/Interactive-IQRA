@@ -1,9 +1,8 @@
 import type { MantineColor } from "@mantine/core";
 import { Text } from "@mantine/core";
-import { quranFont } from "../utils/nextFont";
+import { quranFont } from "../../utils/nextFont";
 import { playIqra1Audio } from "~/utils/iqra-audio";
 
-// TODO: Padding control
 type Props = {
   word: string;
   isHighlighted?: boolean;

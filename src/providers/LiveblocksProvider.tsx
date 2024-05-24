@@ -13,15 +13,18 @@ type Props = {
 };
 
 function LiveblocksProvider({ children, header, roomId }: Props) {
-  const { data, failureCount } =
+  const { data: userAccess, failureCount } =
     api.liveblocks.getCurrentUserRoomAccess.useQuery(
       { roomId },
       { refetchOnWindowFocus: false }
     );
 
-  if (!data && header) return;
+  //TODO Maybe add 1 more attributes to room model (page) and iqraPage into storage.
+  // const {} = api.liveblocks.getCurrentRoomDetails
 
-  if (!data && !header && failureCount > 0)
+  if (!userAccess && header) return;
+
+  if (!userAccess && !header && failureCount > 0)
     return (
       <Center mih="75vh">
         <Paper p="xl" withBorder m="xl">
@@ -41,6 +44,7 @@ function LiveblocksProvider({ children, header, roomId }: Props) {
     <RoomProvider
       id={String(roomId)}
       initialPresence={{ cursor: null, elementId: null }}
+      initialStorage={{ page: 1 }}
     >
       <ClientSideSuspense fallback={header ?? <Loading />}>
         {() => children}

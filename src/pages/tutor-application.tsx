@@ -7,11 +7,11 @@ import {
 import { api } from "~/utils/api";
 import dynamic from "next/dynamic";
 const LazyStatusDisplay = dynamic(
-  () => import("~/components/dynamic-components/StatusDisplay"),
+  () => import("~/components/dynamic/StatusDisplay"),
   { ssr: false }
 );
 const LazyApplicationDropzone = dynamic(
-  () => import("~/components/dynamic-components/ApplicationDropzone"),
+  () => import("~/components/dynamic/ApplicationDropzone"),
   { ssr: false }
 );
 

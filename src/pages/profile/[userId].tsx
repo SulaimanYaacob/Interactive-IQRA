@@ -15,7 +15,7 @@ import type { GetStaticPropsContext } from "next";
 import dynamic from "next/dynamic";
 import type { ClerkPublicMetadata } from "~/types/publicMetadata";
 const LazyProfileButton = dynamic(
-  () => import("~/components/dynamic-components/ProfileButton"),
+  () => import("~/components/dynamic/ProfileButton"),
   { ssr: false }
 );
 const Profile = ({ user }: { user: User }) => {
