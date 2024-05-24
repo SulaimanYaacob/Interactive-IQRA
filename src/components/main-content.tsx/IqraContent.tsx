@@ -13,6 +13,12 @@ import { MdOutlineChevronLeft, MdOutlineChevronRight } from "react-icons/md";
 import QuranText from "./QuranText";
 
 type Props = {
+  isInteractive?: {
+    onClickNextPage?: () => void;
+    onClickPrevPage?: () => void;
+    disableNext: boolean;
+    disablePrev: boolean;
+  };
   nextPageLink?: string;
   prevPageLink?: string;
   content: {
@@ -46,36 +52,44 @@ const BackgroundTheme = ({ children }: { children: ReactNode }) => {
   );
 };
 
-const IqraContent = ({ content, nextPageLink, prevPageLink }: Props) => {
+const IqraContent = ({
+  content,
+  nextPageLink,
+  prevPageLink,
+  isInteractive,
+}: Props) => {
   const textBoxSpacing = useMatches({
     base: 1,
     xs: "xs",
   });
   const [hoveredWord, setHoveredWord] = useState<string>();
+
   return (
     <BackgroundTheme>
-      <ActionIcon
-        pos="absolute"
-        variant="filled"
-        left="-16px"
-        top="50%"
-        component={Link}
-        disabled={!prevPageLink}
-        href={prevPageLink ?? "#"}
-      >
-        <MdOutlineChevronLeft size={24} />
-      </ActionIcon>
-      <ActionIcon
-        pos="absolute"
-        variant="filled"
-        right="-16px"
-        top="50%"
-        component={Link}
-        disabled={!nextPageLink}
-        href={nextPageLink ?? "#"}
-      >
-        <MdOutlineChevronRight size={24} />
-      </ActionIcon>
+      <>
+        <ActionIcon
+          pos="absolute"
+          left="-16px"
+          top="50%"
+          disabled={isInteractive ? isInteractive.disablePrev : !prevPageLink}
+          onClick={isInteractive ? isInteractive.onClickPrevPage : undefined}
+          component={!isInteractive ? Link : undefined}
+          href={!isInteractive && prevPageLink ? prevPageLink : "#"}
+        >
+          <MdOutlineChevronLeft size={24} />
+        </ActionIcon>
+        <ActionIcon
+          pos="absolute"
+          right="-16px"
+          top="50%"
+          disabled={isInteractive ? isInteractive.disableNext : !nextPageLink}
+          onClick={isInteractive ? isInteractive.onClickNextPage : undefined}
+          component={!isInteractive ? Link : undefined}
+          href={!isInteractive && nextPageLink ? nextPageLink : "#"}
+        >
+          <MdOutlineChevronRight size={24} />
+        </ActionIcon>
+      </>
 
       {content?.lines.map((line, lineIdx) => {
         const isRomanText =

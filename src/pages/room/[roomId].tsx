@@ -83,7 +83,15 @@ function InteractiveRoom({ id }: { id: string }) {
         // w={innerWidth - 64}
         // h={innerHeight - 108}
       >
-        <IqraContent content={content} />
+        <IqraContent
+          content={content}
+          isInteractive={{
+            onClickNextPage: () => nextPageLink(page + 1),
+            onClickPrevPage: () => nextPageLink(page - 1),
+            disableNext: page === totalPages,
+            disablePrev: page === 1,
+          }}
+        />
         <Pagination
           bottom={25}
           pos="absolute"
@@ -101,22 +109,22 @@ function InteractiveRoom({ id }: { id: string }) {
           total={totalPages}
           onChange={(number) => nextPageLink(number)}
         />
+        {cursors.map((cursor) => {
+          if (!cursor?.connectionId) return null;
+          const { connectionId, x, y, info } = cursor;
+          return (
+            <Cursor
+              opacity={opacity}
+              key={connectionId}
+              info={info}
+              color={String(COLORS[connectionId % COLORS.length])}
+              // x={x + 32}
+              x={x}
+              y={y}
+            />
+          );
+        })}
       </Center>
-      {cursors.map((cursor) => {
-        if (!cursor?.connectionId) return null;
-        const { connectionId, x, y, info } = cursor;
-        return (
-          <Cursor
-            opacity={opacity}
-            key={connectionId}
-            info={info}
-            color={String(COLORS[connectionId % COLORS.length])}
-            // x={x + 32}
-            x={x}
-            y={y}
-          />
-        );
-      })}
     </>
   );
 }
