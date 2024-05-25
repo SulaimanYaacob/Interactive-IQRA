@@ -96,6 +96,7 @@ const IqraContent = ({
           line.length === 1 && !!line[0]?.match(/[aeiou]/gi)?.length;
         const isSingleColumn = line.length === 1;
         const isDoubleColumn = line.length === 2;
+        const isTripleColumn = line.length === 3;
 
         return !isRomanText ? (
           <Box w="100%" key={`line-${lineIdx}`}>
@@ -113,12 +114,17 @@ const IqraContent = ({
             >
               {line.map((cell, cellIdx) => {
                 //! Currently Harcoded for IQRA 1
-                const hasColumnLengthDiff =
-                  isDoubleColumn && cell.split(" ").length > 4
+                const hasColumnLengthDiff = isDoubleColumn
+                  ? cell.split(" ").length > 4
                     ? "auto"
                     : cell.split(" ").length === 4
                     ? "35%"
-                    : "25%";
+                    : "25%"
+                  : isTripleColumn //! IQRA 2
+                  ? cell.split(" ").length < 4
+                    ? "25%"
+                    : "32%"
+                  : "25%";
 
                 return (
                   <Box
