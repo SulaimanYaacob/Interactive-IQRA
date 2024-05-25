@@ -6,6 +6,7 @@ import {
   type MantineTheme,
   Stack,
   useMatches,
+  Center,
 } from "@mantine/core";
 import Link from "next/link";
 import { type ReactNode, useState } from "react";
@@ -139,15 +140,16 @@ const IqraContent = ({
                       {cell.split(" ").map((word, wordIdx) => {
                         const key = `line-${lineIdx}-cell-${cellIdx}-word-${wordIdx}`;
                         return (
-                          <QuranText
-                            size={30}
-                            key={key}
-                            word={word}
-                            align="center"
-                            isHighlighted={hoveredWord === key}
-                            handleMouseEnter={() => setHoveredWord(key)}
-                            handleMouseLeave={() => setHoveredWord(undefined)}
-                          />
+                          <Center key={key}>
+                            <QuranText
+                              size={30}
+                              word={word}
+                              align="center"
+                              isHighlighted={hoveredWord === key}
+                              handleMouseEnter={() => setHoveredWord(key)}
+                              handleMouseLeave={() => setHoveredWord(undefined)}
+                            />
+                          </Center>
                         );
                       })}
                     </Group>
@@ -157,7 +159,7 @@ const IqraContent = ({
             </Group>
           </Box>
         ) : (
-          <Alert ta="center" key={`line-${lineIdx}`}>
+          <Alert p="xs" w="100%" ta="center" key={`line-${lineIdx}`}>
             <QuranText word={line[0] ?? ""} size={20} />
           </Alert>
         );
