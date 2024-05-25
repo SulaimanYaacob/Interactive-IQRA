@@ -38,7 +38,7 @@ const QuranText = ({
     onMouseEnter: handleMouseEnter,
     onMouseLeave: handleMouseLeave,
     onClick: () => playIqra1Audio(word),
-    px: { base: 1, xs: 5, sm: 10, md: 15 },
+    px: { base: 0, xs: 5, sm: 10, md: 15 },
     fz: { base: size * 0.8, xs: size * 0.9, sm: size, md: size * 1.1 },
   };
 

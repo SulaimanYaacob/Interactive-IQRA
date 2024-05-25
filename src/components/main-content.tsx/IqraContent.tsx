@@ -59,7 +59,7 @@ const IqraContent = ({
   isInteractive,
 }: Props) => {
   const textBoxSpacing = useMatches({
-    base: 1,
+    base: 7,
     xs: "xs",
   });
   const [hoveredWord, setHoveredWord] = useState<string>();
@@ -95,6 +95,7 @@ const IqraContent = ({
         const isRomanText =
           line.length === 1 && !!line[0]?.match(/[aeiou]/gi)?.length;
         const isSingleColumn = line.length === 1;
+        const isDoubleColumn = line.length === 2;
 
         return !isRomanText ? (
           <Box w="100%" key={`line-${lineIdx}`}>
@@ -111,12 +112,10 @@ const IqraContent = ({
               })}
             >
               {line.map((cell, cellIdx) => {
-                const isDoubleColumn = line.length === 2;
-
                 //! Currently Harcoded for IQRA 1
                 const hasColumnLengthDiff =
                   isDoubleColumn && cell.split(" ").length > 4
-                    ? "45%"
+                    ? "auto"
                     : cell.split(" ").length === 4
                     ? "35%"
                     : "25%";
