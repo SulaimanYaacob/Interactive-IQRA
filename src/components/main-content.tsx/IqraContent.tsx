@@ -63,7 +63,7 @@ const IqraContent = ({
     xs: "xs",
   });
   const [hoveredWord, setHoveredWord] = useState<string>();
-
+  //TODO If you have time, try to symmetrically align the text.
   return (
     <BackgroundTheme>
       <>
@@ -99,9 +99,8 @@ const IqraContent = ({
         return !isRomanText ? (
           <Box w="100%" key={`line-${lineIdx}`}>
             <Group
-              py={{ base: "xs", xs: "sm" }}
               gap="xs"
-              w="100%"
+              py={{ base: "xs", xs: "sm" }}
               justify={isSingleColumn ? "center" : "space-between"}
               style={(t) => ({
                 flexDirection: "row-reverse",
@@ -112,11 +111,25 @@ const IqraContent = ({
               })}
             >
               {line.map((cell, cellIdx) => {
+                const isDoubleColumn = line.length === 2;
+
+                //! Currently Harcoded for IQRA 1
+                const hasColumnLengthDiff =
+                  isDoubleColumn && cell.split(" ").length > 4
+                    ? "45%"
+                    : cell.split(" ").length === 4
+                    ? "35%"
+                    : "25%";
+
                 return (
-                  <Box key={`${cellIdx}-${lineIdx}`}>
+                  <Box
+                    w={isSingleColumn ? "auto" : hasColumnLengthDiff}
+                    key={`${cellIdx}-${lineIdx}`}
+                  >
                     <Group
-                      style={{ flexDirection: "row-reverse" }}
+                      grow
                       gap={textBoxSpacing}
+                      style={{ flexDirection: "row-reverse" }}
                     >
                       {cell.split(" ").map((word, wordIdx) => {
                         const key = `line-${lineIdx}-cell-${cellIdx}-word-${wordIdx}`;

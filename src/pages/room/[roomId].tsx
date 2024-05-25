@@ -79,6 +79,7 @@ function InteractiveRoom({ id }: { id: string }) {
         mih="100vh"
         pos="absolute"
         w="100%"
+        p="md"
         top={0}
         // w={innerWidth - 64}
         // h={innerHeight - 108}
