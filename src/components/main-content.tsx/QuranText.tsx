@@ -26,7 +26,6 @@ const QuranText = ({
   isNumber,
   letterSpacing = 0.5,
 }: Props) => {
-  //Props
   const TextProps = {
     pb: 5,
     pt: 10,
