@@ -3,6 +3,7 @@ import { createTRPCRouter } from "~/server/api/trpc";
 import { liveblocksRouter } from "./routers/liveblocksRouter";
 import { tutorRouter } from "./routers/tutorRouter";
 import { userRouter } from "./routers/userRouter";
+import { appointmentRouter } from "./routers/appointmentRouter";
 
 /**
  * This is the primary router for your server.
@@ -11,8 +12,9 @@ import { userRouter } from "./routers/userRouter";
  */
 export const appRouter = createTRPCRouter({
   room: roomRouter,
-  tutor: tutorRouter,
   user: userRouter,
+  tutor: tutorRouter,
+  appointment: appointmentRouter,
   liveblocks: liveblocksRouter,
 });
 
