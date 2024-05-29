@@ -2,22 +2,26 @@ import {
   SignInButton,
   SignedIn,
   SignedOut,
-  UserButton,
+  useClerk,
   useSession,
 } from "@clerk/nextjs";
 import {
   Anchor,
   AppShell,
+  Avatar,
   Burger,
   Button,
   Container,
   Group,
+  Menu,
   UnstyledButton,
 } from "@mantine/core";
 import NativeImage from "~/components/NativeImage";
 import ToggleTheme from "~/components/ToggleTheme";
 import { CiDark, CiLight } from "react-icons/ci";
 import Link from "next/link";
+import { FaRightFromBracket, FaUser } from "react-icons/fa6";
+import { useRouter } from "next/router";
 
 type Props = {
   openedMainNav: boolean;
@@ -26,6 +30,8 @@ type Props = {
 
 function AppHeader({ openedMainNav, toggleMainNav }: Props) {
   const { session } = useSession();
+  const { signOut } = useClerk();
+  const { push } = useRouter();
 
   return (
     <AppShell.Header>
@@ -90,11 +96,31 @@ function AppHeader({ openedMainNav, toggleMainNav }: Props) {
               </SignInButton>
             </SignedOut>
             <SignedIn>
-              <UserButton
-                userProfileMode="navigation"
-                userProfileUrl={`/profile/${session?.user.id}`}
-                afterSignOutUrl="/"
-              />
+              <Menu offset={15} withArrow>
+                <Menu.Target>
+                  <Avatar
+                    alt="profile"
+                    src={session?.user.imageUrl}
+                    style={{ cursor: "pointer" }}
+                  />
+                </Menu.Target>
+                <Menu.Dropdown>
+                  <Menu.Item
+                    component={Link}
+                    href={`/profile/${session?.user.id}`}
+                    leftSection={<FaUser />}
+                  >
+                    View Profile
+                  </Menu.Item>
+                  <Menu.Item
+                    c="red"
+                    leftSection={<FaRightFromBracket />}
+                    onClick={() => signOut(() => push("/"))}
+                  >
+                    Logout
+                  </Menu.Item>
+                </Menu.Dropdown>
+              </Menu>
             </SignedIn>
             <ToggleTheme DarkIcon={CiDark} LightIcon={CiLight} />
           </Group>
