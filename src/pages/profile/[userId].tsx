@@ -1,9 +1,9 @@
 import { clerkClient } from "@clerk/nextjs/server";
 import { type User } from "@clerk/nextjs/dist/types/server";
 import {
-  Accordion,
   Avatar,
   Badge,
+  Breadcrumbs,
   Container,
   Group,
   Paper,
@@ -14,6 +14,7 @@ import {
 import type { GetStaticPropsContext } from "next";
 import dynamic from "next/dynamic";
 import type { ClerkPublicMetadata } from "~/types/publicMetadata";
+import { daysObject } from "~/utils/constants";
 const LazyProfileButton = dynamic(
   () => import("~/components/dynamic/ProfileButton"),
   { ssr: false }
@@ -48,42 +49,43 @@ const Profile = ({ user }: { user: User }) => {
                     </Group>
                   </div>
                 </Group>
-                <LazyProfileButton profileId={user.id} profileRole={role} />
+                <LazyProfileButton
+                  type="personal"
+                  profileId={user.id}
+                  profileRole={role}
+                />
               </Group>
               <Text mt="xs">{bio}</Text>
             </div>
           </Stack>
         </Paper>
         <Paper withBorder p="xl">
-          <Accordion>
-            <Accordion.Item value="applications">
-              <Accordion.Control>
-                <Text fw="700">Availability</Text>
-              </Accordion.Control>
-              <Accordion.Panel>
-                <Stack>
-                  <Group justify="space-between">
-                    <Text>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    </Text>
-                    <Badge>Time</Badge>
-                  </Group>
-                  <Group justify="space-between">
-                    <Text>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    </Text>
-                    <Badge>Time</Badge>
-                  </Group>
-                  <Group justify="space-between">
-                    <Text>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    </Text>
-                    <Badge>Time</Badge>
-                  </Group>
-                </Stack>
-              </Accordion.Panel>
-            </Accordion.Item>
-          </Accordion>
+          <Stack gap="xl">
+            <Group justify="space-between" pos="relative">
+              <Text fw="700" size="xl">
+                Availability
+              </Text>
+              <LazyProfileButton
+                type="availability"
+                profileId={user.id}
+                profileRole={role}
+              />
+            </Group>
+
+            <Stack>
+              {Object.values(daysObject).map(({ index, name }) => (
+                <Group justify="space-between" key={index}>
+                  <Text w="100px" tt="capitalize">
+                    {name}
+                  </Text>
+                  <Breadcrumbs separator="-">
+                    <Badge>START</Badge>
+                    <Badge>END</Badge>
+                  </Breadcrumbs>
+                </Group>
+              ))}
+            </Stack>
+          </Stack>
         </Paper>
       </Stack>
     </Container>

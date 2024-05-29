@@ -7,9 +7,10 @@ import { ActionIcon, Button } from "@mantine/core";
 type Props = {
   profileId: string;
   profileRole: ROLE;
+  type: "availability" | "personal";
 };
 
-const ProfileButton = ({ profileId, profileRole }: Props) => {
+const ProfileButton = ({ profileId, profileRole, type }: Props) => {
   const { openEditProfileModal } = useEditProfile();
   const { session } = useSession();
   const isCurrentUser = session?.user.id === profileId;
@@ -21,10 +22,24 @@ const ProfileButton = ({ profileId, profileRole }: Props) => {
     return <Button>Book Appointment</Button>;
 
   //* user browsing their own profile can edit their profile
-  if (isCurrentUser)
+  if (isCurrentUser && type === "personal")
     return (
       <ActionIcon
         onClick={() => openEditProfileModal()}
+        size="lg"
+        right={0}
+        variant="light"
+        pos={{ base: "absolute", xs: "relative" }}
+      >
+        <FaPen />
+      </ActionIcon>
+    );
+
+  //* user browsing their own profile can edit their availability
+  if (isCurrentUser && type === "availability")
+    return (
+      <ActionIcon
+        onClick={() => alert("Edit availability")}
         size="lg"
         right={0}
         variant="light"

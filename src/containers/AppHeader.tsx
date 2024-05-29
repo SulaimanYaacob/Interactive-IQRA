@@ -12,6 +12,7 @@ import {
   Burger,
   Button,
   Container,
+  Divider,
   Group,
   Menu,
   UnstyledButton,
@@ -20,7 +21,7 @@ import NativeImage from "~/components/NativeImage";
 import ToggleTheme from "~/components/ToggleTheme";
 import { CiDark, CiLight } from "react-icons/ci";
 import Link from "next/link";
-import { FaRightFromBracket, FaUser } from "react-icons/fa6";
+import { FaArrowRight, FaRightFromBracket, FaUser } from "react-icons/fa6";
 import { useRouter } from "next/router";
 
 type Props = {
@@ -104,8 +105,9 @@ function AppHeader({ openedMainNav, toggleMainNav }: Props) {
                     style={{ cursor: "pointer" }}
                   />
                 </Menu.Target>
-                <Menu.Dropdown>
+                <Menu.Dropdown fw={500}>
                   <Menu.Item
+                    color="blue"
                     component={Link}
                     href={`/profile/${session?.user.id}`}
                     leftSection={<FaUser />}
@@ -113,12 +115,24 @@ function AppHeader({ openedMainNav, toggleMainNav }: Props) {
                     View Profile
                   </Menu.Item>
                   <Menu.Item
-                    c="red"
+                    color="red"
                     leftSection={<FaRightFromBracket />}
                     onClick={() => signOut(() => push("/"))}
                   >
                     Logout
                   </Menu.Item>
+                  {session?.user.publicMetadata.role === "ADMIN" && (
+                    <>
+                      <Divider />
+                      <Menu.Item
+                        href="/admin/applications"
+                        component={Link}
+                        leftSection={<FaArrowRight />}
+                      >
+                        Admin
+                      </Menu.Item>
+                    </>
+                  )}
                 </Menu.Dropdown>
               </Menu>
             </SignedIn>
