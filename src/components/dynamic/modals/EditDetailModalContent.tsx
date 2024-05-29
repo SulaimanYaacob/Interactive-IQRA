@@ -13,18 +13,16 @@ import {
 } from "@mantine/core";
 import { hasLength, matches, useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
-import type { EditProfileInput } from "~/server/api/routers/userRouter";
+import type { EditProfileDetailInput } from "~/server/api/routers/userRouter";
 
-//TODO Add Validations
-
-interface EditProfileImage extends EditProfileInput {
+interface EditProfileImage extends EditProfileDetailInput {
   profileImage: Blob | File | string | undefined;
 }
 
-const EditProfileModalContent = ({
+const EditDetailModalContent = ({
   mutate,
 }: {
-  mutate: (profileInput: EditProfileInput) => void;
+  mutate: (detailInput: EditProfileDetailInput) => void;
 }) => {
   const { session } = useSession();
   const { getInputProps, onSubmit, values } = useForm<EditProfileImage>({
@@ -117,4 +115,4 @@ const EditProfileModalContent = ({
   );
 };
 
-export default EditProfileModalContent;
+export default EditDetailModalContent;

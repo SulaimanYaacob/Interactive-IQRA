@@ -4,7 +4,9 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import type { RouterInputs } from "~/utils/api";
 
-export type EditProfileInput = RouterInputs["user"]["editUserProfile"];
+export type EditProfileDetailInput = RouterInputs["user"]["editProfileDetail"];
+export type EditProfileAvailabilityInput =
+  RouterInputs["user"]["editProfileAvailability"];
 
 export const userRouter = createTRPCRouter({
   getProfileById: publicProcedure
@@ -50,7 +52,7 @@ export const userRouter = createTRPCRouter({
       });
     }
   }),
-  editUserProfile: protectedProcedure
+  editProfileDetail: protectedProcedure
     .input(
       z.object({
         firstName: z.string(),
@@ -79,5 +81,42 @@ export const userRouter = createTRPCRouter({
           message: (error as Error).message,
         });
       }
+    }),
+  editProfileAvailability: protectedProcedure
+    .input(
+      z.object({
+        mondayAvailability: z.boolean(),
+        tuesdayAvailability: z.boolean(),
+        wednesdayAvailability: z.boolean(),
+        thursdayAvailability: z.boolean(),
+        fridayAvailability: z.boolean(),
+        saturdayAvailability: z.boolean(),
+        sundayAvailability: z.boolean(),
+        mondayStart: z.string().nullable(),
+        mondayEnd: z.string().nullable(),
+        tuesdayStart: z.string().nullable(),
+        tuesdayEnd: z.string().nullable(),
+        wednesdayStart: z.string().nullable(),
+        wednesdayEnd: z.string().nullable(),
+        thursdayStart: z.string().nullable(),
+        thursdayEnd: z.string().nullable(),
+        fridayStart: z.string().nullable(),
+        fridayEnd: z.string().nullable(),
+        saturdayStart: z.string().nullable(),
+        saturdayEnd: z.string().nullable(),
+        sundayStart: z.string().nullable(),
+        sundayEnd: z.string().nullable(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { ...data } = input;
+      console.log(data);
+
+      await clerkClient.users.updateUser(ctx.auth.id, {
+        publicMetadata: {
+          ...ctx.auth.publicMetadata,
+          availability: data,
+        },
+      });
     }),
 });

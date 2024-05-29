@@ -1,5 +1,3 @@
-import { clerkClient } from "@clerk/nextjs/server";
-import { type User } from "@clerk/nextjs/dist/types/server";
 import {
   Avatar,
   Badge,
@@ -11,17 +9,21 @@ import {
   Text,
   Title,
 } from "@mantine/core";
-import type { GetStaticPropsContext } from "next";
 import dynamic from "next/dynamic";
-import type { ClerkPublicMetadata } from "~/types/publicMetadata";
 import { daysObject } from "~/utils/constants";
+import type { GetStaticPropsContext } from "next";
+import { clerkClient } from "@clerk/nextjs/server";
+import { type User } from "@clerk/nextjs/dist/types/server";
+import type { ClerkPublicMetadata } from "~/types/publicMetadata";
 const LazyProfileButton = dynamic(
   () => import("~/components/dynamic/ProfileButton"),
   { ssr: false }
 );
 const Profile = ({ user }: { user: User }) => {
-  const { bio, role } = user.publicMetadata as unknown as ClerkPublicMetadata;
+  const { bio, role, availability } =
+    user.publicMetadata as unknown as ClerkPublicMetadata;
 
+  //TODO Change the nameeee it editProfile button
   return (
     <Container my="xl">
       <Stack>
@@ -50,7 +52,7 @@ const Profile = ({ user }: { user: User }) => {
                   </div>
                 </Group>
                 <LazyProfileButton
-                  type="personal"
+                  type="detail"
                   profileId={user.id}
                   profileRole={role}
                 />
@@ -79,8 +81,8 @@ const Profile = ({ user }: { user: User }) => {
                     {name}
                   </Text>
                   <Breadcrumbs separator="-">
-                    <Badge>START</Badge>
-                    <Badge>END</Badge>
+                    <Badge>{availability?.sundayStart}</Badge>
+                    <Badge>{availability?.sundayEnd}</Badge>
                   </Breadcrumbs>
                 </Group>
               ))}

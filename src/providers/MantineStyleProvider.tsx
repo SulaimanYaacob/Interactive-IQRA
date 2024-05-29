@@ -1,4 +1,10 @@
-import { Button, Container, MantineProvider, createTheme } from "@mantine/core";
+import {
+  Button,
+  Chip,
+  Container,
+  MantineProvider,
+  createTheme,
+} from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import { ModalsProvider } from "@mantine/modals";
 import type { ReactNode } from "react";
@@ -16,6 +22,11 @@ const theme = createTheme({
     Container: Container.extend({
       defaultProps: {
         size: "lg",
+      },
+    }),
+    Chip: Chip.extend({
+      defaultProps: {
+        radius: "xs",
       },
     }),
   },

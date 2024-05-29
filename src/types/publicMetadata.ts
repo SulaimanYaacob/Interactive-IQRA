@@ -9,26 +9,26 @@ export interface ClerkPublicMetadata {
 
 type Availability = {
   mondayAvailability: boolean;
-  mondayStart?: Date;
-  mondayEnd?: Date;
+  mondayStart?: string;
+  mondayEnd?: string;
   tuesdayAvailability: boolean;
-  tuesdayStart?: Date;
-  tuesdayEnd?: Date;
+  tuesdayStart?: string;
+  tuesdayEnd?: string;
   wednesdayAvailability: boolean;
-  wednesdayStart?: Date;
-  wednesdayEnd?: Date;
+  wednesdayStart?: string;
+  wednesdayEnd?: string;
   thursdayAvailability: boolean;
-  thursdayStart?: Date;
-  thursdayEnd?: Date;
+  thursdayStart?: string;
+  thursdayEnd?: string;
   fridayAvailability: boolean;
-  fridayStart?: Date;
-  fridayEnd?: Date;
+  fridayStart?: string;
+  fridayEnd?: string;
   saturdayAvailability: boolean;
-  saturdayStart?: Date;
-  saturdayEnd?: Date;
+  saturdayStart?: string;
+  saturdayEnd?: string;
   sundayAvailability: boolean;
-  sundayStart?: Date;
-  sundayEnd?: Date;
+  sundayStart?: string;
+  sundayEnd?: string;
 };
 
 type Notifications = {

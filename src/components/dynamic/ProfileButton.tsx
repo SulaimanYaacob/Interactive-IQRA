@@ -1,17 +1,19 @@
 import { FaPen } from "react-icons/fa6";
 import { ROLE } from "~/utils/constants";
 import { useSession } from "@clerk/nextjs";
-import useEditProfile from "~/hooks/useEditProfile";
+import useEditProfileDetail from "~/hooks/useEditProfileDetail";
 import { ActionIcon, Button } from "@mantine/core";
+import useEditProfileAvailability from "~/hooks/useEditProfileAvailability";
 
 type Props = {
   profileId: string;
   profileRole: ROLE;
-  type: "availability" | "personal";
+  type: "availability" | "detail";
 };
 
 const ProfileButton = ({ profileId, profileRole, type }: Props) => {
-  const { openEditProfileModal } = useEditProfile();
+  const { openEditDetailModal } = useEditProfileDetail();
+  const { openEditAvailabilityModal } = useEditProfileAvailability();
   const { session } = useSession();
   const isCurrentUser = session?.user.id === profileId;
 
@@ -22,10 +24,10 @@ const ProfileButton = ({ profileId, profileRole, type }: Props) => {
     return <Button>Book Appointment</Button>;
 
   //* user browsing their own profile can edit their profile
-  if (isCurrentUser && type === "personal")
+  if (isCurrentUser && type === "detail")
     return (
       <ActionIcon
-        onClick={() => openEditProfileModal()}
+        onClick={() => openEditDetailModal()}
         size="lg"
         right={0}
         variant="light"
@@ -39,7 +41,7 @@ const ProfileButton = ({ profileId, profileRole, type }: Props) => {
   if (isCurrentUser && type === "availability")
     return (
       <ActionIcon
-        onClick={() => alert("Edit availability")}
+        onClick={() => openEditAvailabilityModal()}
         size="lg"
         right={0}
         variant="light"
