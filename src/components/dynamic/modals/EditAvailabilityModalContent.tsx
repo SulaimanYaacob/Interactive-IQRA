@@ -43,6 +43,7 @@ const EditAvailabilityModalContent = ({
 
   console.log(values);
 
+  //TODO Change to accordion with Switch / Checkbox
   return (
     <form onSubmit={onSubmit((val) => mutate(val))}>
       <Stack>
@@ -50,49 +51,47 @@ const EditAvailabilityModalContent = ({
           spacing={{ base: "xs", sm: "md" }}
           cols={{ base: 1, sm: 3 }}
         >
-          <Chip.Group multiple>
-            {Object.keys(daysObject).map((day) => (
-              <Stack key={day}>
-                <Chip
-                  {...getInputProps(`${day}Availability`)}
-                  value={day}
-                  defaultChecked={Boolean(
-                    values[`${day}Availability` as keyof typeof values]
-                  )}
-                  styles={(t) => ({
-                    label: {
-                      width: "100%",
-                      // color: t.colors.gray[0],
-                      // background: values[
-                      //   `${day}Availability` as keyof typeof values
-                      // ]
-                      //   ? t.colors.blue[7]
-                      //   : t.colors.red[7],
-                    },
-                  })}
-                  tt="capitalize"
-                  fw="500"
-                >
-                  {day}
-                </Chip>
-                {values[`${day}Availability` as keyof typeof values] && (
-                  <Group gap="xs" grow>
-                    <TimeInput
-                      label="Start Time"
-                      withAsterisk
-                      value=""
-                      {...getInputProps(`${day}Start`)}
-                    />
-                    <TimeInput
-                      label="End Time"
-                      withAsterisk
-                      {...getInputProps(`${day}End`)}
-                    />
-                  </Group>
+          {Object.keys(daysObject).map((day) => (
+            <Stack key={day}>
+              <Chip
+                {...getInputProps(`${day}Availability`)}
+                defaultChecked={Boolean(
+                  values[`${day}Availability` as keyof typeof values] === true
                 )}
-              </Stack>
-            ))}
-          </Chip.Group>
+                value={day}
+                styles={(t) => ({
+                  label: {
+                    width: "100%",
+                    // color: t.colors.gray[0],
+                    // background: values[
+                    //   `${day}Availability` as keyof typeof values
+                    // ]
+                    //   ? t.colors.blue[7]
+                    //   : t.colors.red[7],
+                  },
+                })}
+                tt="capitalize"
+                fw="500"
+              >
+                {day}
+              </Chip>
+              {values[`${day}Availability` as keyof typeof values] && (
+                <Group gap="xs" grow>
+                  <TimeInput
+                    label="Start Time"
+                    withAsterisk
+                    value=""
+                    {...getInputProps(`${day}Start`)}
+                  />
+                  <TimeInput
+                    label="End Time"
+                    withAsterisk
+                    {...getInputProps(`${day}End`)}
+                  />
+                </Group>
+              )}
+            </Stack>
+          ))}
         </SimpleGrid>
         <Button type="submit">Update</Button>
       </Stack>
