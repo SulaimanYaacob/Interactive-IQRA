@@ -39,6 +39,24 @@ const EditAvailabilityModalContent = ({
         sundayStart: availability?.sundayStart ?? "",
         sundayEnd: availability?.sundayEnd ?? "",
       },
+      validate: Object.fromEntries(
+        Object.keys(daysObject).flatMap((day) => [
+          [
+            `${day}Start`,
+            (val: string) => {
+              if (values[`${day}Availability` as keyof typeof values])
+                return val ? null : "Required";
+            },
+          ],
+          [
+            `${day}End`,
+            (val: string) => {
+              if (values[`${day}Availability` as keyof typeof values])
+                return val ? null : "Required";
+            },
+          ],
+        ])
+      ),
     });
 
   //TODO Change to accordion with Switch / Checkbox
