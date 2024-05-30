@@ -12,15 +12,15 @@ type Props = {
 };
 
 const ProfileButton = ({ profileId, profileRole, type }: Props) => {
-  const { openEditDetailModal } = useEditProfileDetail();
-  const { openEditAvailabilityModal } = useEditProfileAvailability();
   const { session } = useSession();
   const isCurrentUser = session?.user.id === profileId;
+  const { openEditDetailModal } = useEditProfileDetail();
+  const { openEditAvailabilityModal } = useEditProfileAvailability();
 
   if (!session) return null;
 
-  //* other users browsing tutor profile can book an appointment
-  if (!isCurrentUser && profileRole === ROLE.TUTOR)
+  //* other users browsing tutor profile can book an appointment that only appears on detail section
+  if (!isCurrentUser && type === "detail" && profileRole === ROLE.TUTOR)
     return <Button>Book Appointment</Button>;
 
   //* user browsing their own profile can edit their profile

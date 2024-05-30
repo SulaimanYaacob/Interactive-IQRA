@@ -41,8 +41,6 @@ const EditAvailabilityModalContent = ({
       },
     });
 
-  console.log(values);
-
   //TODO Change to accordion with Switch / Checkbox
   return (
     <form onSubmit={onSubmit((val) => mutate(val))}>

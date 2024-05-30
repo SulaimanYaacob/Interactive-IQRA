@@ -75,17 +75,40 @@ const Profile = ({ user }: { user: User }) => {
             </Group>
 
             <Stack>
-              {Object.values(daysObject).map(({ index, name }) => (
-                <Group justify="space-between" key={index}>
-                  <Text w="100px" tt="capitalize">
-                    {name}
-                  </Text>
-                  <Breadcrumbs separator="-">
-                    <Badge>{availability?.sundayStart}</Badge>
-                    <Badge>{availability?.sundayEnd}</Badge>
-                  </Breadcrumbs>
-                </Group>
-              ))}
+              {Object.values(daysObject).map(({ index, name }) => {
+                const startTime = String(
+                  availability?.[`${name}Start` as keyof typeof availability]
+                );
+                const endTime = String(
+                  availability?.[`${name}End` as keyof typeof availability]
+                );
+
+                const isAvailable = Boolean(
+                  availability?.[
+                    `${name}Availability` as keyof typeof availability
+                  ]
+                );
+
+                if (!isAvailable) return null;
+
+                return (
+                  <Paper key={index} withBorder p="md">
+                    <Group justify="space-between">
+                      <Text fw="500" w="100px" tt="capitalize">
+                        {name}
+                      </Text>
+                      <Breadcrumbs separator="-">
+                        <Badge size="lg" radius="xs">
+                          {startTime}
+                        </Badge>
+                        <Badge size="lg" radius="xs">
+                          {endTime}
+                        </Badge>
+                      </Breadcrumbs>
+                    </Group>
+                  </Paper>
+                );
+              })}
             </Stack>
           </Stack>
         </Paper>
