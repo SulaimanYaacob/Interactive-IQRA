@@ -3,6 +3,7 @@ import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import type { RouterInputs } from "~/utils/api";
+import { daysObject } from "~/utils/constants";
 
 export type EditProfileDetailInput = RouterInputs["user"]["editProfileDetail"];
 export type EditProfileAvailabilityInput =
@@ -111,10 +112,26 @@ export const userRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { ...data } = input;
 
+      //* if no availability is selected, set time to null
+      Object.keys(daysObject).forEach((day) => {
+        const availabilityKey = `${day}Availability` as keyof typeof data;
+        const startKey = `${day}Start` as keyof typeof data;
+        const endKey = `${day}End` as keyof typeof data;
+
+        if (!data[availabilityKey]) {
+          (data[startKey] as null) = null;
+          (data[endKey] as null) = null;
+        }
+      });
+
+      const allAvailabilityFalse = Object.keys(daysObject).every(
+        (day) => !input[`${day}Availability` as keyof typeof input]
+      );
+
       await clerkClient.users.updateUser(ctx.auth.id, {
         publicMetadata: {
           ...ctx.auth.publicMetadata,
-          availability: data,
+          availability: !allAvailabilityFalse ? data : null,
         },
       });
     }),

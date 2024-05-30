@@ -10,11 +10,13 @@ import {
   Title,
 } from "@mantine/core";
 import dynamic from "next/dynamic";
-import { daysObject } from "~/utils/constants";
 import type { GetStaticPropsContext } from "next";
 import { clerkClient } from "@clerk/nextjs/server";
 import { type User } from "@clerk/nextjs/dist/types/server";
 import type { ClerkPublicMetadata } from "~/types/publicMetadata";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+import { daysObject } from "~/utils/constants";
 const LazyProfileButton = dynamic(
   () => import("~/components/dynamic/ProfileButton"),
   { ssr: false }
@@ -75,40 +77,55 @@ const Profile = ({ user }: { user: User }) => {
             </Group>
 
             <Stack>
-              {Object.values(daysObject).map(({ index, name }) => {
-                const startTime = String(
-                  availability?.[`${name}Start` as keyof typeof availability]
-                );
-                const endTime = String(
-                  availability?.[`${name}End` as keyof typeof availability]
-                );
+              {
+                //TODO Fix this shit
+                availability ? (
+                  Object.keys(daysObject).map((day) => {
+                    //* Pretty f**ked up code here but it works for now :shrug:
+                    dayjs.extend(customParseFormat);
+                    const availabilityKey =
+                      `${day}Availability` as keyof typeof availability;
+                    const startKey = `${day}Start` as keyof typeof availability;
+                    const endKey = `${day}End` as keyof typeof availability;
 
-                const isAvailable = Boolean(
-                  availability?.[
-                    `${name}Availability` as keyof typeof availability
-                  ]
-                );
+                    const startTime = dayjs(
+                      String(availability?.[startKey]),
+                      "HH:mm"
+                    ).format("hh:mm A");
 
-                if (!isAvailable) return null;
+                    const endTime = dayjs(
+                      String(availability?.[endKey]),
+                      "HH:mm"
+                    ).format("hh:mm A");
 
-                return (
-                  <Paper key={index} withBorder p="md">
-                    <Group justify="space-between">
-                      <Text fw="500" w="100px" tt="capitalize">
-                        {name}
-                      </Text>
-                      <Breadcrumbs separator="-">
-                        <Badge size="lg" radius="xs">
-                          {startTime}
-                        </Badge>
-                        <Badge size="lg" radius="xs">
-                          {endTime}
-                        </Badge>
-                      </Breadcrumbs>
-                    </Group>
-                  </Paper>
-                );
-              })}
+                    const isAvailable = Boolean(
+                      availability?.[availabilityKey]
+                    );
+
+                    if (!isAvailable) return null;
+
+                    return (
+                      <Paper key={day} withBorder p="md">
+                        <Group justify="space-between">
+                          <Text fw="500" w="100px" tt="capitalize">
+                            {day}
+                          </Text>
+                          <Breadcrumbs separator="-">
+                            <Badge size="lg" radius="xs">
+                              {startTime}
+                            </Badge>
+                            <Badge size="lg" radius="xs">
+                              {endTime}
+                            </Badge>
+                          </Breadcrumbs>
+                        </Group>
+                      </Paper>
+                    );
+                  })
+                ) : (
+                  <Text>No availability set</Text>
+                )
+              }
             </Stack>
           </Stack>
         </Paper>

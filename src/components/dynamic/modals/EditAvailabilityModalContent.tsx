@@ -72,7 +72,7 @@ const EditAvailabilityModalContent = ({
               <Chip
                 {...getInputProps(`${day}Availability`)}
                 defaultChecked={Boolean(
-                  values[`${day}Availability` as keyof typeof values] === true
+                  values[`${day}Availability` as keyof typeof values]
                 )}
                 value={day}
                 styles={(t) => ({
