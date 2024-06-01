@@ -4,6 +4,7 @@ import { useSession } from "@clerk/nextjs";
 import useEditProfileDetail from "~/hooks/useEditProfileDetail";
 import { ActionIcon, Button } from "@mantine/core";
 import useEditProfileAvailability from "~/hooks/useEditProfileAvailability";
+import useBookAppointment from "~/hooks/useBookAppointment";
 
 type Props = {
   profileId: string;
@@ -16,12 +17,17 @@ const ProfileButton = ({ profileId, profileRole, type }: Props) => {
   const isCurrentUser = session?.user.id === profileId;
   const { openEditDetailModal } = useEditProfileDetail();
   const { openEditAvailabilityModal } = useEditProfileAvailability();
+  const { openBookAppointmentModal } = useBookAppointment();
 
   if (!session) return null;
 
   //* other users browsing tutor profile can book an appointment that only appears on detail section
   if (!isCurrentUser && type === "detail" && profileRole === ROLE.TUTOR)
-    return <Button>Book Appointment</Button>;
+    return (
+      <Button onClick={() => openBookAppointmentModal()}>
+        Book Appointment
+      </Button>
+    );
 
   //* user browsing their own profile can edit their profile
   if (isCurrentUser && type === "detail")

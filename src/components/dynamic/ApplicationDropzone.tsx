@@ -7,6 +7,7 @@ import useUploadApplication from "~/hooks/useUploadApplication";
 const ApplicationDropzone = () => {
   const { uploadApplication } = useUploadApplication();
 
+  //TODO Use GenerateReactHelpers and MutateAsync to sync the upload with the server
   return (
     <>
       <Stack gap="0" ta="center">

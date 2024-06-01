@@ -29,6 +29,13 @@ export const ourFileRouter = {
       // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
       return { uploadedBy: metadata.userId };
     }),
+  // postUploader: f({ pdf: { maxFileSize: "8MB", maxFileCount: 3 } }).middleware(({ req }) => {
+  //   // This code runs on your server before upload
+  //   return { userId: getAuth(req).userId };
+  // }).onUploadComplete(({ metadata }) => {
+  //   // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
+  //   return { uploadedBy: metadata.userId };
+  // })
 } satisfies FileRouter;
 
 export type OurFileRouter = typeof ourFileRouter;

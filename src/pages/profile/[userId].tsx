@@ -5,6 +5,7 @@ import {
   Container,
   Group,
   Paper,
+  SimpleGrid,
   Stack,
   Text,
   Title,
@@ -63,20 +64,20 @@ const Profile = ({ user }: { user: User }) => {
             </div>
           </Stack>
         </Paper>
-        <Paper withBorder p="xl">
-          <Stack gap="xl">
-            <Group justify="space-between" pos="relative">
-              <Text fw="700" size="xl">
-                Availability
-              </Text>
-              <LazyProfileButton
-                type="availability"
-                profileId={user.id}
-                profileRole={role}
-              />
-            </Group>
+        <SimpleGrid cols={{ base: 1, sm: 2 }}>
+          <Paper withBorder p="xl">
+            <Stack gap="xs">
+              <Group mb="md" justify="space-between" pos="relative">
+                <Text fw="700" size="xl">
+                  Availability
+                </Text>
+                <LazyProfileButton
+                  type="availability"
+                  profileId={user.id}
+                  profileRole={role}
+                />
+              </Group>
 
-            <Stack>
               {
                 //TODO Fix this shit
                 availability ? (
@@ -127,8 +128,18 @@ const Profile = ({ user }: { user: User }) => {
                 )
               }
             </Stack>
-          </Stack>
-        </Paper>
+          </Paper>
+          <Paper withBorder p="xl">
+            <Stack gap="xs">
+              <Group mb="md" justify="space-between" pos="relative">
+                <Text fw="700" size="xl">
+                  Testimonials
+                </Text>
+              </Group>
+              <Text></Text>
+            </Stack>
+          </Paper>
+        </SimpleGrid>
       </Stack>
     </Container>
   );

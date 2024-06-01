@@ -34,7 +34,7 @@ const theme = createTheme({
 
 function MantineStyleProvider({ children }: { children: ReactNode }) {
   return (
-    <MantineProvider theme={theme}>
+    <MantineProvider theme={theme} defaultColorScheme="auto">
       <Notifications position="top-center" autoClose={3000} limit={3} />
       <ModalsProvider>{children}</ModalsProvider>
     </MantineProvider>

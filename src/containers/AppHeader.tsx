@@ -107,7 +107,6 @@ function AppHeader({ openedMainNav, toggleMainNav }: Props) {
                 </Menu.Target>
                 <Menu.Dropdown fw={500}>
                   <Menu.Item
-                    color="blue"
                     component={Link}
                     href={`/profile/${session?.user.id}`}
                     leftSection={<FaUser />}
@@ -115,7 +114,6 @@ function AppHeader({ openedMainNav, toggleMainNav }: Props) {
                     View Profile
                   </Menu.Item>
                   <Menu.Item
-                    color="red"
                     leftSection={<FaRightFromBracket />}
                     onClick={() => signOut(() => push("/"))}
                   >

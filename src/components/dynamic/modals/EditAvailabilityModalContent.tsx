@@ -2,6 +2,7 @@ import { useSession } from "@clerk/nextjs";
 import { Button, Chip, Group, SimpleGrid, Stack } from "@mantine/core";
 import { TimeInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
+import { modals } from "@mantine/modals";
 import type { EditProfileAvailabilityInput } from "~/server/api/routers/userRouter";
 import type { ClerkPublicMetadata } from "~/types/publicMetadata";
 import { daysObject } from "~/utils/constants";
@@ -61,7 +62,12 @@ const EditAvailabilityModalContent = ({
 
   //TODO Change to accordion with Switch / Checkbox
   return (
-    <form onSubmit={onSubmit((val) => mutate(val))}>
+    <form
+      onSubmit={onSubmit((val) => {
+        modals.closeAll();
+        mutate(val);
+      })}
+    >
       <Stack>
         <SimpleGrid
           spacing={{ base: "xs", sm: "md" }}
@@ -74,19 +80,9 @@ const EditAvailabilityModalContent = ({
                 defaultChecked={Boolean(
                   values[`${day}Availability` as keyof typeof values]
                 )}
-                value={day}
-                styles={(t) => ({
-                  label: {
-                    width: "100%",
-                    // color: t.colors.gray[0],
-                    // background: values[
-                    //   `${day}Availability` as keyof typeof values
-                    // ]
-                    //   ? t.colors.blue[7]
-                    //   : t.colors.red[7],
-                  },
-                })}
+                styles={{ label: { width: "100%" } }}
                 tt="capitalize"
+                value={day}
                 fw="500"
               >
                 {day}
@@ -94,12 +90,14 @@ const EditAvailabilityModalContent = ({
               {values[`${day}Availability` as keyof typeof values] && (
                 <Group gap="xs" grow>
                   <TimeInput
+                    onClick={(e) => e.currentTarget.showPicker()}
                     label="Start Time"
                     withAsterisk
                     value=""
                     {...getInputProps(`${day}Start`)}
                   />
                   <TimeInput
+                    onClick={(e) => e.currentTarget.showPicker()}
                     label="End Time"
                     withAsterisk
                     {...getInputProps(`${day}End`)}

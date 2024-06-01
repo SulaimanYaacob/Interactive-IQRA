@@ -1,7 +1,7 @@
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/router";
-import EditAvailabilityModalContent from "~/components/dynamic/modals/EditAvailabilityModalContent";
+import BookAppointmentModalContent from "~/components/dynamic/modals/BookAppointmentModalContent";
 import { api } from "~/utils/api";
 import {
   errorProps,
@@ -9,46 +9,46 @@ import {
   successProps,
 } from "~/utils/notificationProps";
 
-const useEditProfileAvailability = () => {
+const useBookAppointment = () => {
   const { reload } = useRouter();
   const { mutate } = api.user.editProfileAvailability.useMutation({
     onMutate: () => {
       notifications.show({
-        id: "update-profile-availability",
-        title: "Updating Profile Availability",
-        message: "Please wait while we update your info",
+        id: "book-appointment",
+        title: "Booking an Appointment",
+        message: "Please wait while we book your appointment",
         ...mutateProps,
       });
     },
     onSuccess: () => {
       notifications.update({
-        id: "update-profile-availability",
-        title: "Profile Updated!",
-        message: "Your availability has been updated",
+        id: "book-appointment",
+        title: "Appointment Booked!",
+        message: "Your appointment has been booked",
         ...successProps,
       });
       reload();
     },
     onError: (error) => {
       notifications.update({
-        id: "update-profile-availability",
-        title: "Unable to update availability",
+        id: "book-appointment",
+        title: "Unable to book an appointment",
         message: error.message,
         ...errorProps,
       });
     },
   });
 
-  const openEditAvailabilityModal = () => {
+  const openBookAppointmentModal = () => {
     modals.open({
-      title: "Update Availability",
-      children: <EditAvailabilityModalContent mutate={mutate} />,
+      title: "",
+      children: <BookAppointmentModalContent />,
       centered: true,
       size: "xl",
     });
   };
 
-  return { openEditAvailabilityModal };
+  return { openBookAppointmentModal };
 };
 
-export default useEditProfileAvailability;
+export default useBookAppointment;
