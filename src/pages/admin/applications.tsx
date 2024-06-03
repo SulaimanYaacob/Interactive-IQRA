@@ -78,7 +78,9 @@ function Applications() {
                         withCheckIcon={false}
                         allowDeselect={false}
                         defaultValue={status}
-                        data={Object.values(STATUS)}
+                        data={Object.values(STATUS).filter(
+                          (status) => status !== STATUS.CANCELLED
+                        )}
                         onChange={(status) =>
                           mutate({
                             applicationId,
@@ -98,7 +100,9 @@ function Applications() {
                         withCheckIcon={false}
                         allowDeselect={false}
                         defaultValue={status}
-                        data={Object.values(STATUS)}
+                        data={Object.values(STATUS).filter(
+                          (status) => status !== STATUS.CANCELLED
+                        )}
                       />
                     </Center>
                     <Accordion.Panel>

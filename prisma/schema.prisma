@@ -26,8 +26,11 @@ model Appointment {
     appointmentId     String   @id @unique @default(uuid())
     studentClerkId    String //? User's that book the appointment 
     studentIdentifier String? //? (In case clerk is no longer used)
-    startTime         DateTime
-    endTime           DateTime
+    comments          String?
+    date              DateTime
+    startTime         String
+    endTime           String
+    rejectedComments  String?
     status            STATUS
 
     createdAt DateTime @default(now())
@@ -67,4 +70,5 @@ enum STATUS {
     PENDING
     ACCEPTED
     REJECTED
+    CANCELLED
 }

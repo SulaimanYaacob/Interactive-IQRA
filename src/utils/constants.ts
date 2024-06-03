@@ -8,6 +8,7 @@ export enum STATUS {
   PENDING = "PENDING",
   ACCEPTED = "ACCEPTED",
   REJECTED = "REJECTED",
+  CANCELLED = "CANCELLED",
 }
 
 export const daysObject = {

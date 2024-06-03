@@ -104,9 +104,9 @@ const EditDetailModalContent = ({
             autosize
             maxRows={4}
             minRows={2}
-            label="Bio (Optional)"
-            description="Max 300 characters"
             {...getInputProps("bio")}
+            label={`Bio (${300 - Number(values.bio?.length)} Characters Left)`}
+            error={Number(values.bio?.length) > 300 && "Comments too long"}
           />
           <Button type="submit">Update</Button>
         </Stack>

@@ -22,6 +22,8 @@ const LazyProfileButton = dynamic(
   () => import("~/components/dynamic/ProfileButton"),
   { ssr: false }
 );
+dayjs.extend(customParseFormat);
+
 const Profile = ({ user }: { user: User }) => {
   const { bio, role, availability } =
     user.publicMetadata as unknown as ClerkPublicMetadata;
@@ -83,7 +85,6 @@ const Profile = ({ user }: { user: User }) => {
                 availability ? (
                   Object.keys(daysObject).map((day) => {
                     //* Pretty f**ked up code here but it works for now :shrug:
-                    dayjs.extend(customParseFormat);
                     const availabilityKey =
                       `${day}Availability` as keyof typeof availability;
                     const startKey = `${day}Start` as keyof typeof availability;

@@ -9,7 +9,6 @@ import { Notifications } from "@mantine/notifications";
 import { ModalsProvider } from "@mantine/modals";
 import type { ReactNode } from "react";
 import "@mantine/notifications/styles.css";
-import "@mantine/dates/styles.css";
 import "@mantine/core/styles.css";
 
 const theme = createTheme({

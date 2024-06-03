@@ -2,6 +2,7 @@ import MantineStyleProvider from "~/providers/MantineStyleProvider";
 import ClerkAuthProvider from "~/providers/ClerkAuthProvider";
 import AppLayout from "~/containers/AppLayout";
 import { type AppType } from "next/app";
+import "@mantine/dates/styles.css";
 import { api } from "~/utils/api";
 import Head from "next/head";
 
