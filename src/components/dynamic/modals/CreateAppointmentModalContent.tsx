@@ -3,9 +3,7 @@ import { DatePicker, TimeInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
 import dayjs from "dayjs";
-import customParseFormat from "dayjs/plugin/customParseFormat";
 import type { CreateAppointmentInput } from "~/server/api/routers/appointmentRouter";
-dayjs.extend(customParseFormat);
 
 const CreateAppointmentModalContent = ({
   mutate,
