@@ -1,8 +1,9 @@
 import { useSession } from "@clerk/nextjs";
-import { Button, Chip, Group, SimpleGrid, Stack } from "@mantine/core";
+import { Breadcrumbs, Button, Group, Stack, Switch } from "@mantine/core";
 import { TimeInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
+import dayjs from "dayjs";
 import type { EditProfileAvailabilityInput } from "~/server/api/routers/userRouter";
 import type { ClerkPublicMetadata } from "~/types/publicMetadata";
 import { daysObject } from "~/utils/constants";
@@ -15,7 +16,7 @@ const EditAvailabilityModalContent = ({
   const { session } = useSession();
   const availability = session?.user.publicMetadata
     .availability as ClerkPublicMetadata["availability"];
-  const { getInputProps, onSubmit, values } =
+  const { getInputProps, onSubmit, values, isValid } =
     useForm<EditProfileAvailabilityInput>({
       initialValues: {
         mondayAvailability: availability?.mondayAvailability ?? false,
@@ -40,27 +41,31 @@ const EditAvailabilityModalContent = ({
         sundayStart: availability?.sundayStart ?? "",
         sundayEnd: availability?.sundayEnd ?? "",
       },
-      validate: Object.fromEntries(
-        Object.keys(daysObject).flatMap((day) => [
-          [
-            `${day}Start`,
-            (val: string) => {
-              if (values[`${day}Availability` as keyof typeof values])
-                return val ? null : "Required";
-            },
-          ],
-          [
-            `${day}End`,
-            (val: string) => {
-              if (values[`${day}Availability` as keyof typeof values])
-                return val ? null : "Required";
-            },
-          ],
-        ])
-      ),
+      validate: (values) => {
+        const errors: Record<string, string | null> = {};
+
+        Object.keys(daysObject).forEach((day) => {
+          const start = values[`${day}Start` as keyof typeof values] as string;
+          const end = values[`${day}End` as keyof typeof values] as string;
+          const available = values[`${day}Availability` as keyof typeof values];
+
+          if (available) {
+            if (!start) errors[`${day}Start`] = "Start Time is required";
+            else if (!end) errors[`${day}End`] = "End Time is required";
+            else if (dayjs(start, "HH:mm").isSame(dayjs(end, "HH:mm"))) {
+              errors[`${day}Start`] = errors[`${day}End`] = "Times must differ";
+            } else if (dayjs(start, "HH:mm").isAfter(dayjs(end, "HH:mm"))) {
+              errors[`${day}Start`] = "Start must be before End";
+              errors[`${day}End`] = "End must be after Start";
+            }
+          }
+        });
+
+        return errors;
+      },
+      validateInputOnChange: true,
     });
 
-  //TODO Change to accordion with Switch / Checkbox
   return (
     <form
       onSubmit={onSubmit((val) => {
@@ -69,45 +74,44 @@ const EditAvailabilityModalContent = ({
       })}
     >
       <Stack>
-        <SimpleGrid
-          spacing={{ base: "xs", sm: "md" }}
-          cols={{ base: 1, sm: 3 }}
-        >
+        <Stack>
           {Object.keys(daysObject).map((day) => (
-            <Stack key={day}>
-              <Chip
-                {...getInputProps(`${day}Availability`)}
-                defaultChecked={Boolean(
-                  values[`${day}Availability` as keyof typeof values]
-                )}
-                styles={{ label: { width: "100%" } }}
-                tt="capitalize"
-                value={day}
-                fw="500"
-              >
-                {day}
-              </Chip>
+            <Group key={day}>
+              <Stack justify="center">
+                <Switch
+                  {...getInputProps(`${day}Availability`)}
+                  defaultChecked={Boolean(
+                    values[`${day}Availability` as keyof typeof values]
+                  )}
+                  value={day}
+                  label={day}
+                  styles={{ label: { width: "100px" } }}
+                  tt="capitalize"
+                  fw="500"
+                >
+                  {day}
+                </Switch>
+              </Stack>
               {values[`${day}Availability` as keyof typeof values] && (
-                <Group gap="xs" grow>
+                <Breadcrumbs separator="-">
                   <TimeInput
                     onClick={(e) => e.currentTarget.showPicker()}
-                    label="Start Time"
                     withAsterisk
-                    value=""
                     {...getInputProps(`${day}Start`)}
                   />
                   <TimeInput
                     onClick={(e) => e.currentTarget.showPicker()}
-                    label="End Time"
                     withAsterisk
                     {...getInputProps(`${day}End`)}
                   />
-                </Group>
+                </Breadcrumbs>
               )}
-            </Stack>
+            </Group>
           ))}
-        </SimpleGrid>
-        <Button type="submit">Update</Button>
+        </Stack>
+        <Button type="submit" disabled={!isValid()}>
+          Update
+        </Button>
       </Stack>
     </form>
   );

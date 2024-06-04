@@ -44,7 +44,7 @@ const useEditProfileAvailability = () => {
       title: "Update Availability",
       children: <EditAvailabilityModalContent mutate={mutate} />,
       centered: true,
-      size: "xl",
+      size: "lg",
     });
   };
 

@@ -49,8 +49,6 @@ const CreateAppointmentModalContent = ({
       }),
     });
 
-  console.log(values.date);
-
   return (
     <form
       onSubmit={onSubmit((val) => {
@@ -77,6 +75,7 @@ const CreateAppointmentModalContent = ({
             onClick={(e) => e.currentTarget.showPicker()}
           />
           <TimeInput
+            minTime="08:00"
             label="End Time"
             {...getInputProps("endTime")}
             onClick={(e) => e.currentTarget.showPicker()}
