@@ -76,7 +76,7 @@ const EditAvailabilityModalContent = ({
       <Stack>
         <Stack>
           {Object.keys(daysObject).map((day) => (
-            <Group key={day}>
+            <Group key={day} pos="relative">
               <Stack justify="center">
                 <Switch
                   {...getInputProps(`${day}Availability`)}

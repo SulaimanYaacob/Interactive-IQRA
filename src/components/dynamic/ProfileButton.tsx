@@ -5,16 +5,19 @@ import useEditProfileDetail from "~/hooks/useEditProfileDetail";
 import { ActionIcon, Button } from "@mantine/core";
 import useEditProfileAvailability from "~/hooks/useEditProfileAvailability";
 import useCreateAppointment from "~/hooks/useCreateAppointment";
+import type { User } from "@clerk/nextjs/dist/types/server";
+import type { ClerkPublicMetadata } from "~/types/publicMetadata";
 
 type Props = {
-  profileId: string;
-  profileRole: ROLE;
+  userProfile: User;
   type: "availability" | "detail";
 };
 
-const ProfileButton = ({ profileId, profileRole, type }: Props) => {
+const ProfileButton = ({ userProfile, type }: Props) => {
   const { session } = useSession();
-  const isCurrentUser = session?.user.id === profileId;
+  const { role, availability } =
+    userProfile.publicMetadata as unknown as ClerkPublicMetadata;
+  const isCurrentUser = session?.user.id === userProfile.id;
   const { openEditDetailModal } = useEditProfileDetail();
   const { openEditAvailabilityModal } = useEditProfileAvailability();
   const { openCreateAppointmentModal, isLoading: sendingAppointment } =
@@ -23,11 +26,11 @@ const ProfileButton = ({ profileId, profileRole, type }: Props) => {
   if (!session) return null;
 
   //* other users browsing tutor profile can book an appointment that only appears on detail section
-  if (!isCurrentUser && type === "detail" && profileRole === ROLE.TUTOR)
+  if (!isCurrentUser && type === "detail" && role === ROLE.TUTOR)
     return (
       <Button
         loading={sendingAppointment}
-        onClick={() => openCreateAppointmentModal()}
+        onClick={() => openCreateAppointmentModal({ availability })}
       >
         Book Appointment
       </Button>

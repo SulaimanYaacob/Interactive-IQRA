@@ -1,16 +1,31 @@
-import { Button, Group, Stack, Text, Textarea } from "@mantine/core";
+import {
+  Badge,
+  Box,
+  Breadcrumbs,
+  Button,
+  Divider,
+  Group,
+  Stack,
+  Text,
+  Textarea,
+} from "@mantine/core";
 import { DatePicker, TimeInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
 import dayjs from "dayjs";
 import type { CreateAppointmentInput } from "~/server/api/routers/appointmentRouter";
+import type { ClerkPublicMetadata } from "~/types/publicMetadata";
+import { daysObject } from "~/utils/constants";
+import getAvailabilityTime from "~/utils/getAvailabilityTime";
 
 const CreateAppointmentModalContent = ({
   mutate,
+  availability,
 }: {
   mutate: (input: CreateAppointmentInput) => void;
+  availability: ClerkPublicMetadata["availability"];
 }) => {
-  const { getInputProps, values, onSubmit, errors } =
+  const { getInputProps, values, onSubmit, isValid } =
     useForm<CreateAppointmentInput>({
       initialValues: {
         date: dayjs().add(1, "day").toDate(),
@@ -25,11 +40,11 @@ const CreateAppointmentModalContent = ({
             : dayjs(values.startTime, "HH:mm").isSame(
                 dayjs(values.endTime, "HH:mm")
               )
-            ? "Start Time and End Time must not be the same"
+            ? "Times must differ"
             : dayjs(values.startTime, "HH:mm").isAfter(
                 dayjs(values.endTime, "HH:mm")
               )
-            ? "Start Time must be before End Time"
+            ? "Start must be before End"
             : null,
 
         endTime:
@@ -38,15 +53,16 @@ const CreateAppointmentModalContent = ({
             : dayjs(values.endTime, "HH:mm").isSame(
                 dayjs(values.startTime, "HH:mm")
               )
-            ? "Start Time and End Time must not be the same"
+            ? "Times must differ"
             : dayjs(values.endTime, "HH:mm").isBefore(
                 dayjs(values.startTime, "HH:mm")
               )
-            ? "End Time must be after Start Time"
+            ? "End must be after Start"
             : null,
         date: values.date == null ? "Please Enter Date" : null,
         comments: values.comments!.length > 300 ? "Max 300 characters" : null,
       }),
+      validateInputOnChange: true,
     });
 
   return (
@@ -56,16 +72,45 @@ const CreateAppointmentModalContent = ({
       })}
     >
       <Stack>
+        <Box ta="center">
+          {Object.values(daysObject).map(({ index, name: day }) => {
+            const { endTime, startTime, isAvailable } = getAvailabilityTime({
+              availability,
+              day,
+            });
+
+            if (isAvailable && index === values.date.getDay())
+              return (
+                <Group key={index} justify="center" gap="xs" py="xs" c="blue">
+                  <Text fw="500" tt="capitalize">
+                    {`${day} from `}
+                  </Text>
+                  <Breadcrumbs separator="-">
+                    <Badge radius="xs" size="lg">
+                      {startTime}
+                    </Badge>
+                    <Badge size="lg" radius="xs">
+                      {endTime}
+                    </Badge>
+                  </Breadcrumbs>
+                </Group>
+              );
+
+            if (!isAvailable && index === values.date.getDay())
+              return (
+                <Text key={index} p="xs" tt="capitalize" c="red" fw="500">
+                  {`Not Available on ${day}`}
+                </Text>
+              );
+          })}
+          <Divider />
+        </Box>
         <Stack align="center">
-          {errors.date && (
-            <Text size="sm" c="red">
-              {errors.date}
-            </Text>
-          )}
           <DatePicker
             value={values.date}
             {...getInputProps("date")}
             minDate={dayjs().add(1, "day").toDate()}
+            // excludeDate={(date) => }
           />
         </Stack>
         <Group grow>
@@ -89,9 +134,10 @@ const CreateAppointmentModalContent = ({
           label={`Comments (${
             300 - Number(values.comments?.length)
           } Characters Left)`}
-          error={Number(values.comments?.length) > 300 && "Comments too long"}
         />
-        <Button type="submit">Book Appointment</Button>
+        <Button type="submit" disabled={!isValid()}>
+          Book Appointment
+        </Button>
       </Stack>
     </form>
   );

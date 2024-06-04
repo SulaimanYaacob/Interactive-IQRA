@@ -25,27 +25,32 @@ const EditDetailModalContent = ({
   mutate: (detailInput: EditProfileDetailInput) => void;
 }) => {
   const { session } = useSession();
-  const { getInputProps, onSubmit, values } = useForm<EditProfileImage>({
-    initialValues: {
-      profileImage: session?.user.imageUrl ?? "",
-      firstName: session?.user.firstName ?? "",
-      lastName: session?.user.lastName ?? "",
-      username: session?.user.username ?? "",
-      bio: String(session?.user.publicMetadata.bio ?? ""),
-    },
-    validate: {
-      firstName: hasLength(
-        { min: 2, max: 20 },
-        "First Name must be 2-20 characters"
-      ),
-      lastName: hasLength({ max: 20 }, "Last Name must be under 20 characters"),
-      username: matches(
-        /^[a-zA-Z0-9_-]{5,10}$/,
-        "Username must be 5-10 characters and contain only letters, numbers, and dashes"
-      ),
-      bio: hasLength({ max: 300 }, "Bio must be under 300 characters"),
-    },
-  });
+  const { getInputProps, onSubmit, values, isValid } =
+    useForm<EditProfileImage>({
+      initialValues: {
+        profileImage: session?.user.imageUrl ?? "",
+        firstName: session?.user.firstName ?? "",
+        lastName: session?.user.lastName ?? "",
+        username: session?.user.username ?? "",
+        bio: String(session?.user.publicMetadata.bio ?? ""),
+      },
+      validate: {
+        firstName: hasLength(
+          { min: 2, max: 20 },
+          "First Name must be 2-20 characters"
+        ),
+        lastName: hasLength(
+          { max: 20 },
+          "Last Name must be under 20 characters"
+        ),
+        username: matches(
+          /^[a-zA-Z0-9_-]{5,10}$/,
+          "Username must be 5-10 characters and contain only letters, numbers, and dashes"
+        ),
+        bio: hasLength({ max: 300 }, "Bio must be under 300 characters"),
+      },
+      validateInputOnChange: true,
+    });
 
   if (!session) return null;
 
@@ -106,9 +111,10 @@ const EditDetailModalContent = ({
             minRows={2}
             {...getInputProps("bio")}
             label={`Bio (${300 - Number(values.bio?.length)} Characters Left)`}
-            error={Number(values.bio?.length) > 300 && "Comments too long"}
           />
-          <Button type="submit">Update</Button>
+          <Button type="submit" disabled={!isValid()}>
+            Update
+          </Button>
         </Stack>
       </Stack>
     </form>

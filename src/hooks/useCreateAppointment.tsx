@@ -1,6 +1,7 @@
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 import CreateAppointmentModalContent from "~/components/dynamic/modals/CreateAppointmentModalContent";
+import { ClerkPublicMetadata } from "~/types/publicMetadata";
 import { api } from "~/utils/api";
 import {
   errorProps,
@@ -36,10 +37,19 @@ const useCreateAppointment = () => {
     },
   });
 
-  const openCreateAppointmentModal = () => {
+  const openCreateAppointmentModal = ({
+    availability,
+  }: {
+    availability: ClerkPublicMetadata["availability"];
+  }) => {
     modals.open({
       title: "Request Appointment",
-      children: <CreateAppointmentModalContent mutate={mutate} />,
+      children: (
+        <CreateAppointmentModalContent
+          mutate={mutate}
+          availability={availability}
+        />
+      ),
       centered: true,
       size: "md",
     });

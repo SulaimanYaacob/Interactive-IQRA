@@ -18,6 +18,7 @@ import type { ClerkPublicMetadata } from "~/types/publicMetadata";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { daysObject } from "~/utils/constants";
+import getAvailabilityTime from "~/utils/getAvailabilityTime";
 const LazyProfileButton = dynamic(
   () => import("~/components/dynamic/ProfileButton"),
   { ssr: false }
@@ -56,11 +57,7 @@ const Profile = ({ user }: { user: User }) => {
                     </Group>
                   </div>
                 </Group>
-                <LazyProfileButton
-                  type="detail"
-                  profileId={user.id}
-                  profileRole={role}
-                />
+                <LazyProfileButton type="detail" userProfile={user} />
               </Group>
               <Text mt="xs">{bio}</Text>
             </div>
@@ -73,61 +70,40 @@ const Profile = ({ user }: { user: User }) => {
                 <Text fw="700" size="xl">
                   Availability
                 </Text>
-                <LazyProfileButton
-                  type="availability"
-                  profileId={user.id}
-                  profileRole={role}
-                />
+                <LazyProfileButton type="availability" userProfile={user} />
               </Group>
 
-              {
-                //TODO Fix this shit
-                availability ? (
-                  Object.keys(daysObject).map((day) => {
-                    //* Pretty f**ked up code here but it works for now :shrug:
-                    const availabilityKey =
-                      `${day}Availability` as keyof typeof availability;
-                    const startKey = `${day}Start` as keyof typeof availability;
-                    const endKey = `${day}End` as keyof typeof availability;
+              {availability ? (
+                Object.keys(daysObject).map((day) => {
+                  const { endTime, startTime, isAvailable } =
+                    getAvailabilityTime({
+                      availability,
+                      day,
+                    });
 
-                    const startTime = dayjs(
-                      String(availability?.[startKey]),
-                      "HH:mm"
-                    ).format("hh:mm A");
+                  if (!isAvailable) return null;
 
-                    const endTime = dayjs(
-                      String(availability?.[endKey]),
-                      "HH:mm"
-                    ).format("hh:mm A");
-
-                    const isAvailable = Boolean(
-                      availability?.[availabilityKey]
-                    );
-
-                    if (!isAvailable) return null;
-
-                    return (
-                      <Paper key={day} withBorder p="md">
-                        <Group justify="space-between">
-                          <Text fw="500" w="100px" tt="capitalize">
-                            {day}
-                          </Text>
-                          <Breadcrumbs separator="-">
-                            <Badge size="lg" radius="xs">
-                              {startTime}
-                            </Badge>
-                            <Badge size="lg" radius="xs">
-                              {endTime}
-                            </Badge>
-                          </Breadcrumbs>
-                        </Group>
-                      </Paper>
-                    );
-                  })
-                ) : (
-                  <Text>No availability set</Text>
-                )
-              }
+                  return (
+                    <Paper key={day} withBorder p="md">
+                      <Group justify="space-between">
+                        <Text fw="500" w="100px" tt="capitalize">
+                          {day}
+                        </Text>
+                        <Breadcrumbs separator="-">
+                          <Badge size="lg" radius="xs">
+                            {startTime}
+                          </Badge>
+                          <Badge size="lg" radius="xs">
+                            {endTime}
+                          </Badge>
+                        </Breadcrumbs>
+                      </Group>
+                    </Paper>
+                  );
+                })
+              ) : (
+                <Text>No availability set</Text>
+              )}
             </Stack>
           </Paper>
           <Paper withBorder p="xl">
