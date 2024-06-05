@@ -9,10 +9,12 @@ import {
   Text,
   Textarea,
 } from "@mantine/core";
-import { DatePicker, TimeInput } from "@mantine/dates";
+import { DatePicker } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
 import dayjs from "dayjs";
+import { useEffect } from "react";
+import AppointmentTimeInput from "~/components/AppointmentTimeInput";
 import type { CreateAppointmentInput } from "~/server/api/routers/appointmentRouter";
 import type { ClerkPublicMetadata } from "~/types/publicMetadata";
 import { daysObject } from "~/utils/constants";
@@ -25,7 +27,7 @@ const CreateAppointmentModalContent = ({
   mutate: (input: CreateAppointmentInput) => void;
   availability: ClerkPublicMetadata["availability"];
 }) => {
-  const { getInputProps, values, onSubmit, isValid } =
+  const { getInputProps, values, onSubmit, isValid, clearErrors } =
     useForm<CreateAppointmentInput>({
       initialValues: {
         date: dayjs().add(1, "day").toDate(),
@@ -64,6 +66,10 @@ const CreateAppointmentModalContent = ({
       }),
       validateInputOnChange: true,
     });
+
+  useEffect(() => {
+    if (isValid()) clearErrors();
+  }, [clearErrors, isValid]);
 
   return (
     <form
@@ -114,16 +120,13 @@ const CreateAppointmentModalContent = ({
           />
         </Stack>
         <Group grow>
-          <TimeInput
+          <AppointmentTimeInput
             label="Start Time"
             {...getInputProps("startTime")}
-            onClick={(e) => e.currentTarget.showPicker()}
           />
-          <TimeInput
-            minTime="08:00"
+          <AppointmentTimeInput
             label="End Time"
             {...getInputProps("endTime")}
-            onClick={(e) => e.currentTarget.showPicker()}
           />
         </Group>
         <Textarea

@@ -84,21 +84,19 @@ const Profile = ({ user }: { user: User }) => {
                   if (!isAvailable) return null;
 
                   return (
-                    <Paper key={day} withBorder p="md">
-                      <Group justify="space-between">
-                        <Text fw="500" w="100px" tt="capitalize">
-                          {day}
-                        </Text>
-                        <Breadcrumbs separator="-">
-                          <Badge size="lg" radius="xs">
-                            {startTime}
-                          </Badge>
-                          <Badge size="lg" radius="xs">
-                            {endTime}
-                          </Badge>
-                        </Breadcrumbs>
-                      </Group>
-                    </Paper>
+                    <Group key={day} justify="space-between">
+                      <Text fw="500" w="100px" tt="capitalize">
+                        {day}
+                      </Text>
+                      <Breadcrumbs separator="-">
+                        <Badge size="lg" radius="xs">
+                          {startTime}
+                        </Badge>
+                        <Badge size="lg" radius="xs">
+                          {endTime}
+                        </Badge>
+                      </Breadcrumbs>
+                    </Group>
                   );
                 })
               ) : (

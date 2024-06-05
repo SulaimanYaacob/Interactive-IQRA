@@ -1,12 +1,12 @@
 import { useSession } from "@clerk/nextjs";
 import { Breadcrumbs, Button, Group, Stack, Switch } from "@mantine/core";
-import { TimeInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
 import dayjs from "dayjs";
 import type { EditProfileAvailabilityInput } from "~/server/api/routers/userRouter";
 import type { ClerkPublicMetadata } from "~/types/publicMetadata";
 import { daysObject } from "~/utils/constants";
+import AppointmentTimeInput from "~/components/AppointmentTimeInput";
 
 const EditAvailabilityModalContent = ({
   mutate,
@@ -94,14 +94,16 @@ const EditAvailabilityModalContent = ({
               </Stack>
               {values[`${day}Availability` as keyof typeof values] && (
                 <Breadcrumbs separator="-">
-                  <TimeInput
-                    onClick={(e) => e.currentTarget.showPicker()}
-                    withAsterisk
+                  <AppointmentTimeInput
+                    w="125px"
+                    value={
+                      values[`${day}Start` as keyof typeof values] as string
+                    }
                     {...getInputProps(`${day}Start`)}
                   />
-                  <TimeInput
-                    onClick={(e) => e.currentTarget.showPicker()}
-                    withAsterisk
+                  <AppointmentTimeInput
+                    w="125px"
+                    value={values[`${day}End` as keyof typeof values] as string}
                     {...getInputProps(`${day}End`)}
                   />
                 </Breadcrumbs>
