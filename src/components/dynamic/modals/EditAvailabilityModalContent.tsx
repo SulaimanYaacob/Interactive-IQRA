@@ -95,14 +95,14 @@ const EditAvailabilityModalContent = ({
               {values[`${day}Availability` as keyof typeof values] && (
                 <Breadcrumbs separator="-">
                   <AppointmentTimeInput
-                    w="125px"
+                    w={{ base: "auto", xs: "150px" }}
                     value={
                       values[`${day}Start` as keyof typeof values] as string
                     }
                     {...getInputProps(`${day}Start`)}
                   />
                   <AppointmentTimeInput
-                    w="125px"
+                    w={{ base: "auto", xs: "150px" }}
                     value={values[`${day}End` as keyof typeof values] as string}
                     {...getInputProps(`${day}End`)}
                   />

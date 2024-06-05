@@ -9,7 +9,7 @@ export const appointmentRouter = createTRPCRouter({
   createAppointment: protectedProcedure
     .input(
       z.object({
-        date: z.date(),
+        date: z.date().optional().default(new Date()),
         startTime: z.string(),
         endTime: z.string(),
         comments: z.string().optional(),

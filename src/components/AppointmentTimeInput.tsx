@@ -8,13 +8,12 @@ interface Props extends SelectProps {
   value?: string;
 }
 
-function AppointmentTimeInput({
-  value,
-  startTime = 8,
-  endTime = 18,
-  ...rest
-}: Props) {
-  const timeList = generateTimeListFromNumber(startTime, endTime, "30m");
+function AppointmentTimeInput({ value, startTime, endTime, ...rest }: Props) {
+  const timeList = generateTimeListFromNumber(
+    startTime ?? 8,
+    endTime ?? 18,
+    "30m"
+  );
 
   return (
     <Select

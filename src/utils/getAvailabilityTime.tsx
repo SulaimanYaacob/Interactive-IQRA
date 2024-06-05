@@ -19,9 +19,24 @@ const getAvailabilityTime = ({ availability, day }: Props) => {
     "hh:mm A"
   );
 
+  const startTimeValue =
+    dayjs(startTime, "hh A").hour() + dayjs(startTime, "HH:mm A").minute() / 60;
+
+  const endTimeValue =
+    dayjs(endTime, "hh A").hour() + dayjs(endTime, "HH:mm A").minute() / 60;
+
   const isAvailable = Boolean(availability?.[availabilityKey]);
 
-  return { isAvailable, startTime, endTime, startKey, endKey, availabilityKey };
+  return {
+    endTime,
+    startTime,
+    endTimeValue,
+    startTimeValue,
+    endKey,
+    startKey,
+    isAvailable,
+    availabilityKey,
+  };
 };
 
 export default getAvailabilityTime;
