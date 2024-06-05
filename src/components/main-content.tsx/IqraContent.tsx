@@ -65,32 +65,54 @@ const IqraContent = ({
   });
   const [hoveredWord, setHoveredWord] = useState<string>();
   //TODO If you have time, try to symmetrically align the text.
+
   return (
     <BackgroundTheme>
-      <>
-        <ActionIcon
-          pos="absolute"
-          left="-16px"
-          top="50%"
-          disabled={isInteractive ? isInteractive.disablePrev : !prevPageLink}
-          onClick={isInteractive ? isInteractive.onClickPrevPage : undefined}
-          component={!isInteractive ? Link : undefined}
-          href={!isInteractive && prevPageLink ? prevPageLink : "#"}
-        >
-          <MdOutlineChevronLeft size={24} />
-        </ActionIcon>
-        <ActionIcon
-          pos="absolute"
-          right="-16px"
-          top="50%"
-          disabled={isInteractive ? isInteractive.disableNext : !nextPageLink}
-          onClick={isInteractive ? isInteractive.onClickNextPage : undefined}
-          component={!isInteractive ? Link : undefined}
-          href={!isInteractive && nextPageLink ? nextPageLink : "#"}
-        >
-          <MdOutlineChevronRight size={24} />
-        </ActionIcon>
-      </>
+      {isInteractive ? (
+        <>
+          <ActionIcon
+            pos="absolute"
+            left="-16px"
+            top="50%"
+            disabled={isInteractive ? isInteractive.disablePrev : !prevPageLink}
+            onClick={isInteractive ? isInteractive.onClickPrevPage : undefined}
+          >
+            <MdOutlineChevronLeft size={24} />
+          </ActionIcon>
+          <ActionIcon
+            pos="absolute"
+            right="-16px"
+            top="50%"
+            disabled={isInteractive ? isInteractive.disableNext : !nextPageLink}
+            onClick={isInteractive ? isInteractive.onClickNextPage : undefined}
+          >
+            <MdOutlineChevronRight size={24} />
+          </ActionIcon>
+        </>
+      ) : (
+        <>
+          <ActionIcon
+            pos="absolute"
+            left="-16px"
+            top="50%"
+            disabled={!prevPageLink}
+            component={Link}
+            href={prevPageLink ? prevPageLink : "#"}
+          >
+            <MdOutlineChevronLeft size={24} />
+          </ActionIcon>
+          <ActionIcon
+            pos="absolute"
+            right="-16px"
+            top="50%"
+            disabled={!nextPageLink}
+            component={Link}
+            href={!isInteractive && nextPageLink ? nextPageLink : "#"}
+          >
+            <MdOutlineChevronRight size={24} />
+          </ActionIcon>
+        </>
+      )}
 
       {content?.lines.map((line, lineIdx) => {
         const isRomanText =
