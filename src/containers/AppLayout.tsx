@@ -2,7 +2,6 @@ import React from "react";
 import dynamic from "next/dynamic";
 import AppNavbar from "./AppNavbar";
 import AppHeader from "./AppHeader";
-import AdminHeader from "./AdminHeader";
 import { useRouter } from "next/router";
 import { useDisclosure } from "@mantine/hooks";
 import { AppShell } from "@mantine/core";
@@ -19,7 +18,7 @@ function AppLayout({ children }: { children: React.ReactNode }) {
   const DynamicHeader = () => {
     if (pathname === "/404") return null;
     if (pathname === "/room/[roomId]") return <DynamicRoomHeader />;
-    if (pathname.includes("admin")) return <AdminHeader />;
+    // if (pathname.includes("admin")) return <AdminHeader />; //TODO Create AdminHeader for Admin pages
 
     return (
       <AppHeader openedMainNav={openedMainNav} toggleMainNav={toggleMainNav} />

@@ -22,7 +22,13 @@ function Applications() {
     undefined,
     { refetchOnWindowFocus: false }
   );
-  const { mutate } = api.tutor.updateApplicationStatus.useMutation();
+
+  const utils = api.useUtils().tutor.getApplications;
+  const { mutate } = api.tutor.updateApplicationStatus.useMutation({
+    onSuccess: async () => {
+      await utils.invalidate();
+    },
+  });
 
   if (isLoading) return <Loading />;
 
@@ -52,7 +58,8 @@ function Applications() {
                           <Box w={{ base: "125px", xs: "auto" }}>
                             <Group gap="xs">
                               <Text fz={{ base: "xs", xs: "md" }} fw="500">
-                                {user?.firstName ?? "" + user?.lastName ?? ""}
+                                {(user?.firstName ?? "") +
+                                  (user?.lastName ?? "")}
                               </Text>
                               <Text size="xs" c="dimmed" visibleFrom="xs">
                                 {new Date(createdAt).toLocaleDateString()}
@@ -74,10 +81,10 @@ function Applications() {
                         w="200px"
                         right={0}
                         pos="absolute"
+                        value={status}
                         visibleFrom="xs"
                         withCheckIcon={false}
                         allowDeselect={false}
-                        defaultValue={status}
                         data={Object.values(STATUS).filter(
                           (status) => status !== STATUS.CANCELLED
                         )}
@@ -95,14 +102,21 @@ function Applications() {
                         w="100px"
                         size="xs"
                         right={0}
-                        hiddenFrom="xs"
+                        value={status}
                         pos="absolute"
+                        hiddenFrom="xs"
                         withCheckIcon={false}
                         allowDeselect={false}
-                        defaultValue={status}
                         data={Object.values(STATUS).filter(
                           (status) => status !== STATUS.CANCELLED
                         )}
+                        onChange={(status) =>
+                          mutate({
+                            applicationId,
+                            status: status as STATUS,
+                            userId: createdByClerkId,
+                          })
+                        }
                       />
                     </Center>
                     <Accordion.Panel>
