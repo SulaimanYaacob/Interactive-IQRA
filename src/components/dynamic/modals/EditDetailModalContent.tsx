@@ -76,7 +76,7 @@ const EditDetailModalContent = ({
     >
       <Stack>
         <Stack align="center">
-          <FileButton {...getInputProps("profileImage")}>
+          <FileButton accept="image/*" {...getInputProps("profileImage")}>
             {(props) => (
               <Center>
                 <Avatar

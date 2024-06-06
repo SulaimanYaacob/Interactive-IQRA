@@ -1,7 +1,7 @@
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 import CreateAppointmentModalContent from "~/components/dynamic/modals/CreateAppointmentModalContent";
-import { ClerkPublicMetadata } from "~/types/publicMetadata";
+import type { ClerkPublicMetadata } from "~/types/publicMetadata";
 import { api } from "~/utils/api";
 import {
   errorProps,

@@ -13,6 +13,7 @@ import { DatePicker } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
 import dayjs from "dayjs";
+import { useRouter } from "next/router";
 import { type FC } from "react";
 import AppointmentTimeInput from "~/components/AppointmentTimeInput";
 import type { CreateAppointmentInput } from "~/server/api/routers/appointmentRouter";
@@ -30,6 +31,9 @@ const CreateAppointmentModalContent: FC<CreateAppointmentModalContentProps> = ({
   mutate,
   availability,
 }) => {
+  const { query } = useRouter();
+  const { userId: tutorClerkId } = query as { userId: string };
+
   const {
     getInputProps,
     values,
@@ -39,6 +43,7 @@ const CreateAppointmentModalContent: FC<CreateAppointmentModalContentProps> = ({
     setFieldValue,
   } = useForm<CreateAppointmentInput>({
     initialValues: {
+      tutorClerkId,
       date: undefined,
       startTime: "",
       endTime: "",
@@ -79,6 +84,8 @@ const CreateAppointmentModalContent: FC<CreateAppointmentModalContentProps> = ({
     date: values.date == null ? "Please Enter Date" : null,
     comments: values.comments!.length > 300 ? "Max 300 characters" : null,
   });
+
+  console.log(values);
 
   const renderAvailability = () => {
     return Object.values(daysObject).map(({ index, name: day }) => {
@@ -144,6 +151,15 @@ const CreateAppointmentModalContent: FC<CreateAppointmentModalContentProps> = ({
     });
   };
 
+  const unavailableDaysSet = new Set(
+    Object.values(daysObject)
+      .filter(
+        ({ name }) =>
+          !getAvailabilityTime({ availability, day: name }).isAvailable
+      )
+      .map(({ index }) => index)
+  );
+
   return (
     <form
       onSubmit={onSubmit((val) => {
@@ -166,14 +182,7 @@ const CreateAppointmentModalContent: FC<CreateAppointmentModalContentProps> = ({
             value={values.date}
             {...getInputProps("date")}
             minDate={dayjs().add(1, "day").toDate()}
-            excludeDate={(date) =>
-              Object.values(daysObject).some(({ index, name }) => {
-                return (
-                  !getAvailabilityTime({ availability, day: name })
-                    .isAvailable && index === date.getDay()
-                );
-              })
-            }
+            excludeDate={(date) => unavailableDaysSet.has(date.getDay())}
           />
         </Stack>
         {renderTimeInputs()}

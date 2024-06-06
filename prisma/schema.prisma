@@ -24,6 +24,7 @@ model Room {
 
 model Appointment {
     appointmentId     String   @id @unique @default(uuid())
+    tutorClerkId      String
     studentClerkId    String //? User's that book the appointment 
     studentIdentifier String? //? (In case clerk is no longer used)
     comments          String?

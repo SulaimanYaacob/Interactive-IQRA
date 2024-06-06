@@ -14,6 +14,7 @@ import {
   Container,
   Divider,
   Group,
+  Indicator,
   Menu,
   UnstyledButton,
 } from "@mantine/core";
@@ -21,7 +22,12 @@ import NativeImage from "~/components/NativeImage";
 import ToggleTheme from "~/components/ToggleTheme";
 import { CiDark, CiLight } from "react-icons/ci";
 import Link from "next/link";
-import { FaArrowRight, FaRightFromBracket, FaUser } from "react-icons/fa6";
+import {
+  FaArrowRight,
+  FaBell,
+  FaRightFromBracket,
+  FaUser,
+} from "react-icons/fa6";
 import { useRouter } from "next/router";
 
 type Props = {
@@ -99,11 +105,13 @@ function AppHeader({ openedMainNav, toggleMainNav }: Props) {
             <SignedIn>
               <Menu offset={15} withArrow>
                 <Menu.Target>
-                  <Avatar
-                    alt="profile"
-                    src={session?.user.imageUrl}
-                    style={{ cursor: "pointer" }}
-                  />
+                  <Indicator disabled={true} offset={5} position="bottom-end">
+                    <Avatar
+                      alt="profile"
+                      src={session?.user.imageUrl}
+                      style={{ cursor: "pointer" }}
+                    />
+                  </Indicator>
                 </Menu.Target>
                 <Menu.Dropdown fw={500}>
                   <Menu.Item
@@ -112,6 +120,13 @@ function AppHeader({ openedMainNav, toggleMainNav }: Props) {
                     leftSection={<FaUser />}
                   >
                     View Profile
+                  </Menu.Item>
+                  <Menu.Item
+                    component={Link}
+                    href={`/appointments`}
+                    leftSection={<FaBell />}
+                  >
+                    Appointments
                   </Menu.Item>
                   <Menu.Item
                     leftSection={<FaRightFromBracket />}

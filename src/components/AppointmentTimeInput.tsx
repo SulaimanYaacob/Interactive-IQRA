@@ -17,6 +17,7 @@ function AppointmentTimeInput({ value, startTime, endTime, ...rest }: Props) {
 
   return (
     <Select
+      allowDeselect={false}
       searchable
       {...rest}
       data={timeList.map(({ label, formattedValue }) => ({

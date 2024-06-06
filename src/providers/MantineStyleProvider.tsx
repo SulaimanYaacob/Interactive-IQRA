@@ -1,4 +1,5 @@
 import {
+  Avatar,
   Button,
   Chip,
   Container,
@@ -26,6 +27,11 @@ const theme = createTheme({
     Chip: Chip.extend({
       defaultProps: {
         radius: "xs",
+      },
+    }),
+    Avatar: Avatar.extend({
+      defaultProps: {
+        bd: "solid 1px",
       },
     }),
   },
