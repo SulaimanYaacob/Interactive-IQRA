@@ -25,7 +25,7 @@ function Appointment() {
   if (!session || !appointments) return <Loading />;
   const { user } = session;
 
-  if (!appointments)
+  if (!appointments.length)
     return (
       <Container my="xl">
         <Title ta="center">You have no appointments</Title>

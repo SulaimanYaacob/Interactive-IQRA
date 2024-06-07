@@ -15,8 +15,9 @@ type Props = {
 
 const ProfileButton = ({ userProfile, type }: Props) => {
   const { session } = useSession();
-  const { role, availability } =
+  const { role: profileRole, availability } =
     userProfile.publicMetadata as unknown as ClerkPublicMetadata;
+
   const isCurrentUser = session?.user.id === userProfile.id;
   const { openEditDetailModal } = useEditProfileDetail();
   const { openEditAvailabilityModal } = useEditProfileAvailability();
@@ -25,8 +26,16 @@ const ProfileButton = ({ userProfile, type }: Props) => {
 
   if (!session) return null;
 
+  const { role: sessionRole } = session?.user
+    .publicMetadata as unknown as ClerkPublicMetadata;
+
   //* other users browsing tutor profile can book an appointment that only appears on detail section
-  if (!isCurrentUser && type === "detail" && role === ROLE.TUTOR)
+  if (
+    !isCurrentUser &&
+    type === "detail" &&
+    profileRole === ROLE.TUTOR &&
+    !sessionRole
+  )
     return (
       <Button
         loading={sendingAppointment}

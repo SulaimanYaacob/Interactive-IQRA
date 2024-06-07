@@ -1,6 +1,7 @@
 import { Liveblocks } from "@liveblocks/node";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+import { env } from "~/env.mjs";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import type { RouterInputs } from "~/utils/api";
 
@@ -8,7 +9,7 @@ import type { RouterInputs } from "~/utils/api";
 export type CreateRoomInput = RouterInputs["liveblocks"]["createRoom"];
 
 const liveblocks = new Liveblocks({
-  secret: String(process.env.LIVEBLOCKS_API_KEY),
+  secret: String(env.LIVEBLOCKS_API_KEY),
 });
 
 function generatePinNumber(): string {
