@@ -14,25 +14,55 @@ import { useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
-import { type FC } from "react";
+import { useState, type FC } from "react";
 import AppointmentTimeInput from "~/components/AppointmentTimeInput";
+import type { BookedAppointments } from "~/pages/profile/[userId]";
 import type { CreateAppointmentInput } from "~/server/api/routers/appointmentRouter";
 import type { ClerkPublicMetadata } from "~/types/publicMetadata";
 import { daysObject } from "~/utils/constants";
-import getAvailabilityTime from "~/utils/getAvailabilityTime";
+import { getAvailabilityTime } from "~/utils/dateHandler";
 
 //TODO Add pricing based on duration of appointment
 interface CreateAppointmentModalContentProps {
   mutate: (input: CreateAppointmentInput) => void;
   availability: ClerkPublicMetadata["availability"];
+  bookedAppointments?: BookedAppointments[];
 }
 
 const CreateAppointmentModalContent: FC<CreateAppointmentModalContentProps> = ({
   mutate,
   availability,
+  bookedAppointments,
 }) => {
   const { query } = useRouter();
   const { userId: tutorClerkId } = query as { userId: string };
+  const [bookedDateTime, setBookedDateTime] = useState<string[]>([]);
+
+  // startTime:
+  //   values.startTime === ""
+  //     ? "Start Time is required"
+  //     : dayjs(values.startTime, "HH:mm").isSame(
+  //         dayjs(values.endTime, "HH:mm")
+  //       )
+  //     ? "Times must differ"
+  //     : dayjs(values.startTime, "HH:mm").isAfter(
+  //         dayjs(values.endTime, "HH:mm")
+  //       )
+  //     ? "Start must be before End"
+  //     : null,
+
+  // endTime:
+  //   values.endTime === ""
+  //     ? "End Time is required"
+  //     : dayjs(values.endTime, "HH:mm").isSame(
+  //         dayjs(values.startTime, "HH:mm")
+  //       )
+  //     ? "Times must differ"
+  //     : dayjs(values.endTime, "HH:mm").isBefore(
+  //         dayjs(values.startTime, "HH:mm")
+  //       )
+  //     ? "End must be after Start"
+  //     : null,
 
   const {
     getInputProps,
@@ -55,37 +85,9 @@ const CreateAppointmentModalContent: FC<CreateAppointmentModalContentProps> = ({
   });
 
   const validateForm = (values: CreateAppointmentInput) => ({
-    startTime:
-      values.startTime === ""
-        ? "Start Time is required"
-        : dayjs(values.startTime, "HH:mm").isSame(
-            dayjs(values.endTime, "HH:mm")
-          )
-        ? "Times must differ"
-        : dayjs(values.startTime, "HH:mm").isAfter(
-            dayjs(values.endTime, "HH:mm")
-          )
-        ? "Start must be before End"
-        : null,
-
-    endTime:
-      values.endTime === ""
-        ? "End Time is required"
-        : dayjs(values.endTime, "HH:mm").isSame(
-            dayjs(values.startTime, "HH:mm")
-          )
-        ? "Times must differ"
-        : dayjs(values.endTime, "HH:mm").isBefore(
-            dayjs(values.startTime, "HH:mm")
-          )
-        ? "End must be after Start"
-        : null,
-
     date: values.date == null ? "Please Enter Date" : null,
     comments: values.comments!.length > 300 ? "Max 300 characters" : null,
   });
-
-  console.log(values);
 
   const renderAvailability = () => {
     return Object.values(daysObject).map(({ index, name: day }) => {
@@ -129,21 +131,28 @@ const CreateAppointmentModalContent: FC<CreateAppointmentModalContentProps> = ({
         }
       );
 
+      const bookedAppointmentTimes = bookedAppointments?.map(
+        ({ date, startTime }) => {
+          if (
+            date === values.date?.toISOString() &&
+            index === dayjs(date).day()
+          ) {
+            return startTime;
+          }
+        }
+      );
+
       return (
         isAvailable &&
         values.date?.getDay() === index && (
           <Group grow key={index}>
             <AppointmentTimeInput
-              label="Start Time"
+              bookedAppointmentTimes={bookedAppointmentTimes as string[]}
+              usage="1hrBooking"
+              label="Book an Hour Session From"
               startTime={startTimeValue}
               endTime={endTimeValue}
               {...getInputProps("startTime")}
-            />
-            <AppointmentTimeInput
-              startTime={startTimeValue}
-              endTime={endTimeValue}
-              label="End Time"
-              {...getInputProps("endTime")}
             />
           </Group>
         )
@@ -162,8 +171,15 @@ const CreateAppointmentModalContent: FC<CreateAppointmentModalContentProps> = ({
 
   return (
     <form
-      onSubmit={onSubmit((val) => {
-        mutate(val);
+      onSubmit={onSubmit(({ startTime, ...val }) => {
+        const formattedEndTime = dayjs(startTime, "hh:mm A")
+          .add(1, "hour")
+          .format("hh:mm A");
+        mutate({
+          ...val,
+          startTime,
+          endTime: formattedEndTime,
+        });
         modals.closeAll();
       })}
     >

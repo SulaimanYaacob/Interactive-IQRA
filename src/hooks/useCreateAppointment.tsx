@@ -1,6 +1,7 @@
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 import CreateAppointmentModalContent from "~/components/dynamic/modals/CreateAppointmentModalContent";
+import type { BookedAppointments } from "~/pages/profile/[userId]";
 import type { ClerkPublicMetadata } from "~/types/publicMetadata";
 import { api } from "~/utils/api";
 import {
@@ -39,8 +40,10 @@ const useCreateAppointment = () => {
 
   const openCreateAppointmentModal = ({
     availability,
+    bookedAppointments,
   }: {
     availability: ClerkPublicMetadata["availability"];
+    bookedAppointments?: BookedAppointments[];
   }) => {
     modals.open({
       title: "Request Appointment",
@@ -48,6 +51,7 @@ const useCreateAppointment = () => {
         <CreateAppointmentModalContent
           mutate={mutate}
           availability={availability}
+          bookedAppointments={bookedAppointments}
         />
       ),
       centered: true,

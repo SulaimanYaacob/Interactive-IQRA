@@ -11,7 +11,7 @@ export const tutorRouter = createTRPCRouter({
     .input(
       z.object({
         search: z.string().optional(),
-        size: z.number().optional().default(3),
+        size: z.number().optional().default(5),
       })
     )
     .query(async ({ input }) => {

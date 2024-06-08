@@ -7,13 +7,15 @@ import useEditProfileAvailability from "~/hooks/useEditProfileAvailability";
 import useCreateAppointment from "~/hooks/useCreateAppointment";
 import type { User } from "@clerk/nextjs/dist/types/server";
 import type { ClerkPublicMetadata } from "~/types/publicMetadata";
+import type { BookedAppointments } from "~/pages/profile/[userId]";
 
 type Props = {
   userProfile: User;
   type: "availability" | "detail";
+  bookedAppointments?: BookedAppointments[];
 };
 
-const ProfileButton = ({ userProfile, type }: Props) => {
+const ProfileButton = ({ userProfile, type, bookedAppointments }: Props) => {
   const { session } = useSession();
   const { role: profileRole, availability } =
     userProfile.publicMetadata as unknown as ClerkPublicMetadata;
@@ -33,13 +35,15 @@ const ProfileButton = ({ userProfile, type }: Props) => {
   if (
     !isCurrentUser &&
     type === "detail" &&
-    profileRole === ROLE.TUTOR &&
-    !sessionRole
+    profileRole === ROLE.TUTOR
+    // &&!sessionRole
   )
     return (
       <Button
         loading={sendingAppointment}
-        onClick={() => openCreateAppointmentModal({ availability })}
+        onClick={() =>
+          openCreateAppointmentModal({ availability, bookedAppointments })
+        }
       >
         Book Appointment
       </Button>

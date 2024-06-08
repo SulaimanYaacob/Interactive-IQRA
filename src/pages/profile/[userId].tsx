@@ -18,14 +18,26 @@ import type { ClerkPublicMetadata } from "~/types/publicMetadata";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { daysObject } from "~/utils/constants";
-import getAvailabilityTime from "~/utils/getAvailabilityTime";
+import { getAvailabilityTime } from "~/utils/dateHandler";
+import { db } from "~/server/db";
+dayjs.extend(customParseFormat);
 const LazyProfileButton = dynamic(
   () => import("~/components/dynamic/ProfileButton"),
   { ssr: false }
 );
-dayjs.extend(customParseFormat);
 
-const Profile = ({ user }: { user: User }) => {
+export type BookedAppointments = {
+  date: string;
+  startTime: string;
+  endTime: string;
+};
+const Profile = ({
+  user,
+  bookedAppointments,
+}: {
+  user: User;
+  bookedAppointments: BookedAppointments[];
+}) => {
   const { bio, role, availability } =
     user.publicMetadata as unknown as ClerkPublicMetadata;
 
@@ -57,7 +69,11 @@ const Profile = ({ user }: { user: User }) => {
                     </Group>
                   </div>
                 </Group>
-                <LazyProfileButton type="detail" userProfile={user} />
+                <LazyProfileButton
+                  type="detail"
+                  userProfile={user}
+                  bookedAppointments={bookedAppointments}
+                />
               </Group>
               <Text mt="xs">{bio}</Text>
             </div>
@@ -128,9 +144,28 @@ export const getStaticProps = async ({
   try {
     const userId = String(params?.userId);
     const user = await clerkClient.users.getUser(userId);
+    const { availability } =
+      user.publicMetadata as unknown as ClerkPublicMetadata;
+
+    const bookedAppointments = await db.appointment.findMany({
+      where: { tutorClerkId: userId },
+      select: {
+        date: true,
+        startTime: true,
+        endTime: true,
+      },
+    });
 
     return {
-      props: { user: JSON.parse(JSON.stringify(user)) as User },
+      props: {
+        user: JSON.parse(JSON.stringify(user)) as User,
+        bookedAppointments: JSON.parse(JSON.stringify(bookedAppointments)) as {
+          // appointmentId: string;
+          date: string;
+          startTime: string;
+          endTime: string;
+        },
+      },
     };
   } catch (error) {
     console.log(error);

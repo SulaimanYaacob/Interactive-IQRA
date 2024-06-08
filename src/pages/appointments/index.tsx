@@ -2,6 +2,8 @@ import { useSession } from "@clerk/nextjs";
 import {
   Accordion,
   Avatar,
+  Badge,
+  Breadcrumbs,
   Center,
   Container,
   Group,
@@ -10,9 +12,13 @@ import {
   Text,
   Title,
 } from "@mantine/core";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 import Loading from "~/components/Loading";
 import { api } from "~/utils/api";
 import { STATUS } from "~/utils/constants";
+import { get12HourTimeFormat, getTimeFromNow } from "~/utils/dateHandler";
+dayjs.extend(customParseFormat);
 
 function Appointment() {
   const { session } = useSession();
@@ -46,6 +52,7 @@ function Appointment() {
                 startTime,
                 endTime,
                 comments,
+                date,
               }) => {
                 return (
                   <Accordion.Item value={appointmentId} key={appointmentId}>
@@ -53,23 +60,34 @@ function Appointment() {
                       <Accordion.Control>
                         <Group>
                           <Avatar
+                            size="lg"
                             src={studentInfo.imageUrl}
                             alt={studentInfo.imageUrl}
                           />
                           <Stack gap="0">
-                            <Group gap="xs">
+                            <Breadcrumbs separatorMargin="xs" separator="-">
                               <Text fz={{ base: "xs", xs: "md" }} fw="500">
-                                {(user?.firstName ?? "") +
-                                  (user?.lastName ?? "")}
+                                {`${user?.firstName ?? ""} ${
+                                  user?.lastName ?? ""
+                                }`}
                               </Text>
                               <Text size="xs" c="dimmed" visibleFrom="xs">
-                                {new Date(createdAt).toLocaleDateString()}
+                                {getTimeFromNow(createdAt)}
                               </Text>
-                            </Group>
+                            </Breadcrumbs>
 
                             <Text c="dimmed" fz={{ base: "xs", xs: "md" }}>
                               {user.emailAddresses[0]?.emailAddress}
                             </Text>
+
+                            <Group mt="xs">
+                              <Badge radius="xs">
+                                {dayjs(date).format("dddd MMM D")}
+                              </Badge>
+                              <Badge radius="xs">
+                                {get12HourTimeFormat(startTime)} - {endTime}
+                              </Badge>
+                            </Group>
                           </Stack>
                         </Group>
                       </Accordion.Control>
@@ -82,7 +100,6 @@ function Appointment() {
                         visibleFrom="xs"
                         withCheckIcon={false}
                         allowDeselect={false}
-                        defaultValue={status}
                         data={Object.values(STATUS).filter(
                           (status) => status !== STATUS.CANCELLED
                         )}
@@ -97,7 +114,6 @@ function Appointment() {
                         pos="absolute"
                         withCheckIcon={false}
                         allowDeselect={false}
-                        defaultValue={status}
                         data={Object.values(STATUS).filter(
                           (status) => status !== STATUS.CANCELLED
                         )}

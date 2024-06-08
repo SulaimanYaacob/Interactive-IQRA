@@ -52,9 +52,9 @@ const EditAvailabilityModalContent = ({
           if (available) {
             if (!start) errors[`${day}Start`] = "Start Time is required";
             else if (!end) errors[`${day}End`] = "End Time is required";
-            else if (dayjs(start, "HH:mm").isSame(dayjs(end, "HH:mm"))) {
+            else if (dayjs(start, "HH:mm A").isSame(dayjs(end, "HH:mm A"))) {
               errors[`${day}Start`] = errors[`${day}End`] = "Times must differ";
-            } else if (dayjs(start, "HH:mm").isAfter(dayjs(end, "HH:mm"))) {
+            } else if (dayjs(start, "HH:mm A").isAfter(dayjs(end, "HH:mm A"))) {
               errors[`${day}Start`] = "Start must be before End";
               errors[`${day}End`] = "End must be after Start";
             }
