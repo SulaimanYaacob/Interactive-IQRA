@@ -95,11 +95,11 @@ export const getAvailabilityTime = ({
   const startKey = `${day}Start` as keyof typeof availability;
   const endKey = `${day}End` as keyof typeof availability;
 
-  const startTime = dayjs(String(availability?.[startKey]), "HH:mm").format(
+  const startTime = dayjs(String(availability?.[startKey]), "HH:mm A").format(
     "hh:mm A"
   );
 
-  const endTime = dayjs(String(availability?.[endKey]), "HH:mm").format(
+  const endTime = dayjs(String(availability?.[endKey]), "HH:mm A").format(
     "hh:mm A"
   );
 

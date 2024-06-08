@@ -29,8 +29,6 @@ function AppointmentTimeInput({
     bookedAppointmentTimes,
   });
 
-  console.log(timeList);
-
   return (
     <Select
       allowDeselect={false}

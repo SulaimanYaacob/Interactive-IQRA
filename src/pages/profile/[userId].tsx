@@ -41,6 +41,8 @@ const Profile = ({
   const { bio, role, availability } =
     user.publicMetadata as unknown as ClerkPublicMetadata;
 
+  console.log(availability);
+
   //TODO Change the nameeee it editProfile button
   return (
     <Container my="xl">

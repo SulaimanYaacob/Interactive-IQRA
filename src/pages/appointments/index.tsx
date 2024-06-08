@@ -1,35 +1,28 @@
-import { useSession } from "@clerk/nextjs";
 import {
   Accordion,
+  ActionIcon,
   Avatar,
   Badge,
   Breadcrumbs,
-  Center,
   Container,
   Group,
-  Select,
   Stack,
   Text,
   Title,
 } from "@mantine/core";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import { FaXmark } from "react-icons/fa6";
 import Loading from "~/components/Loading";
 import { api } from "~/utils/api";
-import { STATUS } from "~/utils/constants";
-import { get12HourTimeFormat, getTimeFromNow } from "~/utils/dateHandler";
+import { getTimeFromNow } from "~/utils/dateHandler";
 dayjs.extend(customParseFormat);
 
 function Appointment() {
-  const { session } = useSession();
-  const { data: appointments } = api.appointment.getUserAppointments.useQuery();
+  const { data: appointments, isLoading } =
+    api.appointment.getUserAppointments.useQuery();
 
-  const tutorStatus = Object.values(STATUS).filter((status) => {
-    return status !== STATUS.CANCELLED;
-  });
-
-  if (!session || !appointments) return <Loading />;
-  const { user } = session;
+  if (!appointments || isLoading) return <Loading />;
 
   if (!appointments.length)
     return (
@@ -39,15 +32,15 @@ function Appointment() {
     );
 
   return (
-    <Container my="xl">
+    <Container my="xl" size="sm">
       <Stack>
         <Title>Appointments</Title>
         <Stack>
-          <Accordion>
+          <Accordion variant="contained" chevronPosition="left">
             {appointments.map(
               ({
                 appointmentId,
-                studentInfo,
+                userAppointmentsInfo,
                 createdAt,
                 startTime,
                 endTime,
@@ -56,69 +49,55 @@ function Appointment() {
               }) => {
                 return (
                   <Accordion.Item value={appointmentId} key={appointmentId}>
-                    <Center pos="relative">
+                    <Group pos="relative">
                       <Accordion.Control>
-                        <Group>
-                          <Avatar
-                            size="lg"
-                            src={studentInfo.imageUrl}
-                            alt={studentInfo.imageUrl}
-                          />
-                          <Stack gap="0">
-                            <Breadcrumbs separatorMargin="xs" separator="-">
-                              <Text fz={{ base: "xs", xs: "md" }} fw="500">
-                                {`${user?.firstName ?? ""} ${
-                                  user?.lastName ?? ""
-                                }`}
-                              </Text>
-                              <Text size="xs" c="dimmed" visibleFrom="xs">
-                                {getTimeFromNow(createdAt)}
-                              </Text>
-                            </Breadcrumbs>
+                        <Group justify="space-between">
+                          <Group>
+                            <Avatar
+                              visibleFrom="xs"
+                              src={userAppointmentsInfo.imageUrl}
+                              alt={userAppointmentsInfo.imageUrl}
+                            />
+                            <Stack gap="0">
+                              <Breadcrumbs separatorMargin="xs" separator="-">
+                                <Text fz={{ base: "xs", xs: "md" }} fw="500">
+                                  {`${userAppointmentsInfo?.firstName ?? ""} ${
+                                    userAppointmentsInfo?.lastName ?? ""
+                                  }`}
+                                </Text>
+                                <Text size="xs" c="dimmed" visibleFrom="xs">
+                                  {getTimeFromNow(createdAt)}
+                                </Text>
+                              </Breadcrumbs>
 
-                            <Text c="dimmed" fz={{ base: "xs", xs: "md" }}>
-                              {user.emailAddresses[0]?.emailAddress}
-                            </Text>
-
-                            <Group mt="xs">
-                              <Badge radius="xs">
-                                {dayjs(date).format("dddd MMM D")}
-                              </Badge>
-                              <Badge radius="xs">
-                                {get12HourTimeFormat(startTime)} - {endTime}
-                              </Badge>
-                            </Group>
+                              <Text c="dimmed" fz={{ base: "xs", xs: "md" }}>
+                                {
+                                  userAppointmentsInfo.emailAddresses[0]
+                                    ?.emailAddress
+                                }
+                              </Text>
+                            </Stack>
+                          </Group>
+                          <Stack visibleFrom="xs" mr="xl" gap="xs" align="end">
+                            <Badge radius="xs">
+                              {dayjs(date).format("dddd MMM D")}
+                            </Badge>
+                            <Badge variant="dot" radius="xs">
+                              {startTime} - {endTime}
+                            </Badge>
                           </Stack>
                         </Group>
                       </Accordion.Control>
-                      <Select
-                        mx="md"
-                        fw="500"
-                        w="200px"
-                        right={0}
+                      <ActionIcon
+                        mr="xs"
                         pos="absolute"
-                        visibleFrom="xs"
-                        withCheckIcon={false}
-                        allowDeselect={false}
-                        data={Object.values(STATUS).filter(
-                          (status) => status !== STATUS.CANCELLED
-                        )}
-                      />
-                      <Select
-                        mx="md"
-                        fw="500"
-                        w="100px"
-                        size="xs"
-                        right={0}
-                        hiddenFrom="xs"
-                        pos="absolute"
-                        withCheckIcon={false}
-                        allowDeselect={false}
-                        data={Object.values(STATUS).filter(
-                          (status) => status !== STATUS.CANCELLED
-                        )}
-                      />
-                    </Center>
+                        right="0"
+                        color="red"
+                        variant="transparent"
+                      >
+                        <FaXmark size="24px" />
+                      </ActionIcon>
+                    </Group>
 
                     <Accordion.Panel>
                       <Text>{comments}</Text>

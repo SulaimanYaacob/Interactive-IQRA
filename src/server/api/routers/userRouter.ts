@@ -112,6 +112,8 @@ export const userRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { ...data } = input;
 
+      console.log(data);
+
       //* if no availability is selected, set time to null
       Object.keys(daysObject).forEach((day) => {
         const availabilityKey = `${day}Availability` as keyof typeof data;
