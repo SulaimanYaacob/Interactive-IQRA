@@ -11,6 +11,12 @@ export enum STATUS {
   CANCELLED = "CANCELLED",
 }
 
+export enum PERIOD {
+  TODAY = "today",
+  UPCOMING = "upcoming",
+  PAST = "past",
+}
+
 export const daysObject = {
   sunday: { name: "sunday", index: 0 },
   monday: { name: "monday", index: 1 },

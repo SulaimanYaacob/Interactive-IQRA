@@ -41,8 +41,6 @@ const Profile = ({
   const { bio, role, availability } =
     user.publicMetadata as unknown as ClerkPublicMetadata;
 
-  console.log(availability);
-
   //TODO Change the nameeee it editProfile button
   return (
     <Container my="xl">
@@ -144,6 +142,7 @@ export const getStaticProps = async ({
   params,
 }: GetStaticPropsContext<{ userId: string }>) => {
   try {
+    //TODO Validation for duplicates
     const userId = String(params?.userId);
     const user = await clerkClient.users.getUser(userId);
     const { availability } =
