@@ -14,7 +14,7 @@ import { useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
-import { useState, type FC } from "react";
+import { type FC } from "react";
 import AppointmentTimeInput from "~/components/AppointmentTimeInput";
 import type { BookedAppointments } from "~/pages/profile/[userId]";
 import type { CreateAppointmentInput } from "~/server/api/routers/appointmentRouter";
@@ -39,33 +39,6 @@ const CreateAppointmentModalContent: FC<CreateAppointmentModalContentProps> = ({
 }) => {
   const { query } = useRouter();
   const { userId: tutorClerkId } = query as { userId: string };
-  const [fullyBookedDate, setFullyBookedDate] = useState<string[]>([]);
-
-  // startTime:
-  //   values.startTime === ""
-  //     ? "Start Time is required"
-  //     : dayjs(values.startTime, "HH:mm").isSame(
-  //         dayjs(values.endTime, "HH:mm")
-  //       )
-  //     ? "Times must differ"
-  //     : dayjs(values.startTime, "HH:mm").isAfter(
-  //         dayjs(values.endTime, "HH:mm")
-  //       )
-  //     ? "Start must be before End"
-  //     : null,
-
-  // endTime:
-  //   values.endTime === ""
-  //     ? "End Time is required"
-  //     : dayjs(values.endTime, "HH:mm").isSame(
-  //         dayjs(values.startTime, "HH:mm")
-  //       )
-  //     ? "Times must differ"
-  //     : dayjs(values.endTime, "HH:mm").isBefore(
-  //         dayjs(values.startTime, "HH:mm")
-  //       )
-  //     ? "End must be after Start"
-  //     : null,
 
   const {
     getInputProps,
@@ -98,6 +71,39 @@ const CreateAppointmentModalContent: FC<CreateAppointmentModalContentProps> = ({
         return startTime;
       }
     });
+
+  const unavailableDaysSet = (calendarDate: Date) =>
+    new Set(
+      Object.values(daysObject)
+        .filter(({ name }) => {
+          const filteredBookedTime = bookedAppointments
+            ?.filter((appointment) =>
+              dayjs(appointment.date).isSame(calendarDate)
+            )
+            .map((appointment) => appointment.startTime);
+
+          const { startTimeValue, endTimeValue, isAvailable } =
+            getAvailabilityTime({
+              availability,
+              day: name,
+            });
+
+          if (!isAvailable) return true;
+
+          const timeList = generateTimeListFromNumber({
+            start: startTimeValue,
+            end: endTimeValue,
+            range: "1hr",
+            usage: "1hrBooking",
+            bookedAppointmentTimes: filteredBookedTime,
+          });
+
+          const allSlotsBooked = timeList.length === filteredBookedTime?.length;
+
+          return allSlotsBooked;
+        })
+        .map(({ index }) => index)
+    );
 
   const renderAvailability = () => {
     return Object.values(daysObject).map(({ index, name: day }) => {
@@ -160,40 +166,6 @@ const CreateAppointmentModalContent: FC<CreateAppointmentModalContentProps> = ({
       );
     });
   };
-
-  const unavailableDaysSet = (calendarDate: Date) =>
-    new Set(
-      Object.values(daysObject)
-        .filter(({ name, index }) => {
-          const filteredBookedTime = bookedAppointments
-            ?.filter((appointment) =>
-              dayjs(appointment.date).isSame(calendarDate)
-            )
-            .map((appointment) => appointment.startTime);
-
-          // Get availability for the current day
-          const { startTimeValue, endTimeValue, isAvailable } =
-            getAvailabilityTime({
-              availability,
-              day: name,
-            });
-
-          if (!isAvailable) return true;
-
-          const timeList = generateTimeListFromNumber({
-            start: startTimeValue,
-            end: endTimeValue,
-            range: "1hr",
-            usage: "1hrBooking",
-            bookedAppointmentTimes: filteredBookedTime,
-          });
-
-          const allSlotsBooked = timeList.length === filteredBookedTime?.length;
-
-          return allSlotsBooked;
-        })
-        .map(({ index }) => index)
-    );
 
   return (
     <form

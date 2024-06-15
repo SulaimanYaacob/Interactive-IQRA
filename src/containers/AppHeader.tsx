@@ -38,7 +38,7 @@ type Props = {
 function AppHeader({ openedMainNav, toggleMainNav }: Props) {
   const { session } = useSession();
   const { signOut } = useClerk();
-  const { push } = useRouter();
+  const { push, pathname, query } = useRouter();
 
   return (
     <AppShell.Header>
@@ -123,7 +123,11 @@ function AppHeader({ openedMainNav, toggleMainNav }: Props) {
                   </Menu.Item>
                   <Menu.Item
                     component={Link}
-                    href={`/appointments/today/1`}
+                    href={
+                      pathname.includes("appointments")
+                        ? `/appointments/${query.slug?.[0]}/1`
+                        : "/appointments/today/1"
+                    }
                     leftSection={<FaBell />}
                   >
                     Appointments
