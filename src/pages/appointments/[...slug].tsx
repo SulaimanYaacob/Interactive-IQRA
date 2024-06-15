@@ -3,7 +3,6 @@ import {
   ActionIcon,
   Avatar,
   Badge,
-  Breadcrumbs,
   Container,
   Divider,
   Group,
@@ -30,11 +29,13 @@ import { api } from "~/utils/api";
 import SuperJSON from "superjson";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import useCancelAppointment from "~/hooks/useCancelAppointment";
 dayjs.extend(customParseFormat);
 
 function Appointment({ period, page }: { period: PERIOD; page: string }) {
   const [activePage, setPage] = useState(Number(page));
   const [loadTab, setLoadTab] = useState<PERIOD>(period);
+  const { openCancelAppointmentModal } = useCancelAppointment();
   const { push } = useRouter();
   //!!!!!!!!!!!!!!!!!! Should put this in middleware !!!!!!!!!!!!!!!!!!
   if (!Object.values(PERIOD).includes(period))
@@ -119,6 +120,7 @@ function Appointment({ period, page }: { period: PERIOD; page: string }) {
                     startTime,
                     endTime,
                     comments,
+                    status,
                     date,
                   }) => {
                     return (
@@ -134,24 +136,11 @@ function Appointment({ period, page }: { period: PERIOD; page: string }) {
                                   alt={userAppointmentsInfo.imageUrl}
                                 />
                                 <Stack gap="0">
-                                  <Breadcrumbs
-                                    separatorMargin="xs"
-                                    separator="-"
-                                  >
-                                    <Text
-                                      fz={{ base: "xs", xs: "md" }}
-                                      fw="500"
-                                    >
-                                      {`${
-                                        userAppointmentsInfo?.firstName ?? ""
-                                      } ${
-                                        userAppointmentsInfo?.lastName ?? ""
-                                      }`}
-                                    </Text>
-                                    <Text size="xs" c="dimmed" visibleFrom="xs">
-                                      {getTimeFromNow(createdAt)}
-                                    </Text>
-                                  </Breadcrumbs>
+                                  <Text fz={{ base: "xs", xs: "md" }} fw="500">
+                                    {`${
+                                      userAppointmentsInfo?.firstName ?? ""
+                                    } ${userAppointmentsInfo?.lastName ?? ""}`}
+                                  </Text>
 
                                   <Text
                                     c="dimmed"
@@ -162,6 +151,9 @@ function Appointment({ period, page }: { period: PERIOD; page: string }) {
                                         ?.emailAddress
                                     }
                                   </Text>
+                                  <Text size="xs" c="dimmed" visibleFrom="xs">
+                                    {`booked ${getTimeFromNow(createdAt)}`}
+                                  </Text>
                                 </Stack>
                               </Group>
                               <Stack
@@ -170,7 +162,7 @@ function Appointment({ period, page }: { period: PERIOD; page: string }) {
                                 gap="xs"
                                 align="end"
                               >
-                                {dayjs(date).format("YYYY-MM-DD") ===
+                                {/* {dayjs(date).format("YYYY-MM-DD") ===
                                   dayjs().format("YYYY-MM-DD") && (
                                   <Badge
                                     radius="xs"
@@ -179,10 +171,9 @@ function Appointment({ period, page }: { period: PERIOD; page: string }) {
                                   >
                                     Today
                                   </Badge>
-                                )}
-                                <Badge radius="xs">
-                                  {getTimeFromNow(date)}
-                                </Badge>
+                                )} */}
+                                <Badge>{status}</Badge>
+                                <Badge>{getTimeFromNow(date)}</Badge>
                               </Stack>
                               {/* <Stack
                                 visibleFrom="xs"
@@ -200,6 +191,7 @@ function Appointment({ period, page }: { period: PERIOD; page: string }) {
                             </Group>
                           </Accordion.Control>
                           <ActionIcon
+                            onClick={openCancelAppointmentModal}
                             mr="xs"
                             pos="absolute"
                             right="0"
@@ -212,6 +204,13 @@ function Appointment({ period, page }: { period: PERIOD; page: string }) {
 
                         <Accordion.Panel>
                           <Stack>
+                            <Divider />
+                            <Group gap="xs" justify="center">
+                              <Badge>{dayjs(date).format("dddd MMM D")}</Badge>
+                              <Badge variant="dot">
+                                {startTime} - {endTime}
+                              </Badge>
+                            </Group>
                             <Divider />
                             {comments ? (
                               <Text>{comments}</Text>

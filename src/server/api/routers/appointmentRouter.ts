@@ -120,4 +120,17 @@ export const appointmentRouter = createTRPCRouter({
         });
       }
     }),
+  cancelAppointment: protectedProcedure
+    .input(
+      z.object({
+        appointmentId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { appointmentId } = input;
+      await ctx.db.appointment.update({
+        where: { appointmentId },
+        data: { status: STATUS.CANCELLED },
+      });
+    }),
 });

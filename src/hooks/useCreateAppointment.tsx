@@ -1,5 +1,6 @@
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
+import { useRouter } from "next/router";
 import CreateAppointmentModalContent from "~/components/dynamic/modals/CreateAppointmentModalContent";
 import type { BookedAppointments } from "~/pages/profile/[userId]";
 import type { ClerkPublicMetadata } from "~/types/publicMetadata";
@@ -11,6 +12,7 @@ import {
 } from "~/utils/notificationProps";
 
 const useCreateAppointment = () => {
+  const { reload } = useRouter();
   const { mutate, isLoading } = api.appointment.createAppointment.useMutation({
     onMutate: () => {
       notifications.show({
@@ -27,6 +29,7 @@ const useCreateAppointment = () => {
         message: "Your appointment has been sent to the tutor",
         ...successProps,
       });
+      reload();
     },
     onError: (error) => {
       notifications.update({

@@ -123,7 +123,7 @@ function AppHeader({ openedMainNav, toggleMainNav }: Props) {
                   </Menu.Item>
                   <Menu.Item
                     component={Link}
-                    href={`/appointments/today`}
+                    href={`/appointments/today/1`}
                     leftSection={<FaBell />}
                   >
                     Appointments

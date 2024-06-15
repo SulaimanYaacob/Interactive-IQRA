@@ -20,7 +20,10 @@ import type { BookedAppointments } from "~/pages/profile/[userId]";
 import type { CreateAppointmentInput } from "~/server/api/routers/appointmentRouter";
 import type { ClerkPublicMetadata } from "~/types/publicMetadata";
 import { daysObject } from "~/utils/constants";
-import { getAvailabilityTime } from "~/utils/dateHandler";
+import {
+  generateTimeListFromNumber,
+  getAvailabilityTime,
+} from "~/utils/dateHandler";
 
 //TODO Add pricing based on duration of appointment
 interface CreateAppointmentModalContentProps {
@@ -36,7 +39,7 @@ const CreateAppointmentModalContent: FC<CreateAppointmentModalContentProps> = ({
 }) => {
   const { query } = useRouter();
   const { userId: tutorClerkId } = query as { userId: string };
-  const [bookedDateTime, setBookedDateTime] = useState<string[]>([]);
+  const [fullyBookedDate, setFullyBookedDate] = useState<string[]>([]);
 
   // startTime:
   //   values.startTime === ""
@@ -89,6 +92,13 @@ const CreateAppointmentModalContent: FC<CreateAppointmentModalContentProps> = ({
     comments: values.comments!.length > 300 ? "Max 300 characters" : null,
   });
 
+  const bookedAppointmentTimes = ({ index }: { index: number }) =>
+    bookedAppointments?.map(({ date, startTime }) => {
+      if (date === values.date?.toISOString() && index === dayjs(date).day()) {
+        return startTime;
+      }
+    });
+
   const renderAvailability = () => {
     return Object.values(daysObject).map(({ index, name: day }) => {
       const { endTime, startTime, isAvailable } = getAvailabilityTime({
@@ -131,23 +141,14 @@ const CreateAppointmentModalContent: FC<CreateAppointmentModalContentProps> = ({
         }
       );
 
-      const bookedAppointmentTimes = bookedAppointments?.map(
-        ({ date, startTime }) => {
-          if (
-            date === values.date?.toISOString() &&
-            index === dayjs(date).day()
-          ) {
-            return startTime;
-          }
-        }
-      );
-
       return (
         isAvailable &&
         values.date?.getDay() === index && (
           <Group grow key={index}>
             <AppointmentTimeInput
-              bookedAppointmentTimes={bookedAppointmentTimes as string[]}
+              bookedAppointmentTimes={
+                bookedAppointmentTimes({ index }) as string[]
+              }
               usage="1hrBooking"
               label="Book an Hour Session From"
               startTime={startTimeValue}
@@ -160,14 +161,39 @@ const CreateAppointmentModalContent: FC<CreateAppointmentModalContentProps> = ({
     });
   };
 
-  const unavailableDaysSet = new Set(
-    Object.values(daysObject)
-      .filter(
-        ({ name }) =>
-          !getAvailabilityTime({ availability, day: name }).isAvailable
-      )
-      .map(({ index }) => index)
-  );
+  const unavailableDaysSet = (calendarDate: Date) =>
+    new Set(
+      Object.values(daysObject)
+        .filter(({ name, index }) => {
+          const filteredBookedTime = bookedAppointments
+            ?.filter((appointment) =>
+              dayjs(appointment.date).isSame(calendarDate)
+            )
+            .map((appointment) => appointment.startTime);
+
+          // Get availability for the current day
+          const { startTimeValue, endTimeValue, isAvailable } =
+            getAvailabilityTime({
+              availability,
+              day: name,
+            });
+
+          if (!isAvailable) return true;
+
+          const timeList = generateTimeListFromNumber({
+            start: startTimeValue,
+            end: endTimeValue,
+            range: "1hr",
+            usage: "1hrBooking",
+            bookedAppointmentTimes: filteredBookedTime,
+          });
+
+          const allSlotsBooked = timeList.length === filteredBookedTime?.length;
+
+          return allSlotsBooked;
+        })
+        .map(({ index }) => index)
+    );
 
   return (
     <form
@@ -198,7 +224,7 @@ const CreateAppointmentModalContent: FC<CreateAppointmentModalContentProps> = ({
             value={values.date}
             {...getInputProps("date")}
             minDate={dayjs().add(1, "day").toDate()}
-            excludeDate={(date) => unavailableDaysSet.has(date.getDay())}
+            excludeDate={(date) => unavailableDaysSet(date).has(date.getDay())}
           />
         </Stack>
         {renderTimeInputs()}
