@@ -11,6 +11,18 @@ export enum STATUS {
   CANCELLED = "CANCELLED",
 }
 
+export enum TUTOR_APPLICATION_STATUS {
+  PENDING = "PENDING",
+  ACCEPTED = "ACCEPTED",
+  REJECTED = "REJECTED",
+}
+
+export enum APPOINTMENT_STATUS {
+  PENDING = "PENDING",
+  COMPLETED = "COMPLETED",
+  CANCELLED = "CANCELLED",
+}
+
 export enum PERIOD {
   TODAY = "today",
   UPCOMING = "upcoming",

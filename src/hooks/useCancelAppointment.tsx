@@ -14,41 +14,48 @@ const LazyCancelAppointmentModalContent = dynamic(
 
 const useCancelAppointment = () => {
   const utils = api.useUtils();
-  const { mutate: cancelAppointment } =
-    api.appointment.cancelAppointment.useMutation({
-      onMutate: () => {
-        notifications.show({
-          id: "cancel-appointment",
-          title: "Cancelling appointment",
-          message: "Please wait while we cancel your appointment",
-          ...mutateProps,
-        });
-      },
-      onSuccess: async () => {
-        notifications.update({
-          id: "cancel-appointment",
-          title: "appointment Cancelled",
-          message: "Your appointment has been cancelled",
-          ...successProps,
-        }),
-          await utils.appointment.getUserAppointments.invalidate();
-      },
-      onError: (error) => {
-        notifications.update({
-          id: "cancel-appointment",
-          title: "Unable to Cancel appointment",
-          message: error.message,
-          ...errorProps,
-        });
-      },
-    });
+  const { mutate } = api.appointment.cancelAppointment.useMutation({
+    onMutate: () => {
+      notifications.show({
+        id: "cancel-appointment",
+        title: "Cancelling appointment",
+        message: "Please wait while we cancel your appointment",
+        ...mutateProps,
+      });
+    },
+    onSuccess: async () => {
+      notifications.update({
+        id: "cancel-appointment",
+        title: "appointment Cancelled",
+        message: "Your appointment has been cancelled",
+        ...successProps,
+      }),
+        await utils.appointment.getUserAppointments.invalidate();
+    },
+    onError: (error) => {
+      notifications.update({
+        id: "cancel-appointment",
+        title: "Unable to Cancel appointment",
+        message: error.message,
+        ...errorProps,
+      });
+    },
+  });
 
-  const openCancelAppointmentModal = () => {
+  const openCancelAppointmentModal = ({
+    appointmentId,
+  }: {
+    appointmentId: string;
+  }) => {
     modals.open({
       size: "md",
-      withCloseButton: false,
       centered: true,
-      children: <LazyCancelAppointmentModalContent />,
+      children: (
+        <LazyCancelAppointmentModalContent
+          mutate={mutate}
+          appointmentId={appointmentId}
+        />
+      ),
     });
   };
 

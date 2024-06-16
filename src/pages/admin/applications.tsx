@@ -15,7 +15,7 @@ import Link from "next/link";
 import { BsFileEarmark } from "react-icons/bs";
 import Loading from "~/components/Loading";
 import { api } from "~/utils/api";
-import { STATUS } from "~/utils/constants";
+import { TUTOR_APPLICATION_STATUS } from "~/utils/constants";
 
 function Applications() {
   const { data: applications, isLoading } = api.tutor.getApplications.useQuery(
@@ -85,13 +85,11 @@ function Applications() {
                         visibleFrom="xs"
                         withCheckIcon={false}
                         allowDeselect={false}
-                        data={Object.values(STATUS).filter(
-                          (status) => status !== STATUS.CANCELLED
-                        )}
+                        data={Object.values(TUTOR_APPLICATION_STATUS)}
                         onChange={(status) =>
                           mutate({
                             applicationId,
-                            status: status as STATUS,
+                            status: status as TUTOR_APPLICATION_STATUS,
                             userId: createdByClerkId,
                           })
                         }
@@ -107,13 +105,11 @@ function Applications() {
                         hiddenFrom="xs"
                         withCheckIcon={false}
                         allowDeselect={false}
-                        data={Object.values(STATUS).filter(
-                          (status) => status !== STATUS.CANCELLED
-                        )}
+                        data={Object.values(TUTOR_APPLICATION_STATUS)}
                         onChange={(status) =>
                           mutate({
                             applicationId,
-                            status: status as STATUS,
+                            status: status as TUTOR_APPLICATION_STATUS,
                             userId: createdByClerkId,
                           })
                         }

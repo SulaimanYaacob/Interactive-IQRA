@@ -21,7 +21,7 @@ import type {
 import { createServerSideHelpers } from "@trpc/react-query/server";
 import { createTRPCContext } from "~/server/api/trpc";
 import { getTimeFromNow } from "~/utils/dateHandler";
-import { PERIOD } from "~/utils/constants";
+import { PERIOD, APPOINTMENT_STATUS } from "~/utils/constants";
 import { appRouter } from "~/server/api/root";
 import Loading from "~/components/Loading";
 import { FaXmark } from "react-icons/fa6";
@@ -31,6 +31,17 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import useCancelAppointment from "~/hooks/useCancelAppointment";
 dayjs.extend(customParseFormat);
+
+const returnStatusColor = (status: APPOINTMENT_STATUS) => {
+  switch (status) {
+    case APPOINTMENT_STATUS.PENDING:
+      return "yellow";
+    case APPOINTMENT_STATUS.COMPLETED:
+      return "green";
+    case APPOINTMENT_STATUS.CANCELLED:
+      return "red";
+  }
+};
 
 function Appointment({ period, page }: { period: PERIOD; page: string }) {
   const [activePage, setPage] = useState(Number(page));
@@ -70,15 +81,6 @@ function Appointment({ period, page }: { period: PERIOD; page: string }) {
     api.appointment.getUserAppointments.useQuery({
       period,
     });
-
-  // if (!appointments || appointments.length === 0)
-  //   return (
-  //     <Container my="xl">
-  //       <Title ta="center">{`You have no ${
-  //         period !== PERIOD.TODAY ? period : "today's"
-  //       } appointments`}</Title>
-  //     </Container>
-  //   );
 
   return (
     <Container my="xl" size="sm">
@@ -162,46 +164,33 @@ function Appointment({ period, page }: { period: PERIOD; page: string }) {
                                 gap="xs"
                                 align="end"
                               >
-                                {/* {dayjs(date).format("YYYY-MM-DD") ===
-                                  dayjs().format("YYYY-MM-DD") && (
-                                  <Badge
-                                    radius="xs"
-                                    variant="outline"
-                                    color="teal"
-                                  >
-                                    Today
-                                  </Badge>
-                                )} */}
-                                <Badge>{status}</Badge>
+                                <Badge
+                                  variant="outline"
+                                  color={returnStatusColor(
+                                    status as APPOINTMENT_STATUS
+                                  )}
+                                >
+                                  {status}
+                                </Badge>
                                 <Badge>{getTimeFromNow(date)}</Badge>
                               </Stack>
-                              {/* <Stack
-                                visibleFrom="xs"
-                                mr="xl"
-                                gap="xs"
-                                align="end"
-                              >
-                                <Badge radius="xs">
-                                  {dayjs(date).format("dddd MMM D")}
-                                </Badge>
-                                <Badge variant="dot" radius="xs">
-                                  {startTime} - {endTime}
-                                </Badge>
-                              </Stack> */}
                             </Group>
                           </Accordion.Control>
-                          <ActionIcon
-                            onClick={openCancelAppointmentModal}
-                            mr="xs"
-                            pos="absolute"
-                            right="0"
-                            color="red"
-                            variant="transparent"
-                          >
-                            <FaXmark size="24px" />
-                          </ActionIcon>
+                          {period === PERIOD.UPCOMING && (
+                            <ActionIcon
+                              onClick={() =>
+                                openCancelAppointmentModal({ appointmentId })
+                              }
+                              mr="xs"
+                              pos="absolute"
+                              right="0"
+                              color="red"
+                              variant="transparent"
+                            >
+                              <FaXmark size="24px" />
+                            </ActionIcon>
+                          )}
                         </Group>
-
                         <Accordion.Panel>
                           <Stack>
                             <Divider />

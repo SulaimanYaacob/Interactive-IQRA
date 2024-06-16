@@ -1,14 +1,18 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
-import type { RouterInputs } from "~/utils/api";
+import type { RouterInputs, RouterOutputs } from "~/utils/api";
 import { TRPCError } from "@trpc/server";
 import { clerkClient } from "@clerk/nextjs";
-import { PERIOD, ROLE, STATUS } from "~/utils/constants";
+import { APPOINTMENT_STATUS, PERIOD, ROLE } from "~/utils/constants";
 import dayjs from "dayjs";
 import chunk from "~/utils/paginationChunk";
 
+export type GetUserAppointmentOutput =
+  RouterOutputs["appointment"]["getUserAppointments"];
 export type CreateAppointmentInput =
   RouterInputs["appointment"]["createAppointment"];
+export type CancelAppointmentInput =
+  RouterInputs["appointment"]["cancelAppointment"];
 
 //TODO Fix filtering and sorting using GTE, LTE, ETC...
 export const appointmentRouter = createTRPCRouter({
@@ -33,7 +37,10 @@ export const appointmentRouter = createTRPCRouter({
               { studentClerkId: ctx.auth.id },
               { tutorClerkId: ctx.auth.id },
             ],
-            status: { not: STATUS.CANCELLED },
+            status:
+              period !== PERIOD.PAST
+                ? { not: APPOINTMENT_STATUS.CANCELLED }
+                : {},
           },
           orderBy:
             period !== PERIOD.PAST ? { date: "asc" } : { createdAt: "desc" },
@@ -82,7 +89,10 @@ export const appointmentRouter = createTRPCRouter({
           return chunk(
             appointmentsWithUserInfo.filter((appointment) => {
               const appointmentDate = new Date(appointment.date);
-              return dayjs(appointmentDate).isBefore(today);
+              return (
+                dayjs(appointmentDate).isBefore(today) ||
+                appointment.status === APPOINTMENT_STATUS.CANCELLED
+              );
             }),
             size
           );
@@ -124,13 +134,14 @@ export const appointmentRouter = createTRPCRouter({
     .input(
       z.object({
         appointmentId: z.string(),
+        cancelReason: z.string().max(300).optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
       const { appointmentId } = input;
       await ctx.db.appointment.update({
         where: { appointmentId },
-        data: { status: STATUS.CANCELLED },
+        data: { status: APPOINTMENT_STATUS.CANCELLED },
       });
     }),
 });

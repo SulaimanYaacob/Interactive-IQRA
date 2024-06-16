@@ -23,7 +23,7 @@ model Room {
 }
 
 model Appointment {
-    appointmentId     String   @id @unique @default(uuid())
+    appointmentId     String             @id @unique @default(uuid())
     tutorClerkId      String
     studentClerkId    String //? User's that book the appointment 
     studentIdentifier String? //? (In case clerk is no longer used)
@@ -31,18 +31,18 @@ model Appointment {
     date              DateTime
     startTime         String
     endTime           String
-    rejectedComments  String?
-    status            STATUS
+    cancelReason      String?
+    status            APPOINTMENT_STATUS
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
 
 model TutorApplication {
-    applicationId       String  @id @unique @default(uuid())
+    applicationId       String                   @id @unique @default(uuid())
     createdByIdentifier String?
     createdByClerkId    String
-    status              STATUS
+    status              TUTOR_APPLICATION_STATUS
     files               File[]
 
     createdAt DateTime @default(now())
@@ -67,9 +67,14 @@ enum ROLE {
     ADMIN
 }
 
-enum STATUS {
+enum TUTOR_APPLICATION_STATUS {
     PENDING
     ACCEPTED
     REJECTED
+}
+
+enum APPOINTMENT_STATUS {
+    PENDING
+    COMPLETED
     CANCELLED
 }

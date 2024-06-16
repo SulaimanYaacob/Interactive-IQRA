@@ -4,7 +4,7 @@ import { clerkClient } from "@clerk/nextjs/server";
 import { z } from "zod";
 import chunk from "~/utils/paginationChunk";
 import { utapi } from "~/server/uploadthing";
-import { ROLE, STATUS } from "~/utils/constants";
+import { ROLE, TUTOR_APPLICATION_STATUS } from "~/utils/constants";
 
 export const tutorRouter = createTRPCRouter({
   getTutors: publicProcedure
@@ -84,7 +84,7 @@ export const tutorRouter = createTRPCRouter({
         await ctx.db.tutorApplication.create({
           data: {
             createdByClerkId: ctx.auth.id,
-            status: STATUS.PENDING,
+            status: TUTOR_APPLICATION_STATUS.PENDING,
             files: {
               createMany: {
                 data: files,
@@ -178,7 +178,7 @@ export const tutorRouter = createTRPCRouter({
       z.object({
         userId: z.string(),
         applicationId: z.string(),
-        status: z.nativeEnum(STATUS),
+        status: z.nativeEnum(TUTOR_APPLICATION_STATUS),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -189,7 +189,7 @@ export const tutorRouter = createTRPCRouter({
             where: { applicationId: applicationId },
             data: { status },
           }),
-          status === STATUS.ACCEPTED &&
+          status === TUTOR_APPLICATION_STATUS.ACCEPTED &&
             clerkClient.users.updateUserMetadata(userId, {
               publicMetadata: { role: ROLE.TUTOR },
             }),
