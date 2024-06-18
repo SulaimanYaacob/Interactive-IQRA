@@ -35,7 +35,7 @@ dayjs.extend(customParseFormat);
 const returnStatusColor = (status: APPOINTMENT_STATUS) => {
   switch (status) {
     case APPOINTMENT_STATUS.PENDING:
-      return "yellow";
+      return "orange";
     case APPOINTMENT_STATUS.COMPLETED:
       return "green";
     case APPOINTMENT_STATUS.CANCELLED:
@@ -49,32 +49,32 @@ function Appointment({ period, page }: { period: PERIOD; page: string }) {
   const { openCancelAppointmentModal } = useCancelAppointment();
   const { push } = useRouter();
   //!!!!!!!!!!!!!!!!!! Should put this in middleware !!!!!!!!!!!!!!!!!!
-  if (!Object.values(PERIOD).includes(period))
-    return (
-      <Stack
-        align="center"
-        justify="center"
-        pos="absolute"
-        right={0}
-        bottom={0}
-        h="100vh"
-        w="100vw"
-      >
-        <Title
-          style={{ background: "rgba(0,0,0,0.8)" }}
-          p="xs"
-          pos="absolute"
-          top={90}
-        >
-          Silent Rick Roll
-        </Title>
-        <iframe
-          allow="autoplay"
-          style={{ height: "100%", width: "100%", border: "none" }}
-          src={`https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1`}
-        ></iframe>
-      </Stack>
-    );
+  // if (!Object.values(PERIOD).includes(period))
+  //   return (
+  //     <Stack
+  //       align="center"
+  //       justify="center"
+  //       pos="absolute"
+  //       right={0}
+  //       bottom={0}
+  //       h="100vh"
+  //       w="100vw"
+  //     >
+  //       <Title
+  //         style={{ background: "rgba(0,0,0,0.8)" }}
+  //         p="xs"
+  //         pos="absolute"
+  //         top={90}
+  //       >
+  //         Silent Rick Roll
+  //       </Title>
+  //       <iframe
+  //         allow="autoplay"
+  //         style={{ height: "100%", width: "100%", border: "none" }}
+  //         src={`https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1`}
+  //       ></iframe>
+  //     </Stack>
+  //   );
   //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   const { data: appointments, isLoading } =

@@ -1,18 +1,12 @@
-import { DatePickerInput, TimeInput } from "@mantine/dates";
-import dayjs from "dayjs";
-import customParseFormat from "dayjs/plugin/customParseFormat";
-import { useState } from "react";
-
-dayjs.extend(customParseFormat);
+import { Center } from "@mantine/core";
 
 const DummyPage = () => {
-  const [date, setDate] = useState<Date | null>();
-
   return (
-    <>
-      <DatePickerInput onChange={(v) => setDate(v)} value={date} />
-      <TimeInput onClick={(e) => e.currentTarget.showPicker()} />
-    </>
+    <Center mih="75vh">
+      {/* <Button component={Link} href={productSession?.url ?? ""}>
+        IQRA 2
+      </Button> */}
+    </Center>
   );
 };
 

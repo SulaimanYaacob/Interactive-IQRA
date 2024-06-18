@@ -2,37 +2,69 @@ import { env } from "~/env.mjs";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import Stripe from "stripe";
 import { TRPCError } from "@trpc/server";
+import type { ClerkPrivateMetadata } from "~/types/privateMetadata";
 
 export const stripeRouter = createTRPCRouter({
-  getProducts: protectedProcedure.query(async ({ ctx }) => {
-    const stripe = new Stripe(String(env.STRIPE_SECRET_KEY), {
-      apiVersion: "2024-04-10",
-    });
+  getIqraProductCheckoutURL: protectedProcedure.query(async ({ ctx }) => {
+    try {
+      const stripe = new Stripe(String(env.STRIPE_SECRET_KEY), {
+        apiVersion: "2024-04-10",
+      });
 
-    const url = env.URL;
+      const url = env.URL;
 
-    const checkoutSession = await stripe.checkout.sessions.create({
-      mode: "payment",
-      line_items: [
+      async function createCheckoutSession(iqraType: number, priceId: string) {
+        return await stripe.checkout.sessions.create({
+          mode: "payment",
+          line_items: [
+            {
+              price: priceId,
+              quantity: 1,
+            },
+          ],
+          success_url: `${url}/st/learn-iqra`,
+          cancel_url: `${url}/st/learn-iqra`,
+          metadata: {
+            userId: ctx.auth.id,
+            iqra: iqraType,
+          },
+        });
+      }
+
+      const checkoutSessionIqra2 = await createCheckoutSession(
+        2,
+        env.STRIPE_IQRA2_PRICE_ID
+      );
+      const checkoutSessionIqra3 = await createCheckoutSession(
+        3,
+        env.STRIPE_IQRA3_PRICE_ID
+      );
+
+      const { iqra2, iqra3 } = ctx.auth.privateMetadata as ClerkPrivateMetadata;
+      const listProductSession = [
         {
-          price: env.STRIPE_IQRA2_PRICE_ID,
-          quantity: 1,
+          productName: "iqra 1",
+          paid: true,
+          checkoutUrl: "/st/iqra-1/1",
         },
-      ],
-      success_url: `${url}/success`,
-      cancel_url: `${url}/st/learn-iqra`,
-      metadata: {
-        userId: ctx.auth.id,
-      },
-    });
+        {
+          productName: "iqra 2",
+          paid: iqra2,
+          checkoutUrl: checkoutSessionIqra2.url,
+        },
+        {
+          productName: "iqra 3",
+          paid: iqra3,
+          checkoutUrl: checkoutSessionIqra3.url,
+        },
+      ];
 
-    if (!checkoutSession.url) {
+      return listProductSession;
+    } catch (error) {
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: "Failed to create checkout session",
       });
     }
-
-    return { url: checkoutSession.url };
   }),
 });
