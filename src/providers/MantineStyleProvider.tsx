@@ -13,6 +13,7 @@ import "@mantine/notifications/styles.css";
 import "@mantine/core/styles.css";
 
 const theme = createTheme({
+  black: "#383b43",
   components: {
     Button: Button.extend({
       defaultProps: {

@@ -172,7 +172,16 @@ function Appointment({ period, page }: { period: PERIOD; page: string }) {
                                 >
                                   {status}
                                 </Badge>
-                                <Badge>{getTimeFromNow(date)}</Badge>
+                                <Badge>
+                                  {getTimeFromNow(
+                                    dayjs(date)
+                                      .add(
+                                        dayjs(startTime, "HH:mm A").hour(),
+                                        "hour"
+                                      )
+                                      .toDate()
+                                  )}
+                                </Badge>
                               </Stack>
                             </Group>
                           </Accordion.Control>
