@@ -12,34 +12,35 @@ import {
 } from "~/utils/notificationProps";
 
 const useCreateAppointment = () => {
-  const { reload } = useRouter();
-  const { mutate, isLoading } = api.appointment.createAppointment.useMutation({
-    onMutate: () => {
-      notifications.show({
-        id: "send-appointment",
-        title: "Sending an Appointment",
-        message: "Please wait while send your appointment",
-        ...mutateProps,
-      });
-    },
-    onSuccess: () => {
-      notifications.update({
-        id: "send-appointment",
-        title: "Appointment Sent!",
-        message: "Your appointment has been sent to the tutor",
-        ...successProps,
-      });
-      reload();
-    },
-    onError: (error) => {
-      notifications.update({
-        id: "send-appointment",
-        title: "Unable to send an appointment",
-        message: error.message,
-        ...errorProps,
-      });
-    },
-  });
+  const { push } = useRouter();
+  const { mutate, isLoading } =
+    api.appointment.createAppointmentCheckoutSession.useMutation({
+      onMutate: () => {
+        notifications.show({
+          id: "send-appointment",
+          title: "Creating Checkout Session",
+          message: "Please wait while we create the checkout session",
+          ...mutateProps,
+        });
+      },
+      onSuccess: async (url) => {
+        notifications.update({
+          id: "send-appointment",
+          title: "Checkout Session Created",
+          message: "Redirecting you to the checkout session",
+          ...successProps,
+        });
+        await push(url!);
+      },
+      onError: (error) => {
+        notifications.update({
+          id: "send-appointment",
+          title: "Unable to create a checkout session",
+          message: error.message,
+          ...errorProps,
+        });
+      },
+    });
 
   const openCreateAppointmentModal = ({
     availability,

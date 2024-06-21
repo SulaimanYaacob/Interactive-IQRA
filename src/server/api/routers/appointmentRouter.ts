@@ -3,14 +3,21 @@ import { createTRPCRouter, protectedProcedure } from "../trpc";
 import type { RouterInputs, RouterOutputs } from "~/utils/api";
 import { TRPCError } from "@trpc/server";
 import { clerkClient } from "@clerk/nextjs";
-import { APPOINTMENT_STATUS, PERIOD, ROLE } from "~/utils/constants";
+import {
+  APPOINTMENT_STATUS,
+  PERIOD,
+  PRODUCT_TYPE,
+  ROLE,
+} from "~/utils/constants";
 import dayjs from "dayjs";
 import chunk from "~/utils/paginationChunk";
+import Stripe from "stripe";
+import { env } from "~/env.mjs";
 
 export type GetUserAppointmentOutput =
   RouterOutputs["appointment"]["getUserAppointments"];
 export type CreateAppointmentInput =
-  RouterInputs["appointment"]["createAppointment"];
+  RouterInputs["appointment"]["createAppointmentCheckoutSession"];
 export type CancelAppointmentInput =
   RouterInputs["appointment"]["cancelAppointment"];
 
@@ -104,7 +111,7 @@ export const appointmentRouter = createTRPCRouter({
         });
       }
     }),
-  createAppointment: protectedProcedure
+  createAppointmentCheckoutSession: protectedProcedure
     .input(
       z.object({
         tutorClerkId: z.string(),
@@ -116,13 +123,57 @@ export const appointmentRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       try {
-        await ctx.db.appointment.create({
-          data: {
+        const url = env.URL;
+        const stripe = new Stripe(String(env.STRIPE_SECRET_KEY), {
+          apiVersion: "2024-04-10",
+        });
+        const { date, endTime, startTime, tutorClerkId, comments } = input;
+
+        const tutorDetails = await clerkClient.users.getUser(tutorClerkId);
+        if (!tutorDetails) throw new Error("Tutor not found");
+        const { firstName, lastName } = tutorDetails;
+
+        const checkoutSession = await stripe.checkout.sessions.create({
+          mode: "payment",
+          payment_method_types: ["card"],
+          line_items: [
+            {
+              quantity: 1,
+              price_data: {
+                currency: "MYR",
+                unit_amount: 5000,
+                product_data: {
+                  name: `Appointment with ${firstName ?? ""} ${lastName ?? ""}`,
+                  description: `On ${dayjs(date).format(
+                    "DD MMM YYYY"
+                  )} From ${startTime} to ${endTime}`,
+                },
+              },
+            },
+          ],
+          success_url: `${url}/profile/${tutorClerkId}`,
+          cancel_url: `${url}/profile/${tutorClerkId}`,
+          metadata: {
             studentClerkId: ctx.auth.id,
-            status: "PENDING",
-            ...input,
+            tutorClerkId: tutorClerkId,
+            date: date.toDateString(),
+            startTime: startTime,
+            endTime: endTime,
+            comments: comments ?? null,
+            status: APPOINTMENT_STATUS.PENDING,
+            productType: PRODUCT_TYPE.APPOINTMENT,
           },
         });
+
+        // await ctx.db.appointment.create({
+        //   data: {
+        //     studentClerkId: ctx.auth.id,
+        //     status: "PENDING",
+        //     ...input,
+        //   },
+        // });
+
+        return checkoutSession.url;
       } catch (error) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",

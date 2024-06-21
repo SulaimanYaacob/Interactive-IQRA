@@ -3,6 +3,9 @@ import { env } from "~/env.mjs";
 import type { NextApiRequest, NextApiResponse } from "next";
 import Stripe from "stripe";
 import { clerkClient } from "@clerk/nextjs";
+import { PRODUCT_TYPE } from "~/utils/constants";
+import { db } from "~/server/db";
+import type { APPOINTMENT_STATUS } from "@prisma/client";
 
 const webhookSecret = env.STRIPE_WEBHOOK_SECRET;
 
@@ -33,15 +36,36 @@ export default async function handler(
     switch (event.type) {
       case "checkout.session.completed":
         const payment = event.data.object;
-        if (payment.mode === "payment") {
-          const userId = payment.metadata?.userId;
-          const iqra = payment.metadata?.iqra;
 
-          if (userId && [2, 3, 4, 5, 6].includes(Number(iqra))) {
-            const privateMetadataKey = `iqra${iqra}`;
-            await clerkClient.users.updateUserMetadata(userId, {
-              privateMetadata: {
-                [privateMetadataKey]: true,
+        console.log(payment);
+        if (payment.mode === "payment") {
+          if (
+            (payment?.metadata?.productType as PRODUCT_TYPE) ===
+            PRODUCT_TYPE.IQRA
+          ) {
+            const userId = payment.metadata?.userId;
+            const iqra = payment.metadata?.iqra;
+
+            if (userId && [2, 3, 4, 5, 6].includes(Number(iqra))) {
+              const privateMetadataKey = `iqra${iqra}`;
+              await clerkClient.users.updateUserMetadata(userId, {
+                privateMetadata: {
+                  [privateMetadataKey]: true,
+                },
+              });
+            }
+          } else if (
+            payment?.metadata?.productType === PRODUCT_TYPE.APPOINTMENT
+          ) {
+            await db.appointment.create({
+              data: {
+                studentClerkId: payment.metadata?.studentClerkId ?? "",
+                tutorClerkId: payment.metadata?.tutorClerkId ?? "",
+                date: new Date(payment.metadata?.date ?? ""),
+                startTime: payment.metadata?.startTime ?? "",
+                endTime: payment.metadata?.endTime ?? "",
+                comments: payment.metadata?.comments ?? "",
+                status: payment.metadata?.status as APPOINTMENT_STATUS,
               },
             });
           }

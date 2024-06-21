@@ -23,6 +23,11 @@ export enum APPOINTMENT_STATUS {
   CANCELLED = "CANCELLED",
 }
 
+export enum PRODUCT_TYPE {
+  IQRA = "IQRA",
+  APPOINTMENT = "APPOINTMENT",
+}
+
 export enum PERIOD {
   TODAY = "today",
   UPCOMING = "upcoming",

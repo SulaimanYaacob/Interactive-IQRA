@@ -3,6 +3,7 @@ import { createTRPCRouter, protectedProcedure } from "../trpc";
 import Stripe from "stripe";
 import { TRPCError } from "@trpc/server";
 import type { ClerkPrivateMetadata } from "~/types/privateMetadata";
+import { PRODUCT_TYPE } from "~/utils/constants";
 
 export const stripeRouter = createTRPCRouter({
   getIqraProductCheckoutURL: protectedProcedure.query(async ({ ctx }) => {
@@ -27,6 +28,7 @@ export const stripeRouter = createTRPCRouter({
           metadata: {
             userId: ctx.auth.id,
             iqra: iqraType,
+            productType: PRODUCT_TYPE.IQRA,
           },
         });
       }
@@ -67,4 +69,52 @@ export const stripeRouter = createTRPCRouter({
       });
     }
   }),
+  createAppointmentCheckoutSession: protectedProcedure
+    // .input(
+    //   z.object({
+    //     tutorClerkId: z.string(),
+    //     date: z.date().optional().default(new Date()),
+    //     startTime: z.string(),
+    //     endTime: z.string(),
+    //     comments: z.string().optional(),
+    //   })
+    // )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const stripe = new Stripe(String(env.STRIPE_SECRET_KEY), {
+          apiVersion: "2024-04-10",
+        });
+        const url = env.URL;
+
+        const checkoutSession = await stripe.checkout.sessions.create({
+          mode: "payment",
+          line_items: [
+            {
+              quantity: 1,
+              price_data: {
+                currency: "MYR",
+                unit_amount: 5000,
+                product_data: {
+                  name: "Appointment",
+                },
+              },
+            },
+          ],
+          success_url: `${url}/dummy`,
+          cancel_url: `${url}/dummy`,
+          metadata: {
+            userId: ctx.auth.id,
+          },
+        });
+
+        console.log("=>", checkoutSession);
+
+        return checkoutSession.url;
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: (error as Error).message,
+        });
+      }
+    }),
 });
