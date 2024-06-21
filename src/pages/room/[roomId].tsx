@@ -27,21 +27,19 @@ export default function Room() {
   const { query } = useRouter();
   const { roomId } = query as { roomId: string };
 
-  if (!roomId) return null;
-
   return (
     <LiveblocksProvider roomId={roomId}>
-      <InteractiveRoom id={roomId} />
+      <InteractiveRoom roomId={roomId} />
     </LiveblocksProvider>
   );
 }
 
 //TODO if you have time, create a nickname when they first join the room
-function InteractiveRoom({ id }: { id: string }) {
+function InteractiveRoom({ roomId }: { roomId: string }) {
   document.body.style.overflow = "hidden";
   const [opacity, setOpacity] = useState(1);
   const containerRef = useRef<HTMLDivElement>(null);
-  const cursors = useElementLiveCursors(id, containerRef);
+  const cursors = useElementLiveCursors(roomId, containerRef);
   const broadcast = useBroadcastEvent();
 
   // const [count, setCount] = useState(0);

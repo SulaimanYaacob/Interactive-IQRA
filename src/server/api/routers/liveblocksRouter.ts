@@ -85,6 +85,10 @@ export const liveblocksRouter = createTRPCRouter({
           where: {
             roomPIN,
           },
+          select: {
+            roomId: true,
+            maxUsers: true,
+          },
         });
 
         if (!prismaRoom) {
@@ -98,20 +102,29 @@ export const liveblocksRouter = createTRPCRouter({
 
         if (!room) return;
 
+        console.log(Object.keys(room.usersAccesses).length);
+
         //* Check if user already joined the room or not. If not, update the user access
         //* Only primary email is being stored in the database
         if (
           !room.usersAccesses[String(ctx.auth.emailAddresses[0]?.emailAddress)]
         ) {
-          await liveblocks.updateRoom(prismaRoom.roomId, {
-            usersAccesses: {
-              ...room.usersAccesses,
-              [String(ctx.auth.emailAddresses[0]?.emailAddress)]: [
-                "room:read",
-                "room:presence:write",
-              ],
-            },
-          });
+          if (Object.keys(room.usersAccesses).length > prismaRoom.maxUsers) {
+            throw new TRPCError({
+              code: "UNAUTHORIZED",
+              message: "Room is full",
+            });
+          } else {
+            await liveblocks.updateRoom(prismaRoom.roomId, {
+              usersAccesses: {
+                ...room.usersAccesses,
+                [String(ctx.auth.emailAddresses[0]?.emailAddress)]: [
+                  "room:read",
+                  "room:presence:write",
+                ],
+              },
+            });
+          }
         }
 
         return room; //TODO Instead of returning room,

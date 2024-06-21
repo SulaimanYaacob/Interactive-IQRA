@@ -21,10 +21,7 @@ const LiveblocksProvider = dynamic(
 );
 export default function RoomHeader() {
   const { query } = useRouter();
-
   const { roomId } = query as { roomId: string };
-  if (!roomId) return null;
-
   const { data } = api.liveblocks.getCurrentRoomDetails.useQuery({ roomId });
 
   if (!data) return null;
