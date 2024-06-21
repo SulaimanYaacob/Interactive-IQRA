@@ -145,8 +145,6 @@ export const getStaticProps = async ({
     //TODO Validation for duplicates
     const userId = String(params?.userId);
     const user = await clerkClient.users.getUser(userId);
-    const { availability } =
-      user.publicMetadata as unknown as ClerkPublicMetadata;
 
     const bookedAppointments = await db.appointment.findMany({
       where: { tutorClerkId: userId },

@@ -26,9 +26,6 @@ const miscellaneous = [
   },
 ];
 
-type Props = {
-  navigationList: typeof navigationList;
-};
 function AppNavbar() {
   const { signOut } = useClerk();
   const { pathname } = useRouter();

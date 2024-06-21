@@ -79,7 +79,7 @@ export const stripeRouter = createTRPCRouter({
     //     comments: z.string().optional(),
     //   })
     // )
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ ctx }) => {
       try {
         const stripe = new Stripe(String(env.STRIPE_SECRET_KEY), {
           apiVersion: "2024-04-10",
