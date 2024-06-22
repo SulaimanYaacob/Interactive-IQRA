@@ -102,8 +102,6 @@ export const liveblocksRouter = createTRPCRouter({
 
         if (!room) return;
 
-        console.log(Object.keys(room.usersAccesses).length);
-
         //* Check if user already joined the room or not. If not, update the user access
         //* Only primary email is being stored in the database
         if (

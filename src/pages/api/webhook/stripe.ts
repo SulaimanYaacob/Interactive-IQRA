@@ -37,7 +37,6 @@ export default async function handler(
       case "checkout.session.completed":
         const payment = event.data.object;
 
-        console.log(payment);
         if (payment.mode === "payment") {
           if (
             (payment?.metadata?.productType as PRODUCT_TYPE) ===

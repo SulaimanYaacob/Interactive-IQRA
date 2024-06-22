@@ -11,7 +11,6 @@ const DummyPage = () => {
       },
     });
 
-  console.log(data);
   return (
     <Center mih="75vh">
       <Button onClick={() => mutate()}>Pay Something I Guess</Button>

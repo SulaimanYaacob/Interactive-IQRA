@@ -107,8 +107,6 @@ export const stripeRouter = createTRPCRouter({
           },
         });
 
-        console.log("=>", checkoutSession);
-
         return checkoutSession.url;
       } catch (error) {
         throw new TRPCError({

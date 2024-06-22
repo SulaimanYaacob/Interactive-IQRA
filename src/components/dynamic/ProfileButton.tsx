@@ -35,8 +35,8 @@ const ProfileButton = ({ userProfile, type, bookedAppointments }: Props) => {
   if (
     !isCurrentUser &&
     type === "detail" &&
-    profileRole === ROLE.TUTOR
-    // &&!sessionRole
+    profileRole === ROLE.TUTOR &&
+    !sessionRole
   )
     return (
       <Button

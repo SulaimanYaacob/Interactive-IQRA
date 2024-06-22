@@ -43,7 +43,7 @@ const Profile = ({
 
   //TODO Change the nameeee it editProfile button
   return (
-    <Container my="xl">
+    <Container my="xl" size="md">
       <Stack>
         <Paper withBorder p="xl">
           <Stack>
@@ -79,7 +79,7 @@ const Profile = ({
             </div>
           </Stack>
         </Paper>
-        <SimpleGrid cols={{ base: 1, sm: 2 }}>
+        <SimpleGrid cols={{ base: 1 }}>
           <Paper withBorder p="xl">
             <Stack gap="xs">
               <Group mb="md" justify="space-between" pos="relative">
@@ -120,7 +120,7 @@ const Profile = ({
               )}
             </Stack>
           </Paper>
-          <Paper withBorder p="xl">
+          {/* <Paper withBorder p="xl">
             <Stack gap="xs">
               <Group mb="md" justify="space-between" pos="relative">
                 <Text fw="700" size="xl">
@@ -129,7 +129,7 @@ const Profile = ({
               </Group>
               <Text></Text>
             </Stack>
-          </Paper>
+          </Paper> */}
         </SimpleGrid>
       </Stack>
     </Container>
