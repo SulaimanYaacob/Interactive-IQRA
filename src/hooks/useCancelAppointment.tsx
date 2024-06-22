@@ -26,7 +26,7 @@ const useCancelAppointment = () => {
     onSuccess: async () => {
       notifications.update({
         id: "cancel-appointment",
-        title: "appointment Cancelled",
+        title: "Appointment Cancelled",
         message: "Your appointment has been cancelled",
         ...successProps,
       }),

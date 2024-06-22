@@ -7,6 +7,7 @@ import {
   Title,
 } from "@mantine/core";
 import { hasLength, useForm } from "@mantine/form";
+import { modals } from "@mantine/modals";
 import { useState } from "react";
 import { FaCircleExclamation } from "react-icons/fa6";
 import type { CancelAppointmentInput } from "~/server/api/routers/appointmentRouter";
@@ -33,7 +34,12 @@ function CancelAppointmentModalContent({
   });
 
   return (
-    <form onSubmit={onSubmit((val) => mutate(val))}>
+    <form
+      onSubmit={onSubmit((val) => {
+        modals.closeAll();
+        mutate(val);
+      })}
+    >
       <Stack p="md">
         <Center>
           <FaCircleExclamation

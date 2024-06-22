@@ -20,6 +20,7 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 import { daysObject } from "~/utils/constants";
 import { getAvailabilityTime } from "~/utils/dateHandler";
 import { db } from "~/server/db";
+import { APPOINTMENT_STATUS } from "@prisma/client";
 dayjs.extend(customParseFormat);
 const LazyProfileButton = dynamic(
   () => import("~/components/dynamic/ProfileButton"),
@@ -147,7 +148,7 @@ export const getStaticProps = async ({
     const user = await clerkClient.users.getUser(userId);
 
     const bookedAppointments = await db.appointment.findMany({
-      where: { tutorClerkId: userId },
+      where: { tutorClerkId: userId, status: APPOINTMENT_STATUS.PENDING },
       select: {
         date: true,
         startTime: true,

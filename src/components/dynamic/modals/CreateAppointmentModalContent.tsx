@@ -61,6 +61,7 @@ const CreateAppointmentModalContent: FC<CreateAppointmentModalContentProps> = ({
   });
 
   const validateForm = (values: CreateAppointmentInput) => ({
+    startTime: values.startTime === "" ? "Please Enter Start Time" : null,
     date: values.date == null ? "Please Enter Date" : null,
     comments: values.comments!.length > 300 ? "Max 300 characters" : null,
   });

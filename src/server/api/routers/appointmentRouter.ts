@@ -172,7 +172,6 @@ export const appointmentRouter = createTRPCRouter({
         //     ...input,
         //   },
         // });
-
         return checkoutSession.url;
       } catch (error) {
         throw new TRPCError({
