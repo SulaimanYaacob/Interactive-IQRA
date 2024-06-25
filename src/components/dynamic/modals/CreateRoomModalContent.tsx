@@ -47,7 +47,6 @@ const CreateRoomModalContent = ({
                 }
               />
               <SegmentedControl
-                disabled
                 data={["1", "2", "3", "4", "5", "6"]} // Must be link with the purchased books
                 {...getInputProps("iqraBook")}
               />

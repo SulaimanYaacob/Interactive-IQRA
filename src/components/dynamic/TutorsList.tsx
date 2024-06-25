@@ -8,7 +8,7 @@ import {
   Title,
   Text,
 } from "@mantine/core";
-import { type ReactNode, useState } from "react";
+import { type ReactNode, useState, useEffect } from "react";
 import { api } from "~/utils/api";
 import Loading from "../Loading";
 import { useRouter } from "next/router";
@@ -47,8 +47,12 @@ const DynamicGroup = ({
 
 const TutorsList = ({ page, search }: { page: number; search: string }) => {
   const { push } = useRouter();
-
   const [activePage, setPage] = useState(Number(page));
+
+  useEffect(() => {
+    setPage(Number(page));
+  }, [page]);
+
   const {
     data: listOfTutors,
     isLoading,
@@ -110,7 +114,8 @@ const TutorsList = ({ page, search }: { page: number; search: string }) => {
           <Center my="xl">
             <Pagination
               total={listOfTutors.length}
-              value={activePage}
+              value={activePage ?? 1}
+              defaultValue={1}
               disabled={isLoading}
               onChange={async (e) => {
                 setPage(e);

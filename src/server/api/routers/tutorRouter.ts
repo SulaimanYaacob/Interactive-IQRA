@@ -19,7 +19,7 @@ export const tutorRouter = createTRPCRouter({
         const { search, size } = input;
 
         //! Can't use the offset and limit here due not having the metadata properties
-        const users = await clerkClient.users.getUserList();
+        const users = await clerkClient.users.getUserList({ limit: 100 });
 
         if (!users)
           throw new TRPCError({

@@ -17,7 +17,7 @@ import { type User } from "@clerk/nextjs/dist/types/server";
 import type { ClerkPublicMetadata } from "~/types/publicMetadata";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import { daysObject } from "~/utils/constants";
+import { ROLE, daysObject } from "~/utils/constants";
 import { getAvailabilityTime } from "~/utils/dateHandler";
 import { db } from "~/server/db";
 import { APPOINTMENT_STATUS } from "@prisma/client";
@@ -80,58 +80,60 @@ const Profile = ({
             </div>
           </Stack>
         </Paper>
-        <SimpleGrid cols={{ base: 1 }}>
-          <Paper withBorder p="xl">
+        {role === ROLE.TUTOR && (
+          <SimpleGrid cols={{ base: 1 }}>
+            <Paper withBorder p="xl">
+              <Stack gap="xs">
+                <Group mb="md" justify="space-between" pos="relative">
+                  <Text fw="700" size="xl">
+                    Availability
+                  </Text>
+                  <LazyProfileButton type="availability" userProfile={user} />
+                </Group>
+
+                {availability ? (
+                  Object.keys(daysObject).map((day) => {
+                    const { endTime, startTime, isAvailable } =
+                      getAvailabilityTime({
+                        availability,
+                        day,
+                      });
+
+                    if (!isAvailable) return null;
+
+                    return (
+                      <Group key={day} justify="space-between">
+                        <Text fw="500" w="100px" tt="capitalize">
+                          {day}
+                        </Text>
+                        <Breadcrumbs separator="-">
+                          <Badge size="lg" radius="xs">
+                            {startTime}
+                          </Badge>
+                          <Badge size="lg" radius="xs">
+                            {endTime}
+                          </Badge>
+                        </Breadcrumbs>
+                      </Group>
+                    );
+                  })
+                ) : (
+                  <Text>No availability set</Text>
+                )}
+              </Stack>
+            </Paper>
+            {/* <Paper withBorder p="xl">
             <Stack gap="xs">
-              <Group mb="md" justify="space-between" pos="relative">
-                <Text fw="700" size="xl">
-                  Availability
-                </Text>
-                <LazyProfileButton type="availability" userProfile={user} />
-              </Group>
-
-              {availability ? (
-                Object.keys(daysObject).map((day) => {
-                  const { endTime, startTime, isAvailable } =
-                    getAvailabilityTime({
-                      availability,
-                      day,
-                    });
-
-                  if (!isAvailable) return null;
-
-                  return (
-                    <Group key={day} justify="space-between">
-                      <Text fw="500" w="100px" tt="capitalize">
-                        {day}
-                      </Text>
-                      <Breadcrumbs separator="-">
-                        <Badge size="lg" radius="xs">
-                          {startTime}
-                        </Badge>
-                        <Badge size="lg" radius="xs">
-                          {endTime}
-                        </Badge>
-                      </Breadcrumbs>
-                    </Group>
-                  );
-                })
-              ) : (
-                <Text>No availability set</Text>
-              )}
+            <Group mb="md" justify="space-between" pos="relative">
+            <Text fw="700" size="xl">
+            Testimonials
+            </Text>
+            </Group>
+            <Text></Text>
             </Stack>
-          </Paper>
-          {/* <Paper withBorder p="xl">
-            <Stack gap="xs">
-              <Group mb="md" justify="space-between" pos="relative">
-                <Text fw="700" size="xl">
-                  Testimonials
-                </Text>
-              </Group>
-              <Text></Text>
-            </Stack>
-          </Paper> */}
-        </SimpleGrid>
+            </Paper> */}
+          </SimpleGrid>
+        )}
       </Stack>
     </Container>
   );

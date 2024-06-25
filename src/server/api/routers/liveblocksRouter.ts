@@ -139,6 +139,13 @@ export const liveblocksRouter = createTRPCRouter({
       try {
         const { maxUsers, iqraBook } = input;
 
+        if (iqraBook !== "1") {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: `Iqra ${iqraBook} is not available`,
+          });
+        }
+
         const prismaRoom = await ctx.db.room.create({
           data: {
             createdByClerkId: ctx.auth.id,
