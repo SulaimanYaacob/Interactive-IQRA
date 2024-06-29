@@ -3,9 +3,11 @@ import {
   ActionIcon,
   Avatar,
   Badge,
+  Center,
   Container,
   Divider,
   Group,
+  Pagination,
   Stack,
   Tabs,
   Text,
@@ -27,7 +29,7 @@ import Loading from "~/components/Loading";
 import { FaXmark } from "react-icons/fa6";
 import { api } from "~/utils/api";
 import SuperJSON from "superjson";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import useCancelAppointment from "~/hooks/useCancelAppointment";
 dayjs.extend(customParseFormat);
@@ -81,6 +83,10 @@ function Appointment({ period, page }: { period: PERIOD; page: string }) {
     api.appointment.getUserAppointments.useQuery({
       period,
     });
+
+  useEffect(() => {
+    setPage(Number(page));
+  }, [page]);
 
   return (
     <Container my="xl" size="sm">
@@ -226,6 +232,18 @@ function Appointment({ period, page }: { period: PERIOD; page: string }) {
           </Tabs.Panel>
         )}
       </Tabs>
+      <Center>
+        {appointments && loadTab === period && (
+          <Pagination
+            total={appointments.length}
+            value={activePage}
+            onChange={async (e) => {
+              setPage(e);
+              await push(`/appointments/${period}/${e}`);
+            }}
+          />
+        )}
+      </Center>
     </Container>
   );
 }
