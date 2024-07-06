@@ -2,6 +2,7 @@ import { Stack, Text } from "@mantine/core";
 import type { UserMeta } from "liveblocks.config";
 
 type Props = {
+  text?: string;
   info: UserMeta["info"];
   color: string;
   opacity: number;
@@ -9,7 +10,7 @@ type Props = {
   y: number;
 };
 
-export default function Cursor({ color, x, y, info, opacity }: Props) {
+export default function Cursor({ color, x, y, info, opacity, text }: Props) {
   return (
     <Stack
       gap={0}
@@ -55,6 +56,22 @@ export default function Cursor({ color, x, y, info, opacity }: Props) {
       >
         {info.username ?? info.name}
       </Text>
+      {text && (
+        <Text
+          style={{
+            borderRadius: "10px",
+            textShadow: "0px 0px 3px black",
+          }}
+          bg={color}
+          c="white"
+          fw={500}
+          ml="xs"
+          inline
+          p="xs"
+        >
+          {text}
+        </Text>
+      )}
     </Stack>
   );
 }

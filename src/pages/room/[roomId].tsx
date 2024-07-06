@@ -1,8 +1,24 @@
-import { Center, Pagination } from "@mantine/core";
-import { useBroadcastEvent, useStorage, useMutation } from "liveblocks.config";
+import {
+  Center,
+  Group,
+  Overlay,
+  Pagination,
+  Stack,
+  TextInput,
+  Title,
+  Text,
+  Divider,
+} from "@mantine/core";
+import {
+  useBroadcastEvent,
+  useStorage,
+  useMutation,
+  useEventListener,
+  type RoomEvent,
+} from "liveblocks.config";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Cursor from "~/components/Cursor";
 import { useElementLiveCursors } from "~/hooks/useElementLiveCursors";
 import iqraOneJson from "~/../public/iqra/iqra-1.json";
@@ -34,7 +50,6 @@ export default function Room() {
   );
 }
 
-//TODO if you have time, create a nickname when they first join the room
 function InteractiveRoom({ roomId }: { roomId: string }) {
   document.body.style.overflow = "hidden";
   const [opacity, setOpacity] = useState(1);
@@ -42,20 +57,39 @@ function InteractiveRoom({ roomId }: { roomId: string }) {
   const cursors = useElementLiveCursors(roomId, containerRef);
   const broadcast = useBroadcastEvent();
 
-  // const [count, setCount] = useState(0);
-  // const others = useOthers();
-  // useEventListener(({ event }) => {
-  //   switch (event.type) {
-  //     case "increase":
-  //       setCount((count) => count + 1);
-  //       break;
-  //     case "decrease":
-  //       setCount((count) => count - 1);
-  //       break;
-  //   }
-  // });
+  const [openChat, setOpenChat] = useState(false);
+  const [text, setText] = useState<RoomEvent>();
+  const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
 
-  //********************************************************************************/
+  useEventListener(({ event }) => {
+    setText({
+      ...event,
+    });
+    if (timeoutId) clearTimeout(timeoutId);
+
+    const id = setTimeout(() => {
+      setText(undefined);
+    }, 3000);
+    setTimeoutId(id);
+  });
+
+  useEffect(() => {
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === "/") {
+        setOpenChat(true);
+      } else if (e.key === "Enter") {
+        setOpenChat(false);
+      } else if (e.key === "Escape") {
+        setOpenChat(false);
+        broadcast({ message: "" });
+      }
+    }
+
+    document.addEventListener("keyup", handleKey);
+    return () => {
+      document.removeEventListener("keyup", handleKey);
+    };
+  }, [broadcast, openChat]);
 
   const page = useStorage((root) => root.page);
   const totalPages = iqraOneJson.length;
@@ -67,10 +101,7 @@ function InteractiveRoom({ roomId }: { roomId: string }) {
     [page]
   );
 
-  //TODO add iqra page!!
-  //* Using Margin Will Affect Cursor Position. Use Padding Instead.
   return (
-    //? Only when padding is necessary (Balance need to be added into the cursor position
     <>
       <Center
         ref={containerRef}
@@ -79,9 +110,29 @@ function InteractiveRoom({ roomId }: { roomId: string }) {
         w="100%"
         p="md"
         top={0}
-        // w={innerWidth - 64}
-        // h={innerHeight - 108}
       >
+        {openChat && (
+          <Overlay blur={15}>
+            <Center pos="absolute" mih="100vh" w="100%">
+              <Stack gap="xs" ta="center">
+                <Group justify="center">
+                  <Text fw={500}>{`Press "Enter" to Send`}</Text>
+                  <Divider orientation="vertical" size="sm" />
+                  <Text fw={500}>{`Press "Esc" to Close`}</Text>
+                </Group>
+                <Title order={3}></Title>
+                <TextInput
+                  placeholder="Say something..."
+                  autoFocus
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter")
+                      broadcast({ message: e.currentTarget.value });
+                  }}
+                />
+              </Stack>
+            </Center>
+          </Overlay>
+        )}
         <IqraContent
           content={content}
           isInteractive={{
@@ -113,11 +164,11 @@ function InteractiveRoom({ roomId }: { roomId: string }) {
           const { connectionId, x, y, info } = cursor;
           return (
             <Cursor
+              text={text?.message}
               opacity={opacity}
               key={connectionId}
               info={info}
               color={String(COLORS[connectionId % COLORS.length])}
-              // x={x + 32}
               x={x}
               y={y}
             />
@@ -126,41 +177,4 @@ function InteractiveRoom({ roomId }: { roomId: string }) {
       </Center>
     </>
   );
-}
-
-{
-  /* <Container py="xl">
-        <Paper style={{ zIndex: -1 }} withBorder p="xl">
-          <Title ta="center">{userCount + 1} Users are in the room</Title>
-          <Text ta="center">
-            {cursor ? `${cursor.x} x ${cursor.y}` : "Move your cursor"}
-          </Text>
-          <Group justify="center" mt="xl">
-            <Button
-              style={{ zIndex: 2 }}
-              onClick={() => {
-                broadcast({ type: "increase" });
-                setCount((count) => count + 1);
-              }}
-              variant="outline"
-            >
-              +
-            </Button>
-            <Title key={count} ta="center">
-              {count}
-            </Title>
-            <Button
-              onClick={() => {
-                broadcast({ type: "decrease" });
-                setCount((count) => count - 1);
-              }}
-              variant="outline"
-            >
-              -
-            </Button>
-            <Button onClick={() => setOpacity(0.1)}>Read Mode</Button>
-            <Button onClick={() => setOpacity(1)}>Reset</Button>
-          </Group>
-        </Paper>
-      </Container> */
 }

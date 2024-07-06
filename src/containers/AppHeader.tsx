@@ -36,9 +36,9 @@ type Props = {
 };
 
 function AppHeader({ openedMainNav, toggleMainNav }: Props) {
+  const { push, pathname, query } = useRouter();
   const { session } = useSession();
   const { signOut } = useClerk();
-  const { push, pathname, query } = useRouter();
 
   return (
     <AppShell.Header>

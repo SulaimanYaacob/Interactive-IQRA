@@ -6,6 +6,7 @@ import {
   Center,
   Container,
   CopyButton,
+  Divider,
   Group,
   Text,
   Tooltip,
@@ -47,22 +48,27 @@ function LiveblocksHeader({ roomPIN }: { roomPIN: string }) {
             Exit Room
           </Button>
           <Center visibleFrom="xs" pos="absolute" left="30%" right="30%">
-            <CopyButton value={roomPIN} timeout={2000}>
-              {({ copied, copy }) => (
-                <Tooltip label={copied ? "Copied" : "Copy"}>
-                  <Button
-                    leftSection={copied ? <FaCheck /> : <FaRegCopy />}
-                    color={copied ? "teal" : "gray"}
-                    onClick={copy}
-                    variant="subtle"
-                  >
-                    <Text lts="3px" fw="500">
-                      {roomPIN}
-                    </Text>
-                  </Button>
-                </Tooltip>
-              )}
-            </CopyButton>
+            <Group>
+              <CopyButton value={roomPIN} timeout={2000}>
+                {({ copied, copy }) => (
+                  <Tooltip label={copied ? "Copied" : "Copy"}>
+                    <Button
+                      leftSection={copied ? <FaCheck /> : <FaRegCopy />}
+                      color={copied ? "teal" : "gray"}
+                      onClick={copy}
+                      variant="subtle"
+                      size="compact-lg"
+                    >
+                      <Text lts="3px" fw="500">
+                        {roomPIN}
+                      </Text>
+                    </Button>
+                  </Tooltip>
+                )}
+              </CopyButton>
+              <Divider orientation="vertical" />
+              <Text>{`Press "/" To Open Chat`}</Text>
+            </Group>
           </Center>
           <Group>
             <AvatarGroup>
