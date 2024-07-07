@@ -66,8 +66,8 @@ function LiveblocksHeader({ roomPIN }: { roomPIN: string }) {
                   </Tooltip>
                 )}
               </CopyButton>
-              <Divider orientation="vertical" />
-              <Text>{`Press "/" To Open Chat`}</Text>
+              <Divider orientation="vertical" visibleFrom="md" />
+              <Text visibleFrom="md">{`Press "/" To Open Chat`}</Text>
             </Group>
           </Center>
           <Group>

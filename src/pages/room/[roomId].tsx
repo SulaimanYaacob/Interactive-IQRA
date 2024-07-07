@@ -14,7 +14,7 @@ import {
   useStorage,
   useMutation,
   useEventListener,
-  RoomEvent,
+  type RoomEvent,
 } from "liveblocks.config";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
@@ -67,7 +67,7 @@ function InteractiveRoom({ roomId }: { roomId: string }) {
 
     const id = setTimeout(() => {
       setText(undefined);
-    }, 3000);
+    }, 5000);
     setTimeoutId(id);
   });
 
