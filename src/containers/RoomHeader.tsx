@@ -67,7 +67,10 @@ function LiveblocksHeader({ roomPIN }: { roomPIN: string }) {
                 )}
               </CopyButton>
               <Divider orientation="vertical" visibleFrom="md" />
-              <Text visibleFrom="md">{`Press "/" To Open Chat`}</Text>
+              <Text
+                c="dimmed"
+                visibleFrom="md"
+              >{`Press "/" To Open Chat`}</Text>
             </Group>
           </Center>
           <Group>

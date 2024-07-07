@@ -5,7 +5,6 @@ import {
   Pagination,
   Stack,
   TextInput,
-  Title,
   Text,
   Divider,
 } from "@mantine/core";
@@ -34,7 +33,7 @@ const COLORS = [
   "#9575CD",
   "#4FC3F7",
   "#81C784",
-  "#FFF176",
+  "#D3C762",
   "#FF8A65",
   "#F06292",
   "#7986CB",
@@ -117,12 +116,11 @@ function InteractiveRoom({ roomId }: { roomId: string }) {
           <Overlay blur={15}>
             <Center pos="absolute" mih="100vh" w="100%">
               <Stack gap="xs" ta="center">
-                <Group justify="center">
+                <Group c="white" justify="center">
                   <Text fw={500}>{`Press "Enter" to Send`}</Text>
                   <Divider orientation="vertical" size="sm" />
                   <Text fw={500}>{`Press "Esc" to Close`}</Text>
                 </Group>
-                <Title order={3}></Title>
                 <TextInput
                   placeholder="Say something..."
                   autoFocus

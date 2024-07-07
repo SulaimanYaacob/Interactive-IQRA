@@ -52,10 +52,7 @@ export default function Cursor({ color, x, y, info, opacity, text }: Props) {
         inline
         pos="absolute"
         left={25}
-        fz="xs"
-        style={{
-          textShadow: "0px 0px 3px black",
-        }}
+        fz="sm"
       >
         {info.username ?? info.name}
       </Text>
