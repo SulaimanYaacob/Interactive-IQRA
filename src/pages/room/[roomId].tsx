@@ -23,6 +23,7 @@ import Cursor from "~/components/Cursor";
 import { useElementLiveCursors } from "~/hooks/useElementLiveCursors";
 import iqraOneJson from "~/../public/iqra/iqra-1.json";
 import IqraContent from "~/components/main-content.tsx/IqraContent";
+import CursorText from "~/components/CursorText";
 const LiveblocksProvider = dynamic(
   () => import("~/providers/LiveblocksProvider"),
   { ssr: false }
@@ -52,14 +53,29 @@ export default function Room() {
 
 function InteractiveRoom({ roomId }: { roomId: string }) {
   document.body.style.overflow = "hidden";
+  const broadcast = useBroadcastEvent();
   const [opacity, setOpacity] = useState(1);
   const containerRef = useRef<HTMLDivElement>(null);
   const cursors = useElementLiveCursors(roomId, containerRef);
-  const broadcast = useBroadcastEvent();
-
   const [openChat, setOpenChat] = useState(false);
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
   const [text, setText] = useState<RoomEvent>();
+  const [clientText, setClientText] = useState<RoomEvent>();
+  const [clienTimeoutId, setClientTimeoutId] = useState<NodeJS.Timeout | null>(
+    null
+  );
+
+  //**************************** Storage ****************************/
+  const page = useStorage((root) => root.page);
+  const totalPages = iqraOneJson.length;
+  const content = iqraOneJson[page - 1]!;
+  const nextPageLink = useMutation(
+    ({ storage }, number: number) => {
+      storage.set("page", number);
+    },
+    [page]
+  );
+  //***************************************************************/
 
   useEventListener(({ event, connectionId }) => {
     setText({ message: event.message, connectionId });
@@ -73,11 +89,9 @@ function InteractiveRoom({ roomId }: { roomId: string }) {
 
   useEffect(() => {
     function handleKey(e: KeyboardEvent) {
-      if (e.key === "/") {
-        setOpenChat(true);
-      } else if (e.key === "Enter") {
-        setOpenChat(false);
-      } else if (e.key === "Escape") {
+      if (e.key === "/") setOpenChat(true);
+      else if (e.key === "Enter") setOpenChat(false);
+      else if (e.key === "Escape") {
         setOpenChat(false);
         broadcast({ message: "" });
       }
@@ -88,16 +102,6 @@ function InteractiveRoom({ roomId }: { roomId: string }) {
       document.removeEventListener("keyup", handleKey);
     };
   }, [broadcast, openChat]);
-
-  const page = useStorage((root) => root.page);
-  const totalPages = iqraOneJson.length;
-  const content = iqraOneJson[page - 1]!;
-  const nextPageLink = useMutation(
-    ({ storage }, number: number) => {
-      storage.set("page", number);
-    },
-    [page]
-  );
 
   return (
     <>
@@ -123,8 +127,21 @@ function InteractiveRoom({ roomId }: { roomId: string }) {
                   placeholder="Say something..."
                   autoFocus
                   onKeyDown={(e) => {
-                    if (e.key === "Enter")
+                    if (e.key === "Enter") {
                       broadcast({ message: e.currentTarget.value });
+                      setClientText({
+                        message: e.currentTarget.value,
+                        connectionId: cursors.selfCursor?.connectionId,
+                      });
+
+                      if (clienTimeoutId) clearTimeout(clienTimeoutId);
+
+                      const id = setTimeout(() => {
+                        setClientText(undefined);
+                      }, 5000);
+
+                      setClientTimeoutId(id);
+                    }
                   }}
                 />
               </Stack>
@@ -157,7 +174,7 @@ function InteractiveRoom({ roomId }: { roomId: string }) {
           total={totalPages}
           onChange={(number) => nextPageLink(number)}
         />
-        {cursors.map((cursor) => {
+        {cursors.otherCursors.map((cursor) => {
           if (!cursor?.connectionId) return null;
           const { connectionId, x, y, info } = cursor;
 
@@ -175,6 +192,23 @@ function InteractiveRoom({ roomId }: { roomId: string }) {
             />
           );
         })}
+
+        {/*//! Totally Hardcoded for emergency purposes */}
+        {cursors.selfCursor && (
+          <CursorText
+            text={
+              clientText?.connectionId === cursors.selfCursor.connectionId
+                ? clientText.message
+                : undefined
+            }
+            opacity={opacity}
+            color={String(
+              COLORS[cursors.selfCursor.connectionId % COLORS.length]
+            )}
+            x={cursors.selfCursor.x}
+            y={cursors.selfCursor.y}
+          />
+        )}
       </Center>
     </>
   );

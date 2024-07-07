@@ -1,4 +1,4 @@
-import { useOthers, useUpdateMyPresence } from "liveblocks.config";
+import { useOthers, useSelf, useUpdateMyPresence } from "liveblocks.config";
 import { type RefObject, useEffect, useState } from "react";
 
 export function useElementLiveCursors(id: string, ref: RefObject<HTMLElement>) {
@@ -6,6 +6,7 @@ export function useElementLiveCursors(id: string, ref: RefObject<HTMLElement>) {
 
   const [boundingRect, setBoundingRect] = useState<DOMRect>();
   const updateMyPresence = useUpdateMyPresence();
+  const self = useSelf();
   const others = useOthers();
 
   useEffect(() => {
@@ -66,7 +67,7 @@ export function useElementLiveCursors(id: string, ref: RefObject<HTMLElement>) {
     };
   }, [id, ref, updateMyPresence, boundingRect]);
 
-  return others
+  const otherCursors = others
     .filter(
       (user) =>
         user.presence?.cursor != null &&
@@ -86,4 +87,17 @@ export function useElementLiveCursors(id: string, ref: RefObject<HTMLElement>) {
         y: presence.cursor.y * boundingRect.height,
       };
     });
+
+  const selfCursor = self.presence?.cursor
+    ? {
+        id: self.id,
+        info: self.info,
+        presence: self.presence,
+        connectionId: self.connectionId,
+        x: self.presence.cursor.x * boundingRect!.width,
+        y: self.presence.cursor.y * boundingRect!.height,
+      }
+    : null;
+
+  return { otherCursors, selfCursor };
 }
