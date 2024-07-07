@@ -58,7 +58,7 @@ function InteractiveRoom({ roomId }: { roomId: string }) {
   const cursors = useElementLiveCursors(roomId, containerRef);
   const [openChat, setOpenChat] = useState(false);
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
-  const [text, setText] = useState<RoomEvent>();
+  const [text, setText] = useState<RoomEvent[]>();
   const [clientText, setClientText] = useState<RoomEvent>();
   const [clienTimeoutId, setClientTimeoutId] = useState<NodeJS.Timeout | null>(
     null
@@ -77,12 +77,20 @@ function InteractiveRoom({ roomId }: { roomId: string }) {
   //***************************************************************/
 
   useEventListener(({ event, connectionId }) => {
-    setText({ message: event.message, connectionId });
+    setText((prev) => {
+      const updatedText = prev?.map((t) =>
+        t.connectionId === connectionId ? event : t
+      );
+
+      return [...(updatedText ?? []), { message: event.message, connectionId }];
+    });
+
     if (timeoutId) clearTimeout(timeoutId);
 
     const id = setTimeout(() => {
-      setText(undefined);
+      setText((prev) => prev?.filter((t) => t.connectionId !== connectionId));
     }, 5000);
+
     setTimeoutId(id);
   });
 
@@ -179,7 +187,8 @@ function InteractiveRoom({ roomId }: { roomId: string }) {
           return (
             <Cursor
               text={
-                text?.connectionId === connectionId ? text.message : undefined
+                text?.find((t) => t.connectionId === connectionId)?.message ??
+                ""
               }
               opacity={opacity}
               key={connectionId}
