@@ -25,6 +25,7 @@ export default function CursorText({ color, x, y, opacity, text }: Props) {
     >
       {text && (
         <Text
+          mt="20px"
           style={{
             borderRadius: "10px",
             textShadow: "0px 0px 3px black",
@@ -32,7 +33,7 @@ export default function CursorText({ color, x, y, opacity, text }: Props) {
           bg={color}
           c="white"
           fw={500}
-          ml="xs"
+          mr="xs"
           inline
           p="xs"
         >
