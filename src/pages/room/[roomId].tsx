@@ -14,7 +14,7 @@ import {
   useStorage,
   useMutation,
   useEventListener,
-  type RoomEvent,
+  RoomEvent,
 } from "liveblocks.config";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
@@ -58,13 +58,11 @@ function InteractiveRoom({ roomId }: { roomId: string }) {
   const broadcast = useBroadcastEvent();
 
   const [openChat, setOpenChat] = useState(false);
-  const [text, setText] = useState<RoomEvent>();
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
+  const [text, setText] = useState<RoomEvent>();
 
-  useEventListener(({ event }) => {
-    setText({
-      ...event,
-    });
+  useEventListener(({ event, connectionId }) => {
+    setText({ message: event.message, connectionId });
     if (timeoutId) clearTimeout(timeoutId);
 
     const id = setTimeout(() => {
@@ -162,9 +160,12 @@ function InteractiveRoom({ roomId }: { roomId: string }) {
         {cursors.map((cursor) => {
           if (!cursor?.connectionId) return null;
           const { connectionId, x, y, info } = cursor;
+
           return (
             <Cursor
-              text={text?.message}
+              text={
+                text?.connectionId === connectionId ? text.message : undefined
+              }
               opacity={opacity}
               key={connectionId}
               info={info}

@@ -53,7 +53,7 @@ const client = createClient({
 type Presence = {
   cursor: { x: number; y: number } | null;
   elementId: string | null;
-
+  message?: string;
   // ...
 };
 
@@ -84,6 +84,7 @@ export type UserMeta = {
 // room. Use a union for multiple events. Must be JSON-serializable.
 export type RoomEvent = {
   message?: string;
+  connectionId?: number;
   // type: "NOTIFICATION",
   // ...
 };

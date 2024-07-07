@@ -1,5 +1,5 @@
 import { Stack, Text } from "@mantine/core";
-import type { UserMeta } from "liveblocks.config";
+import { type UserMeta } from "liveblocks.config";
 
 type Props = {
   text?: string;
@@ -53,6 +53,9 @@ export default function Cursor({ color, x, y, info, opacity, text }: Props) {
         pos="absolute"
         left={25}
         fz="xs"
+        style={{
+          textShadow: "0px 0px 3px black",
+        }}
       >
         {info.username ?? info.name}
       </Text>
