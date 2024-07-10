@@ -121,7 +121,15 @@ export const tutorRouter = createTRPCRouter({
         return { ...application, user };
       });
 
-      return applicationsWithUser;
+      const completedApplications = applicationsWithUser.filter(
+        (application) => application.status !== TUTOR_APPLICATION_STATUS.PENDING
+      );
+
+      const pendingApplications = applicationsWithUser.filter(
+        (application) => application.status === TUTOR_APPLICATION_STATUS.PENDING
+      );
+
+      return { pendingApplications, completedApplications };
     } catch (error) {
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",

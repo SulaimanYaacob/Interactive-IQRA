@@ -65,7 +65,7 @@ function LearnIQRA() {
               <Card key={productName} tt="uppercase" padding="md">
                 <CardSection>
                   <Image
-                    src={`/images/iqra/iqra${++index}-img.png`}
+                    src={`/images/iqra/iqra${index + 1}-img.png`}
                     height={260}
                     fit="contain"
                     alt="iqra"
@@ -84,7 +84,7 @@ function LearnIQRA() {
                   <Button
                     mt="md"
                     component={Link}
-                    href={`/st/iqra-${++index}/1`}
+                    href={`/st/iqra-${index + 1}/1`}
                   >
                     {productName}
                   </Button>
@@ -104,14 +104,18 @@ function LearnIQRA() {
             <Card key={productName} tt="uppercase" padding="md">
               <CardSection>
                 <Image
-                  src={`/images/iqra/iqra${++index}-img.png`}
+                  src={`/images/iqra/iqra${index + 1}-img.png`}
                   height={260}
                   fit="contain"
                   alt="iqra"
                 />
               </CardSection>
               {paid ? (
-                <Button mt="md" component={Link} href={`/st/iqra-${++index}/1`}>
+                <Button
+                  mt="md"
+                  component={Link}
+                  href={`/st/iqra-${index + 1}/1`}
+                >
                   {productName}
                 </Button>
               ) : (
