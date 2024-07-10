@@ -59,7 +59,7 @@ function LiveblocksHeader({ roomPIN }: { roomPIN: string }) {
                       variant="subtle"
                       size="compact-lg"
                     >
-                      <Text lts="3px" fw="500">
+                      <Text lts="1.5px" fw="500">
                         {roomPIN}
                       </Text>
                     </Button>

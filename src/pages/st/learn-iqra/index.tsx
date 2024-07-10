@@ -65,8 +65,9 @@ function LearnIQRA() {
               <Card key={productName} tt="uppercase" padding="md">
                 <CardSection>
                   <Image
-                    src="https://html.scribdassets.com/9plgc5srpc26892h/images/1-2464e1e7a3.jpg"
-                    height={160}
+                    src={`/images/iqra/iqra${++index}-img.png`}
+                    height={260}
+                    fit="contain"
                     alt="iqra"
                   />
                 </CardSection>
@@ -103,8 +104,9 @@ function LearnIQRA() {
             <Card key={productName} tt="uppercase" padding="md">
               <CardSection>
                 <Image
-                  src="https://html.scribdassets.com/9plgc5srpc26892h/images/1-2464e1e7a3.jpg"
-                  height={160}
+                  src={`/images/iqra/iqra${++index}-img.png`}
+                  height={260}
+                  fit="contain"
                   alt="iqra"
                 />
               </CardSection>
